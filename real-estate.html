@@ -1,0 +1,1533 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Pinnacle Properties — Sales & Leasing Intelligence Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root {
+  --gold:#C9A84C;
+  --gold-light:#E2C46A;
+  --gold-pale:rgba(201,168,76,0.12);
+  --gold-border:rgba(201,168,76,0.25);
+  --bg:#080C14;
+  --bg2:#0D1320;
+  --bg3:#111827;
+  --card:#0F1A2E;
+  --card2:#132038;
+  --text:#F0EBE0;
+  --text2:#9AA3B2;
+  --text3:#4B5568;
+  --blue:#2A6FDB;
+  --blue-light:#4B8EF0;
+  --teal:#0EA5A0;
+  --red:#E05454;
+  --green:#2ECC80;
+  --border:rgba(255,255,255,0.06);
+  --shadow:0 4px 32px rgba(0,0,0,0.45);
+  --shadow-gold:0 0 40px rgba(201,168,76,0.10);
+  --radius:14px;
+}
+[data-theme="light"] {
+  --bg:#F4F0E8;--bg2:#EDE8DD;--bg3:#E6DFD1;
+  --card:#FFFFFF;--card2:#F9F6F0;
+  --text:#1A1410;--text2:#5C5245;--text3:#A09080;
+  --border:rgba(0,0,0,0.08);
+  --shadow:0 4px 24px rgba(0,0,0,0.10);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'DM Sans',system-ui,sans-serif;
+  background:var(--bg);color:var(--text);
+  min-height:100vh;overflow-x:hidden;
+}
+
+/* ── GRAIN TEXTURE OVERLAY ── */
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;opacity:0.4;
+}
+
+/* ── HEADER / NAV ── */
+header{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(8,12,20,0.92);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--gold-border);
+  height:62px;
+}
+[data-theme="light"] header{background:rgba(244,240,232,0.92);}
+.header-inner{
+  max-width:1440px;margin:0 auto;padding:0 28px;
+  height:100%;display:flex;align-items:center;justify-content:space-between;
+}
+.logo{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:1.25rem;font-weight:700;
+  color:var(--text);letter-spacing:0.03em;
+  display:flex;align-items:center;gap:10px;
+}
+.logo-dot{
+  width:8px;height:8px;background:var(--gold);
+  border-radius:50%;box-shadow:0 0 10px var(--gold);
+}
+.logo span{color:var(--gold);}
+.header-right{display:flex;align-items:center;gap:12px;}
+.live-badge{
+  display:flex;align-items:center;gap:7px;
+  background:rgba(46,204,128,0.12);border:1px solid rgba(46,204,128,0.25);
+  color:#2ECC80;padding:5px 14px;border-radius:50px;font-size:.73rem;font-weight:600;
+  letter-spacing:.05em;text-transform:uppercase;
+}
+.live-dot{width:7px;height:7px;background:#2ECC80;border-radius:50%;animation:lv 2s infinite;}
+@keyframes lv{0%,100%{opacity:1;}50%{opacity:.3;}}
+.period-btns{display:flex;gap:4px;}
+.pb{
+  background:none;border:1px solid var(--border);
+  color:var(--text2);padding:5px 14px;border-radius:7px;
+  font-size:.78rem;font-weight:500;cursor:pointer;transition:.2s;font-family:inherit;
+}
+.pb:hover,.pb.active{background:var(--gold-pale);border-color:var(--gold-border);color:var(--gold);}
+.theme-toggle{
+  background:none;border:1px solid var(--border);
+  color:var(--text2);width:34px;height:34px;border-radius:8px;
+  cursor:pointer;font-size:.9rem;transition:.2s;
+}
+.theme-toggle:hover{border-color:var(--gold-border);color:var(--gold);}
+
+/* ── LAYOUT ── */
+.page{max-width:1440px;margin:0 auto;padding:82px 28px 40px;position:relative;z-index:1;}
+
+/* ── PAGE HEADER ── */
+.page-header{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  margin-bottom:32px;flex-wrap:wrap;gap:16px;
+}
+.page-title{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:clamp(1.6rem,3vw,2.4rem);font-weight:700;
+  line-height:1.15;letter-spacing:0.01em;
+}
+.page-title span{color:var(--gold);}
+.page-sub{color:var(--text2);font-size:.88rem;margin-top:5px;line-height:1.5;}
+.updated{
+  display:flex;align-items:center;gap:7px;
+  font-size:.75rem;color:var(--text3);
+  background:var(--card);border:1px solid var(--border);
+  padding:8px 16px;border-radius:8px;white-space:nowrap;
+}
+.updated b{color:var(--text2);}
+
+/* ── KPI STRIP ── */
+.kpi-strip{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  gap:16px;margin-bottom:28px;
+}
+.kpi{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:20px 22px;
+  position:relative;overflow:hidden;transition:.3s;cursor:default;
+}
+.kpi::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--gold),transparent);
+  opacity:0;transition:.3s;
+}
+.kpi:hover{border-color:var(--gold-border);box-shadow:var(--shadow-gold);}
+.kpi:hover::before{opacity:1;}
+.kpi-icon{font-size:1.3rem;margin-bottom:10px;}
+.kpi-label{font-size:.72rem;color:var(--text3);font-weight:600;letter-spacing:.09em;text-transform:uppercase;margin-bottom:6px;}
+.kpi-value{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:1.9rem;font-weight:700;line-height:1;color:var(--text);
+}
+.kpi-value .unit{font-size:1rem;color:var(--gold);margin-right:3px;}
+.kpi-delta{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:.73rem;font-weight:600;margin-top:7px;
+  padding:3px 8px;border-radius:50px;
+}
+.kpi-delta.up{background:rgba(46,204,128,0.12);color:#2ECC80;}
+.kpi-delta.down{background:rgba(224,84,84,0.12);color:#E05454;}
+.kpi-delta.neutral{background:rgba(201,168,76,0.12);color:var(--gold);}
+
+/* ── GRID LAYOUTS ── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;}
+.grid-3{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:20px;margin-bottom:20px;}
+.grid-side{display:grid;grid-template-columns:2fr 1fr;gap:20px;margin-bottom:20px;}
+@media(max-width:1100px){.grid-3,.grid-side{grid-template-columns:1fr;}}
+@media(max-width:800px){.grid-2{grid-template-columns:1fr;}}
+
+/* ── CARD ── */
+.card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:24px;
+  box-shadow:var(--shadow);transition:.2s;
+}
+.card:hover{border-color:rgba(201,168,76,0.15);}
+.card-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:20px;
+}
+.card-title{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:1.05rem;font-weight:700;letter-spacing:.01em;
+}
+.card-badge{
+  font-size:.7rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
+  padding:4px 12px;border-radius:50px;
+  background:var(--gold-pale);color:var(--gold);border:1px solid var(--gold-border);
+}
+.card-badge.teal{background:rgba(14,165,160,0.1);color:var(--teal);border-color:rgba(14,165,160,0.2);}
+.card-badge.blue{background:rgba(42,111,219,0.1);color:var(--blue-light);border-color:rgba(42,111,219,0.2);}
+
+/* ── CHART CONTAINERS ── */
+.chart-wrap{position:relative;width:100%;}
+.chart-wrap canvas{max-height:260px;}
+.chart-wrap.tall canvas{max-height:300px;}
+
+/* ── LEADERBOARD TABLE ── */
+.prop-table{width:100%;border-collapse:collapse;margin-top:4px;}
+.prop-table th{
+  font-size:.68rem;font-weight:700;color:var(--text3);
+  letter-spacing:.09em;text-transform:uppercase;
+  padding:0 12px 10px;text-align:left;border-bottom:1px solid var(--border);
+}
+.prop-table th:last-child{text-align:right;}
+.prop-table td{
+  padding:11px 12px;font-size:.83rem;color:var(--text2);
+  border-bottom:1px solid rgba(255,255,255,0.03);vertical-align:middle;
+}
+[data-theme="light"] .prop-table td{border-bottom-color:rgba(0,0,0,0.04);}
+.prop-table tr:last-child td{border-bottom:none;}
+.prop-table tr:hover td{background:var(--gold-pale);}
+.prop-name{color:var(--text);font-weight:500;}
+.prop-aed{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:1rem;font-weight:700;color:var(--gold);text-align:right;
+}
+.status-pill{
+  display:inline-block;font-size:.67rem;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;
+  padding:3px 9px;border-radius:50px;
+}
+.st-sold{background:rgba(46,204,128,0.12);color:#2ECC80;}
+.st-leased{background:rgba(14,165,160,0.12);color:var(--teal);}
+.st-available{background:rgba(201,168,76,0.12);color:var(--gold);}
+.st-reserved{background:rgba(42,111,219,0.12);color:var(--blue-light);}
+.rank-num{
+  width:24px;height:24px;background:var(--bg3);border-radius:6px;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:.72rem;font-weight:700;color:var(--text3);
+}
+.rank-num.g{background:rgba(201,168,76,0.15);color:var(--gold);}
+
+/* ── AGENT LEADERBOARD ── */
+.agent-list{display:flex;flex-direction:column;gap:10px;margin-top:4px;}
+.agent-row{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 14px;background:var(--bg2);border-radius:10px;
+  border:1px solid var(--border);transition:.2s;
+}
+.agent-row:hover{border-color:var(--gold-border);}
+.agent-avatar{
+  width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.85rem;font-weight:700;flex-shrink:0;font-family:'Cormorant Garamond',serif;
+}
+.agent-name{font-size:.85rem;font-weight:600;color:var(--text);flex:1;}
+.agent-deals{font-size:.75rem;color:var(--text3);margin-top:1px;}
+.agent-rev{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:1rem;font-weight:700;color:var(--gold);text-align:right;
+}
+.agent-bar-wrap{width:100%;margin-top:6px;}
+.agent-bar-track{height:3px;background:var(--border);border-radius:2px;}
+.agent-bar-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--gold),var(--gold-light));}
+
+/* ── DISTRICT MAP / HEATMAP ── */
+.district-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px;
+}
+.district-card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;padding:14px;text-align:center;
+  transition:.3s;cursor:default;position:relative;overflow:hidden;
+}
+.district-card::after{
+  content:'';position:absolute;inset:0;border-radius:10px;
+  background:var(--gold);opacity:0;transition:.3s;pointer-events:none;
+}
+.district-card:hover::after{opacity:.05;}
+.dc-name{font-size:.73rem;font-weight:700;color:var(--text2);margin-bottom:6px;letter-spacing:.03em;}
+.dc-val{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:1.3rem;font-weight:700;color:var(--text);
+}
+.dc-sub{font-size:.68rem;color:var(--text3);margin-top:2px;}
+.dc-heat{
+  height:3px;border-radius:2px;margin-top:8px;
+  background:linear-gradient(90deg,var(--gold),var(--gold-light));
+}
+
+/* ── FUNNEL ── */
+.funnel-wrap{margin-top:8px;}
+.funnel-step{
+  display:flex;align-items:center;gap:12px;margin-bottom:10px;
+}
+.funnel-label{font-size:.78rem;color:var(--text2);width:110px;flex-shrink:0;}
+.funnel-track{flex:1;background:var(--bg2);border-radius:4px;height:22px;overflow:hidden;position:relative;}
+.funnel-fill{
+  height:100%;border-radius:4px;
+  display:flex;align-items:center;padding-left:10px;
+  font-size:.72rem;font-weight:700;color:#fff;
+  transition:width 1.2s cubic-bezier(.4,0,.2,1);
+}
+.funnel-count{font-size:.78rem;color:var(--text3);width:40px;text-align:right;flex-shrink:0;}
+
+/* ── MINI KPI ROW ── */
+.mini-kpi-row{display:flex;gap:12px;margin-top:4px;flex-wrap:wrap;}
+.mini-kpi{
+  flex:1;min-width:90px;background:var(--bg2);
+  border:1px solid var(--border);border-radius:10px;
+  padding:12px;text-align:center;
+}
+.mki-val{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:1.35rem;font-weight:700;color:var(--gold);
+}
+.mki-lbl{font-size:.67rem;color:var(--text3);margin-top:2px;text-transform:uppercase;letter-spacing:.06em;}
+
+/* ── BOTTOM ROW ── */
+.bottom-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-bottom:20px;}
+@media(max-width:1100px){.bottom-row{grid-template-columns:1fr 1fr;}}
+@media(max-width:700px){.bottom-row{grid-template-columns:1fr;}}
+
+/* ── TICKER ── */
+.ticker-wrap{
+  background:var(--card);border:1px solid var(--gold-border);
+  border-radius:10px;padding:12px 20px;
+  display:flex;align-items:center;gap:16px;
+  margin-bottom:20px;overflow:hidden;
+}
+.ticker-label{
+  font-size:.68rem;font-weight:700;color:var(--gold);
+  letter-spacing:.1em;text-transform:uppercase;
+  white-space:nowrap;flex-shrink:0;
+}
+.ticker-scroll{flex:1;overflow:hidden;position:relative;}
+.ticker-track{
+  display:flex;gap:40px;animation:tick 30s linear infinite;
+  white-space:nowrap;
+}
+@keyframes tick{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.tick-item{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:.78rem;color:var(--text2);flex-shrink:0;
+}
+.tick-item b{color:var(--text);}
+.tick-item .up{color:#2ECC80;}
+.tick-item .dn{color:#E05454;}
+
+/* ── WATERMARK ── */
+.watermark{
+  text-align:center;padding:24px 0 0;
+  font-size:.75rem;color:var(--text3);
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.watermark a{
+  color:var(--gold);text-decoration:none;font-weight:600;
+  font-family:'Cormorant Garamond',serif;font-size:.9rem;
+}
+.watermark a:hover{text-decoration:underline;}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:var(--bg2);}
+::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px;}
+
+/* ── ANIMATIONS ── */
+.fade-up{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease;}
+.fade-up.visible{opacity:1;transform:translateY(0);}
+
+/* ══════════════════════════════════════
+   BUSINESS IMPACT LAYER
+══════════════════════════════════════ */
+.impact-layer{
+  margin-bottom:28px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.impact-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 24px;
+  border-bottom:1px solid var(--border);
+  background:linear-gradient(90deg,rgba(201,168,76,0.05),transparent);
+}
+.impact-header-left{display:flex;align-items:center;gap:12px;}
+.impact-title{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:1.05rem;font-weight:700;letter-spacing:.01em;
+}
+.impact-subtitle{font-size:.75rem;color:var(--text3);margin-top:2px;}
+.impact-badge{
+  font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  padding:4px 12px;border-radius:50px;
+  background:rgba(224,84,84,0.1);color:#E05454;border:1px solid rgba(224,84,84,0.25);
+  display:flex;align-items:center;gap:6px;
+}
+.impact-badge-dot{
+  width:6px;height:6px;background:#E05454;border-radius:50%;
+  animation:lv 1.5s infinite;
+}
+.impact-body{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:0;
+}
+@media(max-width:900px){.impact-body{grid-template-columns:1fr;}}
+
+/* Left panel — alerts */
+.impact-alerts{
+  padding:20px 24px;
+  border-right:1px solid var(--border);
+}
+@media(max-width:900px){.impact-alerts{border-right:none;border-bottom:1px solid var(--border);}}
+.impact-alerts-title{
+  font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--text3);margin-bottom:14px;
+}
+.impact-alert{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:13px 16px;border-radius:10px;
+  margin-bottom:10px;border:1px solid transparent;
+  transition:.2s;cursor:default;
+}
+.impact-alert:last-child{margin-bottom:0;}
+.impact-alert:hover{transform:translateX(3px);}
+.impact-alert.danger{
+  background:rgba(224,84,84,0.07);
+  border-color:rgba(224,84,84,0.18);
+}
+.impact-alert.warning{
+  background:rgba(201,168,76,0.07);
+  border-color:rgba(201,168,76,0.18);
+}
+.impact-alert.opportunity{
+  background:rgba(46,204,128,0.07);
+  border-color:rgba(46,204,128,0.18);
+}
+.impact-alert-icon{
+  font-size:1.1rem;flex-shrink:0;margin-top:1px;
+}
+.impact-alert-body{flex:1;}
+.impact-alert-text{
+  font-size:.83rem;color:var(--text2);line-height:1.5;
+}
+.impact-alert-text b{color:var(--text);font-weight:600;}
+.impact-loss{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:1.05rem;font-weight:700;
+  margin-top:4px;
+}
+.impact-loss.red{color:#E05454;}
+.impact-loss.amber{color:var(--gold);}
+.impact-loss.green{color:#2ECC80;}
+.impact-alert-tag{
+  display:inline-block;font-size:.63rem;font-weight:700;letter-spacing:.07em;
+  text-transform:uppercase;padding:2px 8px;border-radius:50px;margin-top:6px;
+}
+.tag-danger{background:rgba(224,84,84,0.15);color:#E05454;}
+.tag-warning{background:rgba(201,168,76,0.15);color:var(--gold);}
+.tag-opportunity{background:rgba(46,204,128,0.15);color:#2ECC80;}
+
+/* Right panel — credibility / if-fixed */
+.impact-fix{
+  padding:20px 24px;
+  display:flex;flex-direction:column;gap:16px;
+}
+.impact-fix-title{
+  font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--text3);margin-bottom:2px;
+}
+.impact-fix-card{
+  background:linear-gradient(135deg,rgba(46,204,128,0.08),rgba(14,165,160,0.05));
+  border:1px solid rgba(46,204,128,0.2);
+  border-radius:12px;padding:18px 20px;
+}
+.if-fixed-header{
+  display:flex;align-items:center;gap:10px;margin-bottom:14px;
+}
+.if-fixed-icon{
+  width:32px;height:32px;border-radius:8px;
+  background:rgba(46,204,128,0.15);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1rem;flex-shrink:0;
+}
+.if-fixed-label{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:1rem;font-weight:700;color:var(--text);
+}
+.if-fixed-sub{font-size:.72rem;color:var(--text3);margin-top:1px;}
+.if-fixed-metrics{display:flex;flex-direction:column;gap:10px;}
+.ifm-row{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.ifm-label{font-size:.78rem;color:var(--text2);}
+.ifm-val{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:1.1rem;font-weight:700;color:#2ECC80;
+  white-space:nowrap;
+}
+.ifm-bar-wrap{flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden;}
+.ifm-bar{height:100%;border-radius:3px;background:linear-gradient(90deg,#2ECC80,#0EA5A0);transition:width 1s ease;}
+
+/* Timeline pill */
+.fix-timeline{
+  display:flex;align-items:center;gap:8px;
+  margin-top:14px;padding:10px 14px;
+  background:rgba(201,168,76,0.07);border:1px solid var(--gold-border);
+  border-radius:8px;
+}
+.fix-timeline-icon{font-size:.85rem;}
+.fix-timeline-text{font-size:.78rem;color:var(--text2);line-height:1.4;}
+.fix-timeline-text b{color:var(--gold);}
+
+/* Summary totals row */
+.impact-totals{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  border-top:1px solid var(--border);
+}
+.impact-total-cell{
+  padding:14px 24px;text-align:center;
+  border-right:1px solid var(--border);
+}
+.impact-total-cell:last-child{border-right:none;}
+.itc-label{font-size:.65rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text3);margin-bottom:4px;}
+.itc-val{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:1.25rem;font-weight:700;
+}
+.itc-val.red{color:#E05454;}
+.itc-val.green{color:#2ECC80;}
+.itc-val.gold{color:var(--gold);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-dot"></div>
+      Pinnacle <span>Properties</span> &nbsp;·&nbsp; Intelligence Dashboard
+    </div>
+    <div class="header-right">
+      <div class="live-badge"><div class="live-dot"></div>Live Data</div>
+      <div class="period-btns">
+        <button class="pb" onclick="setPeriod('Q1',this)">Q1</button>
+        <button class="pb" onclick="setPeriod('Q2',this)">Q2</button>
+        <button class="pb" onclick="setPeriod('Q3',this)">Q3</button>
+        <button class="pb active" onclick="setPeriod('Q4',this)">Q4</button>
+      </div>
+      <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+    </div>
+  </div>
+</header>
+
+<div class="page">
+
+  <!-- TICKER -->
+  <div class="ticker-wrap">
+    <div class="ticker-label">📡 Market Pulse</div>
+    <div class="ticker-scroll">
+      <div class="ticker-track" id="tickerTrack">
+        <span class="tick-item">Downtown Dubai · Villa 4BR &nbsp;<b>AED 8.4M</b>&nbsp; <span class="up">↑ 12%</span></span>
+        <span class="tick-item">Business Bay · Office Suite &nbsp;<b>AED 2.1M</b>&nbsp; <span class="dn">↓ 3%</span></span>
+        <span class="tick-item">Dubai Marina · 2BR Apt &nbsp;<b>AED 3.2M</b>&nbsp; <span class="up">↑ 8%</span></span>
+        <span class="tick-item">Palm Jumeirah · Penthouse &nbsp;<b>AED 28M</b>&nbsp; <span class="up">↑ 21%</span></span>
+        <span class="tick-item">JLT · Studio &nbsp;<b>AED 780K</b>&nbsp; <span class="up">↑ 5%</span></span>
+        <span class="tick-item">DIFC · Office Floor &nbsp;<b>AED 14.5M</b>&nbsp; <span class="up">↑ 9%</span></span>
+        <span class="tick-item">Arabian Ranches · Villa 5BR &nbsp;<b>AED 11.2M</b>&nbsp; <span class="dn">↓ 1%</span></span>
+        <span class="tick-item">Dubai South · 1BR Apt &nbsp;<b>AED 640K</b>&nbsp; <span class="up">↑ 15%</span></span>
+        <!-- duplicate for seamless loop -->
+        <span class="tick-item">Downtown Dubai · Villa 4BR &nbsp;<b>AED 8.4M</b>&nbsp; <span class="up">↑ 12%</span></span>
+        <span class="tick-item">Business Bay · Office Suite &nbsp;<b>AED 2.1M</b>&nbsp; <span class="dn">↓ 3%</span></span>
+        <span class="tick-item">Dubai Marina · 2BR Apt &nbsp;<b>AED 3.2M</b>&nbsp; <span class="up">↑ 8%</span></span>
+        <span class="tick-item">Palm Jumeirah · Penthouse &nbsp;<b>AED 28M</b>&nbsp; <span class="up">↑ 21%</span></span>
+        <span class="tick-item">JLT · Studio &nbsp;<b>AED 780K</b>&nbsp; <span class="up">↑ 5%</span></span>
+        <span class="tick-item">DIFC · Office Floor &nbsp;<b>AED 14.5M</b>&nbsp; <span class="up">↑ 9%</span></span>
+        <span class="tick-item">Arabian Ranches · Villa 5BR &nbsp;<b>AED 11.2M</b>&nbsp; <span class="dn">↓ 1%</span></span>
+        <span class="tick-item">Dubai South · 1BR Apt &nbsp;<b>AED 640K</b>&nbsp; <span class="up">↑ 15%</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header fade-up">
+    <div>
+      <div class="page-title">Sales & Leasing <span>Intelligence</span></div>
+      <div class="page-sub" id="pageSub">Q4 2024 · Dubai & UAE Market · All figures in AED</div>
+    </div>
+    <div class="updated">
+      <span>🕐</span> Last updated: <b>Today, 09:15 GST</b>
+    </div>
+  </div>
+
+  <!-- KPI STRIP -->
+  <div class="kpi-strip fade-up">
+    <div class="kpi">
+      <div class="kpi-icon">🏷️</div>
+      <div class="kpi-label">Total Revenue</div>
+      <div class="kpi-value"><span class="unit">AED</span><span id="kv1">142.6M</span></div>
+      <div class="kpi-delta up" id="kd1">↑ 18.4% vs Q3</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-icon">🤝</div>
+      <div class="kpi-label">Units Transacted</div>
+      <div class="kpi-value"><span id="kv2">284</span></div>
+      <div class="kpi-delta up" id="kd2">↑ 31 units vs Q3</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-icon">📋</div>
+      <div class="kpi-label">Active Listings</div>
+      <div class="kpi-value"><span id="kv3">617</span></div>
+      <div class="kpi-delta neutral" id="kd3">↔ +12 this week</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-icon">⏱️</div>
+      <div class="kpi-label">Avg Days on Market</div>
+      <div class="kpi-value"><span id="kv4">23</span></div>
+      <div class="kpi-delta up" id="kd4">↓ 6 days faster</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-icon">💰</div>
+      <div class="kpi-label">Avg Deal Size</div>
+      <div class="kpi-value"><span class="unit">AED</span><span id="kv5">501K</span></div>
+      <div class="kpi-delta up" id="kd5">↑ 7.2% premium</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-icon">🔄</div>
+      <div class="kpi-label">Conversion Rate</div>
+      <div class="kpi-value"><span id="kv6">46</span><span style="font-size:1.1rem;color:var(--gold)">%</span></div>
+      <div class="kpi-delta up" id="kd6">↑ 4pts vs Q3</div>
+    </div>
+  </div>
+
+  <!-- BUSINESS IMPACT LAYER -->
+  <div class="impact-layer fade-up" id="impactLayer">
+    <div class="impact-header">
+      <div class="impact-header-left">
+        <div>
+          <div class="impact-title">⚡ Business Impact Layer</div>
+          <div class="impact-subtitle" id="impactSub">Revenue leakage, missed opportunities &amp; projected recovery for Q4 2024</div>
+        </div>
+      </div>
+      <div class="impact-badge"><div class="impact-badge-dot"></div><span id="impactBadgeQ">Q4 Alert</span></div>
+    </div>
+    <div class="impact-body">
+      <div class="impact-alerts">
+        <div class="impact-alerts-title">🔍 Identified Issues &amp; Opportunities</div>
+        <div id="impactAlertsList"></div>
+      </div>
+      <div class="impact-fix">
+        <div class="impact-fix-title">✅ If Fixed — Expected Impact in 14 Days</div>
+        <div class="impact-fix-card">
+          <div class="if-fixed-header">
+            <div class="if-fixed-icon">🚀</div>
+            <div>
+              <div class="if-fixed-label" id="ifFixedLabel">Projected Q4 Recovery</div>
+              <div class="if-fixed-sub">Based on historical correction benchmarks</div>
+            </div>
+          </div>
+          <div class="if-fixed-metrics" id="ifFixedMetrics"></div>
+          <div class="fix-timeline">
+            <div class="fix-timeline-icon">📅</div>
+            <div class="fix-timeline-text" id="fixTimelineText">
+              <b>14-day action window:</b> Address top 3 issues now → measurable uplift by end of quarter.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="impact-totals">
+      <div class="impact-total-cell">
+        <div class="itc-label">Est. Revenue at Risk</div>
+        <div class="itc-val red" id="itcRisk">—</div>
+      </div>
+      <div class="impact-total-cell">
+        <div class="itc-label">Recoverable Upside</div>
+        <div class="itc-val green" id="itcUpside">—</div>
+      </div>
+      <div class="impact-total-cell">
+        <div class="itc-label">Net Opportunity</div>
+        <div class="itc-val gold" id="itcNet">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 1: Revenue Chart + District Heatmap -->
+  <div class="grid-3 fade-up">
+
+    <!-- Revenue Trend -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Revenue & Unit Volume</div>
+        <div class="card-badge" id="revBadge">Monthly</div>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="revenueChart"></canvas>
+      </div>
+      <div class="mini-kpi-row" style="margin-top:16px;">
+        <div class="mini-kpi"><div class="mki-val" id="mk1">AED 142.6M</div><div class="mki-lbl" id="mk1lbl">Q4 Revenue</div></div>
+        <div class="mini-kpi"><div class="mki-val" id="mk2">AED 120.4M</div><div class="mki-lbl" id="mk2lbl">Q3 Revenue</div></div>
+        <div class="mini-kpi"><div class="mki-val" id="mk3">+18.4%</div><div class="mki-lbl">Growth</div></div>
+      </div>
+    </div>
+
+    <!-- Property Type Split -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">By Property Type</div>
+        <div class="card-badge teal" id="typeBadge">Q4 Mix</div>
+      </div>
+      <div class="chart-wrap" style="display:flex;align-items:center;justify-content:center;height:220px;">
+        <canvas id="typeChart"></canvas>
+      </div>
+      <div style="margin-top:12px;display:flex;flex-direction:column;gap:6px;" id="typeLegend"></div>
+    </div>
+
+    <!-- Nationality of Buyers -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Buyer Nationality</div>
+        <div class="card-badge blue">Top 6</div>
+      </div>
+      <div class="chart-wrap" style="height:240px;">
+        <canvas id="natChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 2: Properties Table + Agent Board -->
+  <div class="grid-side fade-up">
+
+    <!-- Transactions Table -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Recent Transactions</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <select id="statusFilter" onchange="filterTable()" style="background:var(--bg2);border:1px solid var(--border);color:var(--text2);padding:5px 10px;border-radius:7px;font-size:.75rem;cursor:pointer;font-family:inherit;">
+            <option value="all">All Status</option>
+            <option value="sold">Sold</option>
+            <option value="leased">Leased</option>
+            <option value="available">Available</option>
+            <option value="reserved">Reserved</option>
+          </select>
+        </div>
+      </div>
+      <table class="prop-table" id="propTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Property</th>
+            <th>District</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody id="propBody"></tbody>
+      </table>
+    </div>
+
+    <!-- Agent Leaderboard -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Agent Performance</div>
+        <div class="card-badge" id="agentBadge">Q4 Ranking</div>
+      </div>
+      <div class="agent-list" id="agentList"></div>
+    </div>
+  </div>
+
+  <!-- ROW 3: Pipeline Funnel + District Heat + YoY -->
+  <div class="bottom-row fade-up">
+
+    <!-- Lead Funnel -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Lead-to-Close Funnel</div>
+        <div class="card-badge blue" id="funnelBadge">Q4</div>
+      </div>
+      <div class="funnel-wrap" id="funnelWrap"></div>
+    </div>
+
+    <!-- District Performance -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">District Performance</div>
+        <div class="card-badge teal">AED / sqft</div>
+      </div>
+      <div class="district-grid" id="districtGrid"></div>
+    </div>
+
+    <!-- YoY Comparison -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Year-on-Year Revenue</div>
+        <div class="card-badge">2022–2024</div>
+      </div>
+      <div class="chart-wrap tall">
+        <canvas id="yoyChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- WATERMARK -->
+  <div class="watermark">
+    Dashboard built by &nbsp;<a href="https://wa.me/919987258696" target="_blank">Om Bagal Analytics</a>&nbsp; · Business Intelligence for Dubai &nbsp;·&nbsp; ombagal.analytics@gmail.com
+  </div>
+
+</div><!-- /page -->
+
+<script>
+// ════════════════════════════════════════════════════
+// MASTER DATA — All 4 quarters fully defined
+// ════════════════════════════════════════════════════
+var quarterData = {
+  Q1: {
+    label: 'Q1 2024',
+    prevLabel: 'Q4 2023',
+    months: ['Jan','Feb','Mar'],
+    revenue: [28.4, 31.2, 34.8],
+    units: [52, 61, 71],
+    totalRev: '94.4M',
+    prevRev: 'AED 84.1M',
+    growth: '+12.2%',
+    kpis: {
+      rev: '94.4M',   revDelta: '↑ 12.2% vs Q4 2023', revClass: 'up',
+      units: '184',   unitsDelta: '↑ 18 units vs Q4 2023', unitsClass: 'up',
+      listings: '541', listDelta: '↔ +8 this week', listClass: 'neutral',
+      dom: '31',      domDelta: '↓ 2 days faster', domClass: 'up',
+      deal: '420K',   dealDelta: '↑ 3.1% premium', dealClass: 'up',
+      conv: '38',     convDelta: '↑ 2pts vs Q4 2023', convClass: 'up'
+    },
+    typeData: { labels:['Apartments','Villas','Offices','Townhouses','Penthouses'], values:[41,24,16,13,6], colors:['#C9A84C','#0EA5A0','#2A6FDB','#9B59B6','#E05454'] },
+    natData: { labels:['Indian','British','Russian','Chinese','Emirati','Pakistani'], values:[29,16,12,14,11,18] },
+    funnel: [
+      {label:'Enquiries',count:1240,color:'#C9A84C',pct:100},
+      {label:'Viewings',count:590,color:'#0EA5A0',pct:48},
+      {label:'Offers Made',count:280,color:'#2A6FDB',pct:23},
+      {label:'Under Contract',count:198,color:'#9B59B6',pct:16},
+      {label:'Closed',count:184,color:'#2ECC80',pct:15}
+    ],
+    districts: [
+      {name:'Downtown',val:'3,410',heat:82},
+      {name:'Palm Jumeirah',val:'3,820',heat:90},
+      {name:'DIFC',val:'3,200',heat:77},
+      {name:'Dubai Marina',val:'2,650',heat:64},
+      {name:'Business Bay',val:'2,410',heat:58},
+      {name:'JLT',val:'1,610',heat:38}
+    ],
+    agents: [
+      {name:'James O\'Brien',init:'JO',color:'#0EA5A0',deals:22,rev:'AED 18.2M',pct:100},
+      {name:'Fatima Al Mansoori',init:'FA',color:'#C9A84C',deals:19,rev:'AED 15.8M',pct:87},
+      {name:'Ravi Sharma',init:'RS',color:'#2A6FDB',deals:17,rev:'AED 14.1M',pct:77},
+      {name:'Chen Wei',init:'CW',color:'#E05454',deals:14,rev:'AED 11.6M',pct:64},
+      {name:'Aisha Mohammed',init:'AM',color:'#9B59B6',deals:12,rev:'AED 9.9M',pct:55}
+    ],
+    properties: [
+      {rank:1,name:'Marina Gate 2 — 2BR',district:'Dubai Marina',type:'Apartment',status:'sold',value:'AED 2,100,000'},
+      {rank:2,name:'JLT Cluster J — Studio',district:'JLT',type:'Apartment',status:'leased',value:'AED 90,000/yr'},
+      {rank:3,name:'The Palm — Frond E Villa',district:'Palm Jumeirah',type:'Villa',status:'sold',value:'AED 12,400,000'},
+      {rank:4,name:'DIFC — Office Suite 14B',district:'DIFC',type:'Office',status:'leased',value:'AED 460,000/yr'},
+      {rank:5,name:'Business Bay — 1BR Apt',district:'Business Bay',type:'Apartment',status:'available',value:'AED 1,350,000'},
+      {rank:6,name:'Al Noor Properties South — 3BR Townhouse',district:'Dubai South',type:'Townhouse',status:'reserved',value:'AED 1,650,000'},
+      {rank:7,name:'Burj Vista Tower 2 — 2BR',district:'Downtown',type:'Apartment',status:'sold',value:'AED 3,100,000'},
+      {rank:8,name:'Arabian Ranches — 4BR Villa',district:'Arabian Ranches',type:'Villa',status:'sold',value:'AED 6,200,000'},
+      {rank:9,name:'Sobha Hartland — 1BR Apt',district:'MBR City',type:'Apartment',status:'leased',value:'AED 145,000/yr'},
+      {rank:10,name:'Creek Harbour — 2BR Apt',district:'Creek Harbour',type:'Apartment',status:'available',value:'AED 1,900,000'}
+    ]
+  },
+  Q2: {
+    label: 'Q2 2024',
+    prevLabel: 'Q1 2024',
+    months: ['Apr','May','Jun'],
+    revenue: [33.6, 36.9, 40.1],
+    units: [65, 74, 85],
+    totalRev: '110.6M',
+    prevRev: 'AED 94.4M',
+    growth: '+17.2%',
+    kpis: {
+      rev: '110.6M', revDelta: '↑ 17.2% vs Q1', revClass: 'up',
+      units: '224',  unitsDelta: '↑ 40 units vs Q1', unitsClass: 'up',
+      listings: '572', listDelta: '↔ +10 this week', listClass: 'neutral',
+      dom: '28',     domDelta: '↓ 3 days faster', domClass: 'up',
+      deal: '455K',  dealDelta: '↑ 5.4% premium', dealClass: 'up',
+      conv: '41',    convDelta: '↑ 3pts vs Q1', convClass: 'up'
+    },
+    typeData: { labels:['Apartments','Villas','Offices','Townhouses','Penthouses'], values:[39,26,17,12,6], colors:['#C9A84C','#0EA5A0','#2A6FDB','#9B59B6','#E05454'] },
+    natData: { labels:['Indian','British','Russian','Chinese','Emirati','Pakistani'], values:[30,17,13,13,11,16] },
+    funnel: [
+      {label:'Enquiries',count:1480,color:'#C9A84C',pct:100},
+      {label:'Viewings',count:718,color:'#0EA5A0',pct:49},
+      {label:'Offers Made',count:355,color:'#2A6FDB',pct:24},
+      {label:'Under Contract',count:246,color:'#9B59B6',pct:17},
+      {label:'Closed',count:224,color:'#2ECC80',pct:15}
+    ],
+    districts: [
+      {name:'Downtown',val:'3,590',heat:87},
+      {name:'Palm Jumeirah',val:'3,990',heat:95},
+      {name:'DIFC',val:'3,420',heat:82},
+      {name:'Dubai Marina',val:'2,780',heat:67},
+      {name:'Business Bay',val:'2,580',heat:62},
+      {name:'JLT',val:'1,710',heat:41}
+    ],
+    agents: [
+      {name:'Fatima Al Mansoori',init:'FA',color:'#C9A84C',deals:26,rev:'AED 21.6M',pct:100},
+      {name:'Ravi Sharma',init:'RS',color:'#2A6FDB',deals:22,rev:'AED 18.3M',pct:85},
+      {name:'James O\'Brien',init:'JO',color:'#0EA5A0',deals:21,rev:'AED 17.5M',pct:81},
+      {name:'Aisha Mohammed',init:'AM',color:'#9B59B6',deals:17,rev:'AED 14.1M',pct:65},
+      {name:'Chen Wei',init:'CW',color:'#E05454',deals:14,rev:'AED 11.6M',pct:54}
+    ],
+    properties: [
+      {rank:1,name:'Downtown Blvd Heights — 3BR',district:'Downtown',type:'Apartment',status:'sold',value:'AED 3,850,000'},
+      {rank:2,name:'Palm Signature Villa — 4BR',district:'Palm Jumeirah',type:'Villa',status:'sold',value:'AED 18,500,000'},
+      {rank:3,name:'The Opus — Office Suite',district:'Business Bay',type:'Office',status:'leased',value:'AED 420,000/yr'},
+      {rank:4,name:'Marina Wharf — 2BR Apt',district:'Dubai Marina',type:'Apartment',status:'available',value:'AED 2,350,000'},
+      {rank:5,name:'DIFC Podium — Grade A',district:'DIFC',type:'Office',status:'leased',value:'AED 880,000/yr'},
+      {rank:6,name:'Arabian Ranches 3 — 4BR Villa',district:'Arabian Ranches',type:'Villa',status:'reserved',value:'AED 7,100,000'},
+      {rank:7,name:'JLT Cluster X — 1BR',district:'JLT',type:'Apartment',status:'sold',value:'AED 820,000'},
+      {rank:8,name:'Al Noor Properties South — 3BR Townhouse',district:'Dubai South',type:'Townhouse',status:'available',value:'AED 1,780,000'},
+      {rank:9,name:'Creek Harbour — 4BR Penthouse',district:'Creek Harbour',type:'Penthouse',status:'sold',value:'AED 15,200,000'},
+      {rank:10,name:'Sobha Hartland — 2BR Apt',district:'MBR City',type:'Apartment',status:'leased',value:'AED 190,000/yr'}
+    ]
+  },
+  Q3: {
+    label: 'Q3 2024',
+    prevLabel: 'Q2 2024',
+    months: ['Jul','Aug','Sep'],
+    revenue: [37.4, 40.8, 42.2],
+    units: [72, 80, 101],
+    totalRev: '120.4M',
+    prevRev: 'AED 110.6M',
+    growth: '+8.9%',
+    kpis: {
+      rev: '120.4M', revDelta: '↑ 8.9% vs Q2', revClass: 'up',
+      units: '253',  unitsDelta: '↑ 29 units vs Q2', unitsClass: 'up',
+      listings: '601', listDelta: '↔ +9 this week', listClass: 'neutral',
+      dom: '29',     domDelta: '↓ 1 day faster', domClass: 'up',
+      deal: '476K',  dealDelta: '↑ 4.6% premium', dealClass: 'up',
+      conv: '42',    convDelta: '↑ 1pt vs Q2', convClass: 'up'
+    },
+    typeData: { labels:['Apartments','Villas','Offices','Townhouses','Penthouses'], values:[37,28,17,11,7], colors:['#C9A84C','#0EA5A0','#2A6FDB','#9B59B6','#E05454'] },
+    natData: { labels:['Indian','British','Russian','Chinese','Emirati','Pakistani'], values:[30,18,14,12,10,16] },
+    funnel: [
+      {label:'Enquiries',count:1650,color:'#C9A84C',pct:100},
+      {label:'Viewings',count:810,color:'#0EA5A0',pct:49},
+      {label:'Offers Made',count:405,color:'#2A6FDB',pct:25},
+      {label:'Under Contract',count:278,color:'#9B59B6',pct:17},
+      {label:'Closed',count:253,color:'#2ECC80',pct:15}
+    ],
+    districts: [
+      {name:'Downtown',val:'3,710',heat:90},
+      {name:'Palm Jumeirah',val:'4,080',heat:97},
+      {name:'DIFC',val:'3,540',heat:86},
+      {name:'Dubai Marina',val:'2,870',heat:69},
+      {name:'Business Bay',val:'2,680',heat:65},
+      {name:'JLT',val:'1,790',heat:43}
+    ],
+    agents: [
+      {name:'Fatima Al Mansoori',init:'FA',color:'#C9A84C',deals:30,rev:'AED 24.9M',pct:100},
+      {name:'James O\'Brien',init:'JO',color:'#0EA5A0',deals:25,rev:'AED 20.8M',pct:83},
+      {name:'Ravi Sharma',init:'RS',color:'#2A6FDB',deals:23,rev:'AED 19.1M',pct:77},
+      {name:'Aisha Mohammed',init:'AM',color:'#9B59B6',deals:19,rev:'AED 15.8M',pct:63},
+      {name:'Chen Wei',init:'CW',color:'#E05454',deals:16,rev:'AED 13.3M',pct:53}
+    ],
+    properties: [
+      {rank:1,name:'Burj Vista Tower 1 — 3BR',district:'Downtown',type:'Apartment',status:'sold',value:'AED 4,050,000'},
+      {rank:2,name:'The Opus — Grade A Office',district:'Business Bay',type:'Office',status:'leased',value:'AED 360,000/yr'},
+      {rank:3,name:'Palm Jumeirah Signature Villa',district:'Palm Jumeirah',type:'Villa',status:'sold',value:'AED 20,100,000'},
+      {rank:4,name:'Marina Gate — 2BR Apt',district:'Dubai Marina',type:'Apartment',status:'available',value:'AED 2,000,000'},
+      {rank:5,name:'DIFC Grade A Office',district:'DIFC',type:'Office',status:'leased',value:'AED 910,000/yr'},
+      {rank:6,name:'Arabian Ranches 2 — 4BR Villa',district:'Arabian Ranches',type:'Villa',status:'reserved',value:'AED 7,200,000'},
+      {rank:7,name:'JLT Cluster J — 1BR',district:'JLT',type:'Apartment',status:'sold',value:'AED 760,000'},
+      {rank:8,name:'Al Noor Properties South Townhouse 3BR',district:'Dubai South',type:'Townhouse',status:'available',value:'AED 1,810,000'},
+      {rank:9,name:'Creek Harbour — Penthouse 4BR',district:'Creek Harbour',type:'Penthouse',status:'sold',value:'AED 16,400,000'},
+      {rank:10,name:'Sobha Hartland — 2BR Apt',district:'MBR City',type:'Apartment',status:'leased',value:'AED 208,000/yr'}
+    ]
+  },
+  Q4: {
+    label: 'Q4 2024',
+    prevLabel: 'Q3 2024',
+    months: ['Oct','Nov','Dec'],
+    revenue: [42.1, 49.3, 51.2],
+    units: [82, 96, 106],
+    totalRev: '142.6M',
+    prevRev: 'AED 120.4M',
+    growth: '+18.4%',
+    kpis: {
+      rev: '142.6M', revDelta: '↑ 18.4% vs Q3', revClass: 'up',
+      units: '284',  unitsDelta: '↑ 31 units vs Q3', unitsClass: 'up',
+      listings: '617', listDelta: '↔ +12 this week', listClass: 'neutral',
+      dom: '23',     domDelta: '↓ 6 days faster', domClass: 'up',
+      deal: '501K',  dealDelta: '↑ 7.2% premium', dealClass: 'up',
+      conv: '46',    convDelta: '↑ 4pts vs Q3', convClass: 'up'
+    },
+    typeData: { labels:['Apartments','Villas','Offices','Townhouses','Penthouses'], values:[38,27,18,11,6], colors:['#C9A84C','#0EA5A0','#2A6FDB','#9B59B6','#E05454'] },
+    natData: { labels:['Indian','British','Russian','Chinese','Emirati','Pakistani'], values:[31,18,14,12,10,15] },
+    funnel: [
+      {label:'Enquiries',count:1840,color:'#C9A84C',pct:100},
+      {label:'Viewings',count:920,color:'#0EA5A0',pct:50},
+      {label:'Offers Made',count:462,color:'#2A6FDB',pct:25},
+      {label:'Under Contract',count:310,color:'#9B59B6',pct:17},
+      {label:'Closed',count:284,color:'#2ECC80',pct:15}
+    ],
+    districts: [
+      {name:'Downtown',val:'3,820',heat:95},
+      {name:'Palm Jumeirah',val:'4,210',heat:100},
+      {name:'DIFC',val:'3,650',heat:88},
+      {name:'Dubai Marina',val:'2,940',heat:72},
+      {name:'Business Bay',val:'2,760',heat:68},
+      {name:'JLT',val:'1,840',heat:45}
+    ],
+    agents: [
+      {name:'Fatima Al Mansoori',init:'FA',color:'#C9A84C',deals:34,rev:'AED 28.4M',pct:100},
+      {name:'James O\'Brien',init:'JO',color:'#0EA5A0',deals:29,rev:'AED 24.1M',pct:85},
+      {name:'Ravi Sharma',init:'RS',color:'#2A6FDB',deals:26,rev:'AED 21.6M',pct:76},
+      {name:'Aisha Mohammed',init:'AM',color:'#9B59B6',deals:22,rev:'AED 18.2M',pct:64},
+      {name:'Chen Wei',init:'CW',color:'#E05454',deals:18,rev:'AED 14.9M',pct:52}
+    ],
+    properties: [
+      {rank:1,name:'Burj Vista, Tower 1 — 3BR',district:'Downtown',type:'Apartment',status:'sold',value:'AED 4,250,000'},
+      {rank:2,name:'The Opus by Zaha Hadid — Office',district:'Business Bay',type:'Office',status:'leased',value:'AED 380,000/yr'},
+      {rank:3,name:'Palm Jumeirah Signature Villa',district:'Palm Jumeirah',type:'Villa',status:'sold',value:'AED 22,800,000'},
+      {rank:4,name:'Marina Gate 2 — 2BR',district:'Dubai Marina',type:'Apartment',status:'available',value:'AED 2,100,000'},
+      {rank:5,name:'DIFC — Grade A Office Suite',district:'DIFC',type:'Office',status:'leased',value:'AED 950,000/yr'},
+      {rank:6,name:'Arabian Ranches 3 — 4BR Villa',district:'Arabian Ranches',type:'Villa',status:'reserved',value:'AED 7,400,000'},
+      {rank:7,name:'JLT Cluster J — 1BR Studio',district:'JLT',type:'Apartment',status:'sold',value:'AED 780,000'},
+      {rank:8,name:'Al Noor Properties South — Townhouse 3BR',district:'Dubai South',type:'Townhouse',status:'available',value:'AED 1,850,000'},
+      {rank:9,name:'Creek Harbour — Penthouse 5BR',district:'Creek Harbour',type:'Penthouse',status:'sold',value:'AED 18,500,000'},
+      {rank:10,name:'Sobha Hartland — 2BR Apt',district:'MBR City',type:'Apartment',status:'leased',value:'AED 220,000/yr'}
+    ]
+  }
+};
+
+// ════════════════════════════════════════════════════
+// BUSINESS IMPACT LAYER — Quarter Data
+// ════════════════════════════════════════════════════
+var impactData = {
+  Q1: {
+    subtitle: 'Revenue leakage, missed opportunities & projected recovery for Q1 2024',
+    alerts: [
+      {
+        type: 'danger', icon: '🔴',
+        text: '<b>High days-on-market in JLT & Dubai Marina</b> — avg 38 days vs 22-day market benchmark → listings ageing out of buyer interest.',
+        loss: '− AED 2.1M estimated quarterly revenue drag', lossClass: 'red',
+        tag: 'Revenue Drag', tagClass: 'tag-danger'
+      },
+      {
+        type: 'warning', icon: '🟡',
+        text: '<b>Townhouse segment underrepresented</b> — only 13% of portfolio vs 19% market demand share → missing mid-tier family buyer segment.',
+        loss: '~ AED 1.4M untapped segment revenue', lossClass: 'amber',
+        tag: 'Portfolio Gap', tagClass: 'tag-warning'
+      },
+      {
+        type: 'opportunity', icon: '🟢',
+        text: '<b>Indian & Pakistani buyer demand surging in Q1</b> — combined 47% of buyers yet only 31% of listings marketed in relevant channels.',
+        loss: '+ AED 3.8M opportunity if channel-aligned', lossClass: 'green',
+        tag: 'Growth Opportunity', tagClass: 'tag-opportunity'
+      },
+      {
+        type: 'danger', icon: '🔴',
+        text: '<b>Conversion rate at 38%</b> — 6 pts below Q4 2023 benchmark → ~34 leads/month converting below potential.',
+        loss: '− AED 1.6M from below-benchmark conversion', lossClass: 'red',
+        tag: 'Conversion Loss', tagClass: 'tag-danger'
+      }
+    ],
+    ifFixed: {
+      label: 'Projected Q1 Recovery',
+      metrics: [
+        { label: 'Sales Increase', val: '+10–14%', bar: 62 },
+        { label: 'Listing Age Reduction', val: '−65%', bar: 65 },
+        { label: 'Lead Conversion Lift', val: '+5–7 pts', bar: 55 },
+        { label: 'Avg Deal Size Growth', val: '+AED 28K', bar: 48 }
+      ],
+      timeline: '<b>14-day action window:</b> Re-target JLT & Marina pricing, add townhouse listings, activate South Asian buyer campaigns.'
+    },
+    totals: { risk: 'AED 3.7M', upside: 'AED 3.8M', net: 'AED +0.1M' }
+  },
+  Q2: {
+    subtitle: 'Revenue leakage, missed opportunities & projected recovery for Q2 2024',
+    alerts: [
+      {
+        type: 'danger', icon: '🔴',
+        text: '<b>Office leasing pipeline thin</b> — only 17% of portfolio is office yet DIFC & Business Bay occupancy demand up 24% YoY.',
+        loss: '− AED 2.8M in uncaptured leasing revenue', lossClass: 'red',
+        tag: 'Pipeline Gap', tagClass: 'tag-danger'
+      },
+      {
+        type: 'warning', icon: '🟡',
+        text: '<b>28-day avg days on market</b> — 6 days above optimal → each extra day costs AED ~14K per unsold unit in opportunity cost.',
+        loss: '~ AED 1.9M quarterly opportunity cost', lossClass: 'amber',
+        tag: 'Velocity Risk', tagClass: 'tag-warning'
+      },
+      {
+        type: 'opportunity', icon: '🟢',
+        text: '<b>Chinese buyer share growing to 13%</b> — Mandarin-language listings and targeted digital outreach not yet deployed.',
+        loss: '+ AED 4.2M reachable with localised marketing', lossClass: 'green',
+        tag: 'Buyer Segment', tagClass: 'tag-opportunity'
+      },
+      {
+        type: 'opportunity', icon: '🟢',
+        text: '<b>Palm Jumeirah demand at 95% heat</b> — only 3 active listings in top-demand zone; waitlist buyers going to competitors.',
+        loss: '+ AED 6.1M if 2–3 new Palm listings activated', lossClass: 'green',
+        tag: 'Inventory Shortage', tagClass: 'tag-opportunity'
+      }
+    ],
+    ifFixed: {
+      label: 'Projected Q2 Recovery',
+      metrics: [
+        { label: 'Sales Increase', val: '+13–17%', bar: 75 },
+        { label: 'Office Leasing Revenue Uplift', val: '+AED 2.1M', bar: 70 },
+        { label: 'Days-on-Market Reduction', val: '−5 days', bar: 60 },
+        { label: 'New Buyer Segment Revenue', val: '+AED 1.8M', bar: 52 }
+      ],
+      timeline: '<b>14-day action window:</b> Add Palm listings, launch Mandarin outreach, onboard 2 office properties in DIFC corridor.'
+    },
+    totals: { risk: 'AED 4.7M', upside: 'AED 10.3M', net: 'AED +5.6M' }
+  },
+  Q3: {
+    subtitle: 'Revenue leakage, missed opportunities & projected recovery for Q3 2024',
+    alerts: [
+      {
+        type: 'danger', icon: '🔴',
+        text: '<b>Penthouse category thinning</b> — 7% of type mix but demand index at all-time high; 4 qualified HNW buyers in pipeline with no matched stock.',
+        loss: '− AED 5.2M in unmatched HNW transactions', lossClass: 'red',
+        tag: 'Inventory Mismatch', tagClass: 'tag-danger'
+      },
+      {
+        type: 'warning', icon: '🟡',
+        text: '<b>Agent performance spread widening</b> — top agent closes 30 deals vs bottom agent 16; no mentoring or re-routing of warm leads.',
+        loss: '~ AED 2.4M lost to inefficient lead distribution', lossClass: 'amber',
+        tag: 'Team Efficiency', tagClass: 'tag-warning'
+      },
+      {
+        type: 'danger', icon: '🔴',
+        text: '<b>Business Bay avg sqft price at AED 2,680</b> — 8% below comparable Q3 market rate; underpricing reducing gross margin.',
+        loss: '− AED 1.8M from below-market pricing', lossClass: 'red',
+        tag: 'Pricing Gap', tagClass: 'tag-danger'
+      },
+      {
+        type: 'opportunity', icon: '🟢',
+        text: '<b>MBR City & Creek Harbour emerging zones</b> — YoY appreciation 18–22% but only 2 active listings; early-mover advantage window open.',
+        loss: '+ AED 7.4M if 4–5 listings added in emerging zones', lossClass: 'green',
+        tag: 'Emerging Zone', tagClass: 'tag-opportunity'
+      }
+    ],
+    ifFixed: {
+      label: 'Projected Q3 Recovery',
+      metrics: [
+        { label: 'Sales Increase', val: '+11–15%', bar: 68 },
+        { label: 'Pricing Margin Recovery', val: '+AED 1.4M', bar: 58 },
+        { label: 'HNW Conversion Improvement', val: '+3 deals', bar: 72 },
+        { label: 'Emerging Zone Revenue', val: '+AED 4.2M', bar: 80 }
+      ],
+      timeline: '<b>14-day action window:</b> Source 2 penthouse listings, reprice Business Bay portfolio, assign top leads to top 2 agents.'
+    },
+    totals: { risk: 'AED 7.0M', upside: 'AED 7.4M', net: 'AED +0.4M' }
+  },
+  Q4: {
+    subtitle: 'Revenue leakage, missed opportunities & projected recovery for Q4 2024',
+    alerts: [
+      {
+        type: 'danger', icon: '🔴',
+        text: '<b>JLT & Dubai Marina listings priced 30% below Palm benchmark</b> — 5 active listings below comparable comps → direct margin erosion on every deal.',
+        loss: '− AED 3.2M estimated quarterly revenue loss', lossClass: 'red',
+        tag: 'Pricing Risk', tagClass: 'tag-danger'
+      },
+      {
+        type: 'warning', icon: '🟡',
+        text: '<b>Viewing-to-offer drop-off at 50%</b> — 920 viewings but only 462 offers made → property presentation or lead qualifier gap at viewing stage.',
+        loss: '~ AED 2.6M from below-conversion viewings', lossClass: 'amber',
+        tag: 'Funnel Leak', tagClass: 'tag-warning'
+      },
+      {
+        type: 'danger', icon: '🔴',
+        text: '<b>2 high-value units in "Reserved" for 40+ days</b> — Arabian Ranches (AED 7.4M) + Dubai South (AED 1.85M) with no signed contracts blocking new intake.',
+        loss: '− AED 9.25M in locked-up inventory', lossClass: 'red',
+        tag: 'Inventory Lock', tagClass: 'tag-danger'
+      },
+      {
+        type: 'opportunity', icon: '🟢',
+        text: '<b>Russian & British buyers combined at 32% of demand</b> — EU-facing campaigns and off-plan project marketing not yet activated for Q4 peak season.',
+        loss: '+ AED 8.4M potential from targeted EU buyer outreach', lossClass: 'green',
+        tag: 'Buyer Opportunity', tagClass: 'tag-opportunity'
+      }
+    ],
+    ifFixed: {
+      label: 'Projected Q4 Recovery',
+      metrics: [
+        { label: 'Sales Revenue Increase', val: '+12–18%', bar: 80 },
+        { label: 'Inventory Lock-Up Reduction', val: '−80%', bar: 80 },
+        { label: 'Viewing-to-Offer Conversion Lift', val: '+8–10 pts', bar: 65 },
+        { label: 'EU Buyer Revenue Capture', val: '+AED 4.8M', bar: 72 }
+      ],
+      timeline: '<b>14-day action window:</b> Re-price JLT & Marina comps, resolve 2 stalled reservations, launch EU buyer peak-season campaign.'
+    },
+    totals: { risk: 'AED 15.05M', upside: 'AED 8.4M', net: 'AED +1.2M' }
+  }
+};
+
+// ── BUILD IMPACT LAYER ──
+function buildImpact(q){
+  q = q || activeQ;
+  var d = impactData[q];
+
+  document.getElementById('impactSub').textContent = d.subtitle;
+  document.getElementById('impactBadgeQ').textContent = q + ' Alert';
+  document.getElementById('ifFixedLabel').textContent = d.ifFixed.label;
+
+  // Alerts
+  var alertsEl = document.getElementById('impactAlertsList');
+  alertsEl.innerHTML = '';
+  d.alerts.forEach(function(a){
+    alertsEl.innerHTML +=
+      '<div class="impact-alert '+a.type+'">'
+        +'<div class="impact-alert-icon">'+a.icon+'</div>'
+        +'<div class="impact-alert-body">'
+          +'<div class="impact-alert-text">'+a.text+'</div>'
+          +'<div class="impact-loss '+a.lossClass+'">'+a.loss+'</div>'
+          +'<span class="impact-alert-tag '+a.tagClass+'">'+a.tag+'</span>'
+        +'</div>'
+      +'</div>';
+  });
+
+  // If-Fixed metrics
+  var metricsEl = document.getElementById('ifFixedMetrics');
+  metricsEl.innerHTML = '';
+  d.ifFixed.metrics.forEach(function(m){
+    metricsEl.innerHTML +=
+      '<div>'
+        +'<div class="ifm-row">'
+          +'<span class="ifm-label">'+m.label+'</span>'
+          +'<span class="ifm-val">'+m.val+'</span>'
+        +'</div>'
+        +'<div class="ifm-bar-wrap"><div class="ifm-bar" style="width:'+m.bar+'%"></div></div>'
+      +'</div>';
+  });
+
+  // Timeline text
+  document.getElementById('fixTimelineText').innerHTML = d.ifFixed.timeline;
+
+  // Totals row
+  document.getElementById('itcRisk').textContent   = d.totals.risk;
+  document.getElementById('itcUpside').textContent = d.totals.upside;
+  document.getElementById('itcNet').textContent    = d.totals.net;
+}
+
+// ════════════════════════════════════════════════════
+// ACTIVE QUARTER STATE
+// ════════════════════════════════════════════════════
+var activeQ = 'Q4';
+
+// ── THEME ──
+function toggleTheme(){
+  var h=document.documentElement,d=h.getAttribute('data-theme')==='dark';
+  h.setAttribute('data-theme',d?'light':'dark');
+  document.getElementById('themeBtn').textContent=d?'🌙':'☀️';
+  setTimeout(function(){ buildCharts(activeQ); },50);
+}
+
+// ── CHART DEFAULTS ──
+function chartColors(){
+  var d=document.documentElement.getAttribute('data-theme')==='dark';
+  return{
+    text:d?'#9AA3B2':'#5C5245',
+    grid:d?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.06)',
+    bg:d?'#0F1A2E':'#FFFFFF'
+  };
+}
+Chart.defaults.font.family="'DM Sans',system-ui,sans-serif";
+
+// ════════════════════════════════════════════════════
+// setPeriod — MASTER UPDATE FUNCTION
+// ════════════════════════════════════════════════════
+function setPeriod(q, btn){
+  // Update active button
+  document.querySelectorAll('.pb').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  activeQ = q;
+
+  var d = quarterData[q];
+
+  // ── Page subtitle ──
+  document.getElementById('pageSub').textContent = d.label + ' · Dubai & UAE Market · All figures in AED';
+
+  // ── KPIs ──
+  var kpi = d.kpis;
+  document.getElementById('kv1').textContent = kpi.rev;
+  document.getElementById('kv2').textContent = kpi.units;
+  document.getElementById('kv3').textContent = kpi.listings;
+  document.getElementById('kv4').textContent = kpi.dom;
+  document.getElementById('kv5').textContent = kpi.deal;
+  document.getElementById('kv6').textContent = kpi.conv;
+
+  // KPI deltas — reset classes then set
+  function setDelta(id, text, cls){
+    var el = document.getElementById(id);
+    el.textContent = text;
+    el.className = 'kpi-delta ' + cls;
+  }
+  setDelta('kd1', kpi.revDelta,   kpi.revClass);
+  setDelta('kd2', kpi.unitsDelta, kpi.unitsClass);
+  setDelta('kd3', kpi.listDelta,  kpi.listClass);
+  setDelta('kd4', kpi.domDelta,   kpi.domClass);
+  setDelta('kd5', kpi.dealDelta,  kpi.dealClass);
+  setDelta('kd6', kpi.convDelta,  kpi.convClass);
+
+  // ── Mini KPIs below revenue chart ──
+  document.getElementById('mk1').textContent = 'AED ' + kpi.rev;
+  document.getElementById('mk1lbl').textContent = q + ' Revenue';
+  document.getElementById('mk2').textContent = d.prevRev;
+  // Previous quarter label
+  var prevQMap = {Q1:'Q4 2023', Q2:'Q1', Q3:'Q2', Q4:'Q3'};
+  document.getElementById('mk2lbl').textContent = prevQMap[q] + ' Revenue';
+  document.getElementById('mk3').textContent = d.growth;
+
+  // ── Card badges ──
+  document.getElementById('typeBadge').textContent = q + ' Mix';
+  document.getElementById('agentBadge').textContent = q + ' Ranking';
+  document.getElementById('funnelBadge').textContent = q;
+
+  // ── Rebuild all visuals ──
+  buildTable('all', q);
+  buildAgents(q);
+  buildFunnel(q);
+  buildDistricts(q);
+  buildCharts(q);
+  buildImpact(q);
+}
+
+// ── BUILD TABLE ──
+function buildTable(filter, q){
+  q = q || activeQ;
+  var props = quarterData[q].properties;
+  var body = document.getElementById('propBody');
+  body.innerHTML = '';
+  props.forEach(function(p, i){
+    if(filter && filter !== 'all' && p.status !== filter) return;
+    var sc = {sold:'st-sold',leased:'st-leased',available:'st-available',reserved:'st-reserved'}[p.status];
+    var sl = {sold:'Sold',leased:'Leased',available:'Available',reserved:'Reserved'}[p.status];
+    body.innerHTML += '<tr>'
+      + '<td><span class="rank-num'+(i===0?' g':'')+'">'+p.rank+'</span></td>'
+      + '<td class="prop-name">'+p.name+'</td>'
+      + '<td style="font-size:.78rem;color:var(--text3);">'+p.district+'</td>'
+      + '<td style="font-size:.78rem;">'+p.type+'</td>'
+      + '<td><span class="status-pill '+sc+'">'+sl+'</span></td>'
+      + '<td class="prop-aed">'+p.value+'</td>'
+      + '</tr>';
+  });
+}
+function filterTable(){
+  buildTable(document.getElementById('statusFilter').value, activeQ);
+}
+
+// ── BUILD AGENTS ──
+function buildAgents(q){
+  q = q || activeQ;
+  var agts = quarterData[q].agents;
+  var el = document.getElementById('agentList');
+  el.innerHTML = '';
+  agts.forEach(function(a, i){
+    el.innerHTML += '<div class="agent-row">'
+      + '<div class="agent-avatar" style="background:'+a.color+'22;color:'+a.color+';">'+a.init+'</div>'
+      + '<div style="flex:1;">'
+        + '<div class="agent-name">'+(i===0?'🥇 ':i===1?'🥈 ':i===2?'🥉 ':'')+a.name+'</div>'
+        + '<div class="agent-deals">'+a.deals+' deals closed</div>'
+        + '<div class="agent-bar-wrap"><div class="agent-bar-track"><div class="agent-bar-fill" style="width:'+a.pct+'%;background:linear-gradient(90deg,'+a.color+','+a.color+'88);"></div></div></div>'
+      + '</div>'
+      + '<div class="agent-rev">'+a.rev+'</div>'
+      + '</div>';
+  });
+}
+
+// ── BUILD FUNNEL ──
+function buildFunnel(q){
+  q = q || activeQ;
+  var funnelData = quarterData[q].funnel;
+  var el = document.getElementById('funnelWrap');
+  el.innerHTML = '';
+  funnelData.forEach(function(f){
+    el.innerHTML += '<div class="funnel-step">'
+      + '<div class="funnel-label">'+f.label+'</div>'
+      + '<div class="funnel-track"><div class="funnel-fill" style="width:'+f.pct+'%;background:linear-gradient(90deg,'+f.color+','+f.color+'aa);">'+f.count+'</div></div>'
+      + '<div class="funnel-count">'+f.count+'</div>'
+      + '</div>';
+  });
+}
+
+// ── BUILD DISTRICTS ──
+function buildDistricts(q){
+  q = q || activeQ;
+  var dists = quarterData[q].districts;
+  var el = document.getElementById('districtGrid');
+  el.innerHTML = '';
+  dists.forEach(function(d){
+    el.innerHTML += '<div class="district-card">'
+      + '<div class="dc-name">'+d.name+'</div>'
+      + '<div class="dc-val">'+d.val+'</div>'
+      + '<div class="dc-sub">AED / sqft</div>'
+      + '<div class="dc-heat" style="width:'+d.heat+'%;"></div>'
+      + '</div>';
+  });
+}
+
+// ── CHARTS ──
+var charts = {};
+function destroyAll(){
+  Object.values(charts).forEach(function(c){ if(c) c.destroy(); });
+  charts = {};
+}
+
+function buildCharts(q){
+  q = q || activeQ;
+  destroyAll();
+  var cc = chartColors();
+  var d = quarterData[q];
+
+  // Revenue + Units
+  charts.rev = new Chart(document.getElementById('revenueChart'),{
+    type:'bar',
+    data:{
+      labels: d.months,
+      datasets:[
+        {label:'Revenue (AED M)', data:d.revenue, backgroundColor:['rgba(201,168,76,0.75)','rgba(201,168,76,0.85)','rgba(201,168,76,1)'], borderRadius:6, yAxisID:'y'},
+        {label:'Units', data:d.units, type:'line', borderColor:'#0EA5A0', backgroundColor:'rgba(14,165,160,0.1)', pointBackgroundColor:'#0EA5A0', pointRadius:5, borderWidth:2.5, fill:true, tension:.4, yAxisID:'y2'}
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:true,
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{display:true,labels:{color:cc.text,font:{size:11},boxWidth:12,padding:16}},
+        tooltip:{callbacks:{label:function(c){return c.dataset.yAxisID==='y'?' AED '+c.raw+'M':' '+c.raw+' units';}}}
+      },
+      scales:{
+        x:{grid:{color:cc.grid},ticks:{color:cc.text}},
+        y:{grid:{color:cc.grid},ticks:{color:cc.text,callback:function(v){return 'AED '+v+'M';}},position:'left'},
+        y2:{grid:{display:false},ticks:{color:'#0EA5A0'},position:'right'}
+      }
+    }
+  });
+
+  // Property Type Doughnut
+  charts.type = new Chart(document.getElementById('typeChart'),{
+    type:'doughnut',
+    data:{labels:d.typeData.labels, datasets:[{data:d.typeData.values, backgroundColor:d.typeData.colors, borderWidth:0, hoverOffset:8}]},
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      cutout:'68%',
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:function(c){return ' '+c.label+': '+c.raw+'%';}}}
+      }
+    }
+  });
+  // Type Legend
+  var leg = document.getElementById('typeLegend');
+  leg.innerHTML = '';
+  d.typeData.labels.forEach(function(l, i){
+    leg.innerHTML += '<div style="display:flex;align-items:center;justify-content:space-between;">'
+      + '<div style="display:flex;align-items:center;gap:8px;">'
+        + '<div style="width:10px;height:10px;border-radius:3px;background:'+d.typeData.colors[i]+';flex-shrink:0;"></div>'
+        + '<span style="font-size:.78rem;color:var(--text2);">'+l+'</span>'
+      + '</div>'
+      + '<span style="font-size:.78rem;font-weight:600;color:var(--text);">'+d.typeData.values[i]+'%</span>'
+      + '</div>';
+  });
+
+  // Nationality Horizontal Bar
+  charts.nat = new Chart(document.getElementById('natChart'),{
+    type:'bar',
+    data:{
+      labels: d.natData.labels,
+      datasets:[{
+        data: d.natData.values,
+        backgroundColor:['rgba(201,168,76,0.8)','rgba(14,165,160,0.8)','rgba(42,111,219,0.8)','rgba(224,84,84,0.8)','rgba(46,204,128,0.8)','rgba(155,89,182,0.8)'],
+        borderRadius:6
+      }]
+    },
+    options:{
+      indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' '+c.raw+'% of buyers';}}}},
+      scales:{
+        x:{grid:{color:cc.grid},ticks:{color:cc.text,callback:function(v){return v+'%'}},max:40},
+        y:{grid:{display:false},ticks:{color:cc.text,font:{size:11}}}
+      }
+    }
+  });
+
+  // YoY Bar — highlight active quarter column
+  var yoyHighlight = {Q1:0, Q2:1, Q3:2, Q4:3};
+  var activeIdx = yoyHighlight[q];
+  var yoy22 = [58,62,71,68];
+  var yoy23 = [74,81,88,95];
+  var yoy24 = [92,104,120,143];
+
+  // Build per-bar colors with highlight on active quarter
+  function yoyColors(base, alpha, activeAlpha){
+    return ['Q1','Q2','Q3','Q4'].map(function(_, i){
+      return i === activeIdx
+        ? base.replace('XX', activeAlpha)
+        : base.replace('XX', alpha);
+    });
+  }
+
+  charts.yoy = new Chart(document.getElementById('yoyChart'),{
+    type:'bar',
+    data:{
+      labels:['Q1','Q2','Q3','Q4'],
+      datasets:[
+        {label:'2022', data:yoy22, backgroundColor:['Q1','Q2','Q3','Q4'].map(function(_,i){ return i===activeIdx?'rgba(255,255,255,0.22)':'rgba(255,255,255,0.08)';}), borderRadius:5},
+        {label:'2023', data:yoy23, backgroundColor:['Q1','Q2','Q3','Q4'].map(function(_,i){ return i===activeIdx?'rgba(14,165,160,0.9)':'rgba(14,165,160,0.45)';}), borderRadius:5},
+        {label:'2024', data:yoy24, backgroundColor:['Q1','Q2','Q3','Q4'].map(function(_,i){ return i===activeIdx?'rgba(201,168,76,1)':'rgba(201,168,76,0.5)';}), borderRadius:5}
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:cc.text,font:{size:11},boxWidth:12}}},
+      scales:{
+        x:{grid:{color:cc.grid},ticks:{color:cc.text}},
+        y:{grid:{color:cc.grid},ticks:{color:cc.text,callback:function(v){return 'AED '+v+'M';}}}
+      }
+    }
+  });
+}
+
+// ── SCROLL ANIMATION ──
+(function(){
+  if(!('IntersectionObserver' in window)) return;
+  var io = new IntersectionObserver(function(e){
+    e.forEach(function(x){ if(x.isIntersecting){ x.target.classList.add('visible'); io.unobserve(x.target); } });
+  },{threshold:0.05});
+  document.querySelectorAll('.fade-up').forEach(function(el, i){
+    el.style.transitionDelay = (i * 0.07) + 's';
+    io.observe(el);
+  });
+})();
+
+// ── INIT (default Q4) ──
+buildTable('all', 'Q4');
+buildAgents('Q4');
+buildFunnel('Q4');
+buildDistricts('Q4');
+buildCharts('Q4');
+buildImpact('Q4');
+</script>
+</body>
+</html>

@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Al Baraka Freight — Logistics & Freight Forwarding Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --gold:#C9A84C;--gold-light:#E2C46A;
+  --gold-pale:rgba(201,168,76,0.12);--gold-border:rgba(201,168,76,0.25);
+  --bg:#060D16;--bg2:#0A1520;--bg3:#0F1E2E;
+  --card:#0C1828;--card2:#102034;
+  --text:#ECE7DC;--text2:#8896A8;--text3:#404F62;
+  --green:#22C55E;--green-pale:rgba(34,197,94,0.12);
+  --teal:#06B6D4;--teal-pale:rgba(6,182,212,0.12);
+  --amber:#F59E0B;--amber-pale:rgba(245,158,11,0.12);
+  --red:#EF4444;--red-pale:rgba(239,68,68,0.12);
+  --blue:#3B82F6;--blue-pale:rgba(59,130,246,0.12);
+  --purple:#A78BFA;--purple-pale:rgba(167,139,250,0.12);
+  --border:rgba(255,255,255,0.055);
+  --shadow:0 4px 36px rgba(0,0,0,0.5);
+  --shadow-gold:0 0 44px rgba(201,168,76,0.10);
+  --radius:14px;
+}
+[data-theme="light"]{
+  --bg:#EFF3F8;--bg2:#E4EAF2;--bg3:#D8E1EC;
+  --card:#FFFFFF;--card2:#F4F7FB;
+  --text:#0C1420;--text2:#3A4A5C;--text3:#8090A4;
+  --border:rgba(0,0,0,0.07);
+  --shadow:0 4px 24px rgba(0,0,0,0.10);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{'scroll-behavior':smooth;}
+body{'font-family':'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  'background-image':url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Crect x='2' y='2' width='76' height='76' fill='none' stroke='%23C9A84C' stroke-width='0.3' opacity='0.035'/%3E%3Cline x1='40' y1='2' x2='40' y2='78' stroke='%23C9A84C' stroke-width='0.2' opacity='0.025'/%3E%3Cline x1='2' y1='40' x2='78' y2='40' stroke='%23C9A84C' stroke-width='0.2' opacity='0.025'/%3E%3C/svg%3E");
+}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:var(--bg2);}
+::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px;}
+
+/* ── HEADER ── */
+header{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(6,13,22,0.94);backdrop-filter:blur(20px);
+  'border-bottom':1px solid var(--gold-border);height:62px;
+}
+[data-theme="light"] header{background:rgba(239,243,248,0.96);}
+.header-inner{'max-width':1480px;margin:0 auto;padding:0 28px;height:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.logo{'font-family':'Cormorant Garamond',Georgia,serif;font-size:1.22rem;font-weight:700;color:var(--text);display:flex;align-items:center;gap:10px;letter-spacing:.02em;white-space:nowrap;}
+.logo-mark{width:30px;height:30px;background:linear-gradient(135deg,var(--gold),var(--gold-light));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;color:#060A00;flex-shrink:0;}
+.logo span{color:var(--gold);}
+.header-center{display:flex;align-items:center;gap:8px;}
+.hselect{background:var(--card);border:1px solid var(--border);color:var(--text);padding:6px 14px;border-radius:8px;font-size:.8rem;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;}
+.hselect:focus{outline:none;border-color:var(--gold-border);}
+.period-btns{display:flex;gap:4px;}
+.pb{background:none;border:1px solid var(--border);color:var(--text2);padding:5px 14px;border-radius:7px;font-size:.78rem;font-weight:500;cursor:pointer;transition:.2s;font-family:inherit;}
+.pb:hover,.pb.active{background:var(--gold-pale);border-color:var(--gold-border);color:var(--gold);}
+.header-right{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.live-badge{display:flex;align-items:center;gap:7px;background:rgba(34,197,94,0.10);border:1px solid rgba(34,197,94,0.22);color:var(--green);padding:5px 14px;border-radius:50px;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;}
+.live-dot{width:7px;height:7px;background:var(--green);border-radius:50%;animation:lv 2s infinite;}
+@keyframes lv{0%,100%{opacity:1;}50%{opacity:.25;}}
+.theme-toggle{background:none;border:1px solid var(--border);color:var(--text2);width:34px;height:34px;border-radius:8px;cursor:pointer;font-size:.9rem;transition:.2s;}
+.theme-toggle:hover{'border-color':var(--gold-border);color:var(--gold);}
+
+/* ── PAGE ── */
+.page{'max-width':1480px;margin:0 auto;padding:80px 28px 44px;position:relative;z-index:1;}
+
+/* ── TICKER ── */
+.ticker-wrap{background:var(--card);border:1px solid var(--gold-border);border-radius:10px;padding:11px 20px;margin-bottom:22px;display:flex;align-items:center;gap:16px;overflow:hidden;}
+.ticker-label{'font-size':.67rem;font-weight:700;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;flex-shrink:0;}
+.ticker-scroll{flex:1;overflow:hidden;}
+.ticker-track{display:flex;gap:40px;animation:tick 38s linear infinite;white-space:nowrap;}
+@keyframes tick{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.tick-item{display:inline-flex;align-items:center;gap:7px;font-size:.77rem;color:var(--text2);flex-shrink:0;}
+.tick-item b{color:var(--text);}
+.tick-item .ok{color:var(--green);}
+.tick-item .warn{color:var(--amber);}
+.tick-item .crit{color:var(--red);}
+
+/* ── PAGE HEADER ── */
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:26px;flex-wrap:wrap;gap:14px;}
+.page-title{'font-family':'Cormorant Garamond',Georgia,serif;font-size:clamp(1.55rem,3vw,2.3rem);font-weight:700;line-height:1.15;letter-spacing:.01em;}
+.page-title span{color:var(--gold);}
+.page-sub{color:var(--text2);font-size:.86rem;margin-top:5px;line-height:1.5;}
+.updated{display:flex;align-items:center;gap:7px;font-size:.73rem;color:var(--text3);background:var(--card);border:1px solid var(--border);padding:8px 16px;border-radius:8px;white-space:nowrap;}
+.updated b{color:var(--text2);}
+
+/* ── KPI STRIP ── */
+.kpi-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:14px;margin-bottom:22px;}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;position:relative;overflow:hidden;transition:.3s;cursor:default;}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),transparent);opacity:0;transition:.3s;}
+.kpi:hover{'border-color':var(--gold-border);box-shadow:var(--shadow-gold);}
+.kpi:hover::before{opacity:1;}
+.kpi-icon{'font-size':1.25rem;margin-bottom:8px;}
+.kpi-label{'font-size':.69rem;color:var(--text3);font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px;}
+.kpi-value{'font-family':'Cormorant Garamond',Georgia,serif;font-size:1.85rem;font-weight:700;line-height:1;color:var(--text);}
+.kpi-value .unit{'font-size':.9rem;color:var(--gold);margin-right:3px;}
+.kpi-delta{display:inline-flex;align-items:center;gap:4px;font-size:.71rem;font-weight:700;margin-top:7px;padding:3px 8px;border-radius:50px;}
+.kpi-delta.up{background:var(--green-pale);color:var(--green);}
+.kpi-delta.down{background:var(--red-pale);color:var(--red);}
+.kpi-delta.neutral{background:var(--gold-pale);color:var(--gold);}
+.kpi-delta.warn{background:var(--amber-pale);color:var(--amber);}
+
+/* ── PORT FOCUS BANNER ── */
+.port-banner{
+  display:none;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;
+  background:linear-gradient(135deg,rgba(59,130,246,0.07),rgba(59,130,246,0.03));
+  border:1px solid rgba(59,130,246,0.25);border-radius:12px;padding:16px 22px;margin-bottom:18px;
+}
+.port-banner-stats{display:flex;gap:24px;flex-wrap:wrap;align-items:center;}
+.pbs-val{'font-family':'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;color:var(--blue);}
+.pbs-lbl{'font-size':.67rem;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;}
+
+/* ── GRIDS ── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px;}
+.grid-3{display:grid;grid-template-columns:1.7fr 1fr 1fr;gap:18px;margin-bottom:18px;}
+.grid-side{display:grid;grid-template-columns:2fr 1fr;gap:18px;margin-bottom:18px;}
+.grid-3b{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-bottom:18px;}
+@media(max-width:1100px){.grid-3,.grid-side,.grid-3b{'grid-template-columns':1fr 1fr;}}
+@media(max-width:700px){.grid-2,.grid-3,.grid-side,.grid-3b{'grid-template-columns':1fr;}}
+
+/* ── CARD ── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);transition:.2s;}
+.card:hover{'border-color':rgba(201,168,76,0.14);}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.card-title{'font-family':'Cormorant Garamond',Georgia,serif;font-size:1.04rem;font-weight:700;letter-spacing:.01em;}
+.badge{'font-size':.68rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:4px 12px;border-radius:50px;}
+.badge-gold{background:var(--gold-pale);color:var(--gold);border:1px solid var(--gold-border);}
+.badge-teal{background:var(--teal-pale);color:var(--teal);border:1px solid rgba(6,182,212,0.22);}
+.badge-green{background:var(--green-pale);color:var(--green);border:1px solid rgba(34,197,94,0.22);}
+.badge-red{background:var(--red-pale);color:var(--red);border:1px solid rgba(239,68,68,0.22);}
+.badge-blue{background:var(--blue-pale);color:var(--blue);border:1px solid rgba(59,130,246,0.22);}
+.badge-amber{background:var(--amber-pale);color:var(--amber);border:1px solid rgba(245,158,11,0.22);}
+.badge-purple{background:var(--purple-pale);color:var(--purple);border:1px solid rgba(167,139,250,0.22);}
+
+/* ── CHART ── */
+.chart-wrap canvas{'max-height':260px;}
+.chart-wrap.tall canvas{'max-height':310px;}
+
+/* ── SHIPMENT TABLE ── */
+.ship-table{width:100%;border-collapse:collapse;}
+.ship-table th{'font-size':.67rem;font-weight:700;color:var(--text3);letter-spacing:.09em;text-transform:uppercase;padding:0 10px 10px;text-align:left;border-bottom:1px solid var(--border);}
+.ship-table td{padding:9px 10px;font-size:.81rem;color:var(--text2);border-bottom:1px solid rgba(255,255,255,0.03);vertical-align:middle;}
+[data-theme="light"] .ship-table td{'border-bottom-color':rgba(0,0,0,0.04);}
+.ship-table tr:last-child td{'border-bottom':none;}
+.ship-table tr:hover td{background:var(--gold-pale);}
+.ship-id{'font-family':'Cormorant Garamond',serif;font-weight:700;color:var(--gold);font-size:.95rem;}
+.route-arrow{color:var(--text3);}
+.st-pill{display:inline-block;font-size:.65rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:50px;}
+.st-transit{background:var(--blue-pale);color:var(--blue);}
+.st-customs{background:var(--amber-pale);color:var(--amber);}
+.st-delivered{background:var(--green-pale);color:var(--green);}
+.st-delayed{background:var(--red-pale);color:var(--red);}
+.st-warehouse{background:var(--purple-pale);color:var(--purple);}
+
+/* ── CLIENT LEADERBOARD ── */
+.client-list{display:flex;flex-direction:column;gap:10px;}
+.client-row{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;transition:.2s;}
+.client-row:hover{'border-color':var(--gold-border);}
+.client-avatar{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;flex-shrink:0;font-family:'Cormorant Garamond',serif;}
+.client-name{'font-size':.84rem;font-weight:600;color:var(--text);flex:1;}
+.client-meta{'font-size':.72rem;color:var(--text3);margin-top:2px;}
+.client-rev{'font-family':'Cormorant Garamond',serif;font-size:1rem;font-weight:700;color:var(--gold);text-align:right;white-space:nowrap;}
+.client-bar-track{height:3px;background:var(--border);border-radius:2px;margin-top:5px;}
+.client-bar-fill{height:100%;border-radius:2px;}
+
+/* ── CUSTOMS FUNNEL ── */
+.funnel-wrap{display:flex;flex-direction:column;gap:10px;}
+.funnel-row{display:flex;align-items:center;gap:12px;}
+.funnel-label{'font-size':.77rem;color:var(--text2);width:130px;flex-shrink:0;}
+.funnel-track{flex:1;background:var(--bg2);border-radius:4px;height:22px;overflow:hidden;}
+.funnel-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:10px;font-size:.71rem;font-weight:700;color:#fff;}
+.funnel-count{'font-size':.77rem;color:var(--text3);width:50px;text-align:right;flex-shrink:0;}
+
+/* ── WAREHOUSE GRID ── */
+.wh-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.wh-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:13px 11px;text-align:center;transition:.25s;}
+.wh-card:hover{'border-color':var(--gold-border);}
+.wh-icon{'font-size':1.3rem;margin-bottom:5px;}
+.wh-name{'font-size':.69rem;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px;}
+.wh-val{'font-family':'Cormorant Garamond',serif;font-size:1.2rem;font-weight:700;color:var(--text);}
+.wh-bar{height:4px;border-radius:2px;margin-top:6px;}
+.wh-status{'font-size':.64rem;font-weight:700;margin-top:4px;padding:2px 7px;border-radius:50px;}
+.whs-ok{color:var(--green);background:var(--green-pale);}
+.whs-warn{color:var(--amber);background:var(--amber-pale);}
+.whs-full{color:var(--red);background:var(--red-pale);}
+
+/* ── MINI KPI ROW ── */
+.mini-row{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;}
+.mini-kpi{flex:1;min-width:80px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:11px;text-align:center;}
+.mki-val{'font-family':'Cormorant Garamond',serif;font-size:1.3rem;font-weight:700;color:var(--gold);}
+.mki-lbl{'font-size':.65rem;color:var(--text3);margin-top:2px;text-transform:uppercase;letter-spacing:.06em;}
+
+/* ── INCIDENT LIST ── */
+.inc-list{display:flex;flex-direction:column;gap:9px;}
+.inc-row{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;transition:.2s;}
+.inc-row:hover{'border-color':var(--gold-border);}
+.inc-sev{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;}
+.inc-p1{background:var(--red-pale);}
+.inc-p2{background:var(--amber-pale);}
+.inc-p3{background:var(--blue-pale);}
+.inc-loc{'font-size':.83rem;font-weight:600;color:var(--text);flex:1;}
+.inc-desc{'font-size':.72rem;color:var(--text3);margin-top:2px;}
+.inc-eta{'font-size':.73rem;font-weight:700;color:var(--gold);white-space:nowrap;}
+
+/* ── WATERMARK ── */
+.watermark{'text-align':center;padding:24px 0 0;font-size:.74rem;color:var(--text3);display:flex;align-items:center;justify-content:center;gap:6px;}
+.watermark a{color:var(--gold);text-decoration:none;font-weight:600;font-family:'Cormorant Garamond',serif;font-size:.9rem;}
+.watermark a:hover{'text-decoration':underline;}
+
+/* ── FADE UP ── */
+.fade-up{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease;}
+.fade-up.visible{opacity:1;transform:translateY(0);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-mark">🚢</div>
+      Al Baraka <span>Freight</span> &nbsp;·&nbsp; Logistics Intelligence
+    </div>
+    <div class="header-center">
+      <select class="hselect" id="portSelect" onchange="filterPort()">
+        <option value="all">All Ports & Free Zones</option>
+        <option value="jafza">Jebel Ali Industrial Zone — Jebel Ali</option>
+        <option value="dafza">Dubai Airport Cargo Zone — Al Garhoud</option>
+        <option value="dpc">DPC — Port Rashid</option>
+        <option value="icad">ICAD — Abu Dhabi</option>
+      </select>
+      <div class="period-btns">
+        <button class="pb" onclick="setPeriod('Q1',this)">Q1</button>
+        <button class="pb" onclick="setPeriod('Q2',this)">Q2</button>
+        <button class="pb" onclick="setPeriod('Q3',this)">Q3</button>
+        <button class="pb active" onclick="setPeriod('Q4',this)">Q4</button>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="live-badge"><div class="live-dot"></div>Port Live</div>
+      <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()">🌙</button>
+    </div>
+  </div>
+</header>
+
+<div class="page">
+
+  <!-- TICKER -->
+  <div class="ticker-wrap fade-up">
+    <div class="ticker-label">🚢 Shipment Feed</div>
+    <div class="ticker-scroll">
+      <div class="ticker-track">
+        <span class="tick-item">BL-4821 · Shanghai→Jebel Ali <b>ETA 48h</b> <span class="ok">● On Schedule</span></span>
+        <span class="tick-item">BL-4806 · Rotterdam→Jebel Ali Industrial Zone <b>Customs Cleared</b> <span class="ok">● Released</span></span>
+        <span class="tick-item">BL-4798 · Mumbai→Dubai <b>Delayed 6h</b> <span class="warn">● Port Congestion</span></span>
+        <span class="tick-item">AIR-2241 · Frankfurt→DXB <b>In Transit</b> <span class="ok">● On Time</span></span>
+        <span class="tick-item">BL-4834 · Singapore→Dubai Airport Cargo Zone <b>Customs Hold</b> <span class="crit">● Docs Pending</span></span>
+        <span class="tick-item">Jebel Ali Industrial Zone WH-3 · Utilisation <b>84%</b> <span class="warn">● Near Capacity</span></span>
+        <span class="tick-item">BL-4819 · Karachi→Jebel Ali <b>Delivered</b> <span class="ok">● POD Received</span></span>
+        <span class="tick-item">Q4 TEU Volume <b>28,440</b> <span class="ok">● ↑ 14% vs Q3</span></span>
+        <span class="tick-item">BL-4821 · Shanghai→Jebel Ali <b>ETA 48h</b> <span class="ok">● On Schedule</span></span>
+        <span class="tick-item">BL-4806 · Rotterdam→Jebel Ali Industrial Zone <b>Customs Cleared</b> <span class="ok">● Released</span></span>
+        <span class="tick-item">BL-4798 · Mumbai→Dubai <b>Delayed 6h</b> <span class="warn">● Port Congestion</span></span>
+        <span class="tick-item">AIR-2241 · Frankfurt→DXB <b>In Transit</b> <span class="ok">● On Time</span></span>
+        <span class="tick-item">BL-4834 · Singapore→Dubai Airport Cargo Zone <b>Customs Hold</b> <span class="crit">● Docs Pending</span></span>
+        <span class="tick-item">Jebel Ali Industrial Zone WH-3 · Utilisation <b>84%</b> <span class="warn">● Near Capacity</span></span>
+        <span class="tick-item">BL-4819 · Karachi→Jebel Ali <b>Delivered</b> <span class="ok">● POD Received</span></span>
+        <span class="tick-item">Q4 TEU Volume <b>28,440</b> <span class="ok">● ↑ 14% vs Q3</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PORT FOCUS BANNER -->
+  <div class="port-banner" id="portBanner">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div style="font-size:1.5rem;">🏭</div>
+      <div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:700;color:var(--text);" id="portBannerName">Port / Free Zone</div>
+        <div style="font-size:.74rem;color:var(--text3);">Port Focus Mode · Filtered data for selected facility</div>
+      </div>
+    </div>
+    <div class="port-banner-stats">
+      <div><div class="pbs-val" id="pbTeu">—</div><div class="pbs-lbl">TEU Volume</div></div>
+      <div><div class="pbs-val" id="pbTat">—</div><div class="pbs-lbl">Avg TAT</div></div>
+      <div><div class="pbs-val" id="pbSla" style="color:var(--green)">—</div><div class="pbs-lbl">SLA Score</div></div>
+      <div><div class="pbs-val" id="pbRev" style="color:var(--gold)">—</div><div class="pbs-lbl">Revenue (AED)</div></div>
+    </div>
+    <button onclick="document.getElementById('portSelect').value='all';filterPort();"
+      style="background:var(--blue-pale);border:1px solid rgba(59,130,246,0.25);color:var(--blue);padding:7px 16px;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;">
+      ✕ Clear Filter
+    </button>
+  </div>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header fade-up">
+    <div>
+      <div class="page-title">Logistics & Freight <span>Command</span></div>
+      <div class="page-sub" id="pageSub">Q4 2024 · Oct – Dec · Jebel Ali Industrial Zone · Dubai Airport Cargo Zone · DPC · Shipment, Customs & Warehouse Intelligence</div>
+    </div>
+    <div class="updated"><span>🕐</span> Synced: <b>Today, 07:30 GST</b></div>
+  </div>
+
+  <!-- KPI STRIP -->
+  <div class="kpi-strip fade-up">
+    <div class="kpi">
+      <div class="kpi-icon">📦</div>
+      <div class="kpi-label">Total Shipments</div>
+      <div class="kpi-value"><span id="kv1">1,284</span></div>
+      <div class="kpi-delta up" id="kd1">↑ 14% vs Q3</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-icon">🏗️</div>
+      <div class="kpi-label">TEU Volume</div>
+      <div class="kpi-value"><span id="kv2">28,440</span></div>
+      <div class="kpi-delta up" id="kd2">↑ 9.2% vs Q3</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-icon">⏱️</div>
+      <div class="kpi-label">Avg Customs TAT</div>
+      <div class="kpi-value"><span id="kv3">18</span><span class="unit">hrs</span></div>
+      <div class="kpi-delta up" id="kd3">↓ 3hrs faster</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-icon">✅</div>
+      <div class="kpi-label">Client SLA Score</div>
+      <div class="kpi-value"><span id="kv4">94.6</span><span class="unit">%</span></div>
+      <div class="kpi-delta neutral" id="kd4">Target: 95%</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-icon">💰</div>
+      <div class="kpi-label">Revenue (AED)</div>
+      <div class="kpi-value"><span class="unit">AED</span><span id="kv5">8.4M</span></div>
+      <div class="kpi-delta up" id="kd5">↑ 11.2% vs Q3</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-icon">🚨</div>
+      <div class="kpi-label">Delayed Shipments</div>
+      <div class="kpi-value"><span id="kv6">38</span></div>
+      <div class="kpi-delta down" id="kd6">2.96% delay rate</div>
+    </div>
+  </div>
+
+  <!-- ROW 1: Shipment Volume Chart + Mode Split + Cargo Type -->
+  <div class="grid-3 fade-up">
+
+    <!-- Shipment & Revenue Trend -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Shipment Volume & Revenue Trend</div>
+        <div class="badge badge-gold" id="consBadge">Monthly — Q4</div>
+      </div>
+      <div class="chart-wrap"><canvas id="shipChart"></canvas></div>
+      <div class="mini-row">
+        <div class="mini-kpi"><div class="mki-val" id="miniCurr">1,284</div><div class="mki-lbl" id="miniCurrLbl">Shipments Q4</div></div>
+        <div class="mini-kpi"><div class="mki-val" id="miniPrev">1,126</div><div class="mki-lbl" id="miniPrevLbl">Shipments Q3</div></div>
+        <div class="mini-kpi"><div class="mki-val" id="miniGrowth">+14%</div><div class="mki-lbl">Growth</div></div>
+      </div>
+    </div>
+
+    <!-- Transport Mode Split -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Transport Mode Split</div>
+        <div class="badge badge-teal">Q4 Mix</div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center;height:210px;">
+        <canvas id="modeChart"></canvas>
+      </div>
+      <div id="modeLegend" style="margin-top:10px;display:flex;flex-direction:column;gap:5px;"></div>
+    </div>
+
+    <!-- Cargo Type -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Cargo Category Breakdown</div>
+        <div class="badge badge-blue" id="cargoBadge">Q4</div>
+      </div>
+      <div style="height:230px;"><canvas id="cargoChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- ROW 2: Shipment Table + Alerts -->
+  <div class="grid-side fade-up">
+
+    <!-- Active Shipments -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Active Shipment Pipeline</div>
+        <div style="display:flex;gap:8px;">
+          <select id="statusFilter" onchange="buildShipTable()" style="background:var(--bg2);border:1px solid var(--border);color:var(--text2);padding:5px 10px;border-radius:7px;font-size:.74rem;cursor:pointer;font-family:inherit;">
+            <option value="all">All Status</option>
+            <option value="transit">In Transit</option>
+            <option value="customs">Customs</option>
+            <option value="delivered">Delivered</option>
+            <option value="delayed">Delayed</option>
+            <option value="warehouse">Warehouse</option>
+          </select>
+        </div>
+      </div>
+      <table class="ship-table">
+        <thead>
+          <tr>
+            <th>BL / AWB</th>
+            <th>Origin → Dest.</th>
+            <th>Cargo</th>
+            <th>Mode</th>
+            <th>Status</th>
+            <th>ETA / POD</th>
+          </tr>
+        </thead>
+        <tbody id="shipBody"></tbody>
+      </table>
+    </div>
+
+    <!-- Alerts & Exceptions -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Exceptions & Alerts</div>
+        <div class="badge badge-amber" id="alertBadge">5 Active</div>
+      </div>
+      <div class="inc-list" id="alertList"></div>
+    </div>
+  </div>
+
+  <!-- ROW 3: Customs Funnel + Warehouse + Client Leaderboard -->
+  <div class="grid-3b fade-up">
+
+    <!-- Customs Clearance Funnel -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Customs Clearance Pipeline</div>
+        <div class="badge badge-teal">Live Queue</div>
+      </div>
+      <div class="funnel-wrap" id="customsFunnel"></div>
+      <div class="mini-row" style="margin-top:14px;">
+        <div class="mini-kpi"><div class="mki-val" id="tatVal">18h</div><div class="mki-lbl">Avg TAT</div></div>
+        <div class="mini-kpi"><div class="mki-val" id="clearRate">96.4%</div><div class="mki-lbl">Clear Rate</div></div>
+        <div class="mini-kpi"><div class="mki-val" id="holdsVal">12</div><div class="mki-lbl">On Hold</div></div>
+      </div>
+    </div>
+
+    <!-- Warehouse Utilisation -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Warehouse Utilisation</div>
+        <div class="badge badge-gold">Jebel Ali Industrial Zone · Dubai Airport Cargo Zone</div>
+      </div>
+      <div class="wh-grid" id="whGrid"></div>
+    </div>
+
+    <!-- Client SLA Leaderboard -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Client SLA Performance</div>
+        <div class="badge badge-gold">Q4 Ranking</div>
+      </div>
+      <div class="client-list" id="clientList"></div>
+    </div>
+  </div>
+
+  <!-- ROW 4: YoY + Route Performance -->
+  <div class="grid-2 fade-up">
+
+    <!-- YoY Volume -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Shipment Volume — Year on Year</div>
+        <div class="badge badge-gold">2022–2024</div>
+      </div>
+      <div class="chart-wrap tall"><canvas id="yoyChart"></canvas></div>
+    </div>
+
+    <!-- Top Trade Routes -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Top Trade Routes — Revenue & Volume</div>
+        <div class="badge badge-blue" id="routeBadge">Q4</div>
+      </div>
+      <div class="chart-wrap tall"><canvas id="routeChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- WATERMARK -->
+  <div class="watermark fade-up">
+    Dashboard built by &nbsp;<a href="https://wa.me/919987258696" target="_blank">Om Bagal Analytics</a>&nbsp; · Business Intelligence for Dubai &nbsp;·&nbsp; ombagal.official@gmail.com
+  </div>
+
+</div><!-- /page -->
+
+<script>
+// ── THEME ──
+function toggleTheme(){
+  var h=document.documentElement,d=h.getAttribute('data-theme')==='dark';
+  h.setAttribute('data-theme',d?'light':'dark');
+  document.getElementById('themeBtn').textContent=d?'🌙':'☀️';
+  setTimeout(buildCharts,50);
+}
+
+// ── CHART HELPERS ──
+function cc(){
+  var d=document.documentElement.getAttribute('data-theme')==='dark';
+  return{txt:d?'#8896A8':'#3A4A5C',grid:d?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.07)'};
+}
+Chart.defaults.font.family="'DM Sans',system-ui,sans-serif";
+var charts={};
+function destroyAll(){Object.values(charts).forEach(function(c){if(c)c.destroy();});charts={};}
+
+// ══════════════════════════════════════════
+//  ALL DATA — PER QUARTER
+// ══════════════════════════════════════════
+var QDATA = {
+  Q1:{
+    label:'Q1 2024 · Jan – Mar',
+    kpis:{shipments:'982',teu:'22,140',tat:'24',sla:'91.8',rev:'6.2M',delays:'58'},
+    kd:{shipments:{c:'up',t:'↑ 6% vs Q4 2023'},teu:{c:'up',t:'↑ 4.1% vs Q4 2023'},tat:{c:'down',t:'↑ Slower Q1 peak'},sla:{c:'warn',t:'Below 95% target'},rev:{c:'up',t:'↑ 5.8% vs Q4 2023'},delays:{c:'down',t:'5.9% delay rate'}},
+    months:['Jan','Feb','Mar'],
+    shipVol:[298,322,362],
+    shipRev:[1.8,2.0,2.4],
+    mode:{labels:['Sea FCL','Sea LCL','Air Freight','Road','Rail'],values:[48,22,18,9,3]},
+    cargo:{labels:['Electronics','Machinery','Consumer Goods','Auto Parts','Food & Bev','Chemicals'],values:[28,22,18,14,11,7]},
+    customs:[
+      {label:'Awaiting Lodge',count:142,pct:100,color:'#C9A84C'},
+      {label:'Under Review',count:98,pct:69,color:'#3B82F6'},
+      {label:'Docs Requested',count:44,pct:31,color:'#F59E0B'},
+      {label:'Cleared',count:840,pct:591,color:'#22C55E'},
+      {label:'On Hold',count:18,pct:13,color:'#EF4444'}
+    ],
+    tatVal:'24h',clearRate:'94.1%',holdsVal:'18',
+    wh:[
+      {icon:'🏭',name:'Jebel Ali Industrial Zone WH-1',pct:72,status:'ok'},
+      {icon:'🏭',name:'Jebel Ali Industrial Zone WH-2',pct:68,status:'ok'},
+      {icon:'🏭',name:'Jebel Ali Industrial Zone WH-3',pct:61,status:'ok'},
+      {icon:'🏢',name:'Dubai Airport Cargo Zone A1',pct:55,status:'ok'},
+      {icon:'🏢',name:'Dubai Airport Cargo Zone A2',pct:48,status:'ok'},
+      {icon:'🏪',name:'DPC CFS-1',pct:74,status:'ok'}
+    ],
+    clients:[
+      {name:'Emirates Trading LLC',init:'ET',color:'#C9A84C',shipments:142,sla:'93.2%',pct:100},
+      {name:'Al Futtaim Logistics',init:'AF',color:'#06B6D4',shipments:118,sla:'92.8%',pct:83},
+      {name:'HarbourLink Group Direct',init:'DW',color:'#3B82F6',shipments:94,sla:'91.4%',pct:66},
+      {name:'Carrefour ME Dist.',init:'CM',color:'#22C55E',shipments:82,sla:'90.6%',pct:58},
+      {name:'Gulf Bridge Intl',init:'GB',color:'#A78BFA',shipments:66,sla:'89.8%',pct:46}
+    ],
+    alerts:[
+      {sev:'p1',icon:'🔴',loc:'BL-3921 — Singapore→Dubai Airport Cargo Zone',desc:'Documents incomplete · Customs hold since 48h',eta:'Urgent'},
+      {sev:'p2',icon:'🟡',loc:'BL-3906 — Mumbai Port',desc:'Vessel delayed — port congestion · 12h ETA slip',eta:'ETA slip: 12h'},
+      {sev:'p2',icon:'🟡',loc:'Jebel Ali Industrial Zone WH-3 — Zone B',desc:'Pallet rack inspection due · Safety compliance',eta:'Due tomorrow'},
+      {sev:'p3',icon:'🔵',loc:'AWB-1182 — Frankfurt→DXB',desc:'Minor clearance query · Response expected',eta:'ETA: 4h'},
+      {sev:'p3',icon:'🔵',loc:'BL-3899 — Karachi→Dubai',desc:'Duty recalculation underway · Non-critical',eta:'ETA: 6h'}
+    ],
+    routes:{labels:['Shanghai→JA','Mumbai→DXB','Rotterdam→JA','Singapore→DA','Karachi→DXB','Frankfurt→DXB'],vol:[184,156,128,112,94,72],rev:[1.8,1.4,1.2,1.1,0.9,0.8]}
+  },
+  Q2:{
+    label:'Q2 2024 · Apr – Jun',
+    kpis:{shipments:'1,084',teu:'24,820',tat:'21',sla:'93.2',rev:'7.1M',delays:'46'},
+    kd:{shipments:{c:'up',t:'↑ 10.4% vs Q1'},teu:{c:'up',t:'↑ 12.1% vs Q1'},tat:{c:'up',t:'↓ 3hrs faster vs Q1'},sla:{c:'up',t:'↑ Improving'},rev:{c:'up',t:'↑ 14.5% vs Q1'},delays:{c:'up',t:'4.2% delay rate'}},
+    months:['Apr','May','Jun'],
+    shipVol:[342,368,374],
+    shipRev:[2.2,2.4,2.5],
+    mode:{labels:['Sea FCL','Sea LCL','Air Freight','Road','Rail'],values:[50,20,17,10,3]},
+    cargo:{labels:['Electronics','Machinery','Consumer Goods','Auto Parts','Food & Bev','Chemicals'],values:[30,20,19,13,11,7]},
+    customs:[
+      {label:'Awaiting Lodge',count:128,pct:100,color:'#C9A84C'},
+      {label:'Under Review',count:86,pct:67,color:'#3B82F6'},
+      {label:'Docs Requested',count:32,pct:25,color:'#F59E0B'},
+      {label:'Cleared',count:956,pct:100,color:'#22C55E'},
+      {label:'On Hold',count:14,pct:11,color:'#EF4444'}
+    ],
+    tatVal:'21h',clearRate:'95.6%',holdsVal:'14',
+    wh:[
+      {icon:'🏭',name:'Jebel Ali Industrial Zone WH-1',pct:76,status:'ok'},
+      {icon:'🏭',name:'Jebel Ali Industrial Zone WH-2',pct:72,status:'ok'},
+      {icon:'🏭',name:'Jebel Ali Industrial Zone WH-3',pct:79,status:'warn'},
+      {icon:'🏢',name:'Dubai Airport Cargo Zone A1',pct:62,status:'ok'},
+      {icon:'🏢',name:'Dubai Airport Cargo Zone A2',pct:58,status:'ok'},
+      {icon:'🏪',name:'DPC CFS-1',pct:80,status:'warn'}
+    ],
+    clients:[
+      {name:'Emirates Trading LLC',init:'ET',color:'#C9A84C',shipments:162,sla:'94.8%',pct:100},
+      {name:'Al Futtaim Logistics',init:'AF',color:'#06B6D4',shipments:134,sla:'94.2%',pct:83},
+      {name:'HarbourLink Group Direct',init:'DW',color:'#3B82F6',shipments:108,sla:'93.1%',pct:67},
+      {name:'Carrefour ME Dist.',init:'CM',color:'#22C55E',shipments:94,sla:'92.4%',pct:58},
+      {name:'Gulf Bridge Intl',init:'GB',color:'#A78BFA',shipments:76,sla:'91.6%',pct:47}
+    ],
+    alerts:[
+      {sev:'p1',icon:'🔴',loc:'BL-4102 — Colombo→Jebel Ali Industrial Zone',desc:'Reefer container temp breach · Urgent inspection',eta:'Urgent'},
+      {sev:'p2',icon:'🟡',loc:'Jebel Ali Industrial Zone WH-3 — Section C',desc:'Near-capacity alert · Overflow planning needed',eta:'Action today'},
+      {sev:'p2',icon:'🟡',loc:'BL-4088 — Rotterdam→Dubai',desc:'Customs tariff query · Agent notified',eta:'ETA: 8h'},
+      {sev:'p3',icon:'🔵',loc:'DPC CFS-1 — Berth 7',desc:'Minor crane maintenance · Brief berth delay',eta:'ETA: 2h'},
+      {sev:'p3',icon:'🔵',loc:'AWB-1244 — London→DXB',desc:'Clearance extension requested · Routine',eta:'ETA: 5h'}
+    ],
+    routes:{labels:['Shanghai→JA','Mumbai→DXB','Rotterdam→JA','Singapore→DA','Karachi→DXB','Frankfurt→DXB'],vol:[208,172,146,128,102,84],rev:[2.1,1.6,1.4,1.2,1.0,0.8]}
+  },
+  Q3:{
+    label:'Q3 2024 · Jul – Sep',
+    kpis:{shipments:'1,126',teu:'26,020',tat:'21',sla:'92.4',rev:'7.6M',delays:'52'},
+    kd:{shipments:{c:'up',t:'↑ 3.9% vs Q2'},teu:{c:'up',t:'↑ 4.8% vs Q2'},tat:{c:'neutral',t:'Stable — summer ops'},sla:{c:'down',t:'↓ Summer pressure'},rev:{c:'up',t:'↑ 7% vs Q2'},delays:{c:'down',t:'4.6% delay rate'}},
+    months:['Jul','Aug','Sep'],
+    shipVol:[362,386,378],
+    shipRev:[2.4,2.6,2.6],
+    mode:{labels:['Sea FCL','Sea LCL','Air Freight','Road','Rail'],values:[49,21,18,9,3]},
+    cargo:{labels:['Electronics','Machinery','Consumer Goods','Auto Parts','Food & Bev','Chemicals'],values:[29,21,18,14,12,6]},
+    customs:[
+      {label:'Awaiting Lodge',count:136,pct:100,color:'#C9A84C'},
+      {label:'Under Review',count:92,pct:68,color:'#3B82F6'},
+      {label:'Docs Requested',count:38,pct:28,color:'#F59E0B'},
+      {label:'Cleared',count:1020,pct:100,color:'#22C55E'},
+      {label:'On Hold',count:16,pct:12,color:'#EF4444'}
+    ],
+    tatVal:'21h',clearRate:'95.1%',holdsVal:'16',
+    wh:[
+      {icon:'🏭',name:'Jebel Ali Industrial Zone WH-1',pct:80,status:'warn'},
+      {icon:'🏭',name:'Jebel Ali Industrial Zone WH-2',pct:76,status:'ok'},
+      {icon:'🏭',name:'Jebel Ali Industrial Zone WH-3',pct:82,status:'warn'},
+      {icon:'🏢',name:'Dubai Airport Cargo Zone A1',pct:68,status:'ok'},
+      {icon:'🏢',name:'Dubai Airport Cargo Zone A2',pct:64,status:'ok'},
+      {icon:'🏪',name:'DPC CFS-1',pct:84,status:'warn'}
+    ],
+    clients:[
+      {name:'Emirates Trading LLC',init:'ET',color:'#C9A84C',shipments:174,sla:'93.6%',pct:100},
+      {name:'Al Futtaim Logistics',init:'AF',color:'#06B6D4',shipments:148,sla:'93.0%',pct:85},
+      {name:'HarbourLink Group Direct',init:'DW',color:'#3B82F6',shipments:118,sla:'91.8%',pct:68},
+      {name:'Carrefour ME Dist.',init:'CM',color:'#22C55E',shipments:102,sla:'91.2%',pct:59},
+      {name:'Gulf Bridge Intl',init:'GB',color:'#A78BFA',shipments:82,sla:'90.4%',pct:47}
+    ],
+    alerts:[
+      {sev:'p1',icon:'🔴',loc:'Jebel Ali Industrial Zone WH-1 — Fire Suppression',desc:'Annual inspection overdue · Compliance risk',eta:'Overdue'},
+      {sev:'p2',icon:'🟡',loc:'BL-4312 — Karachi→Dubai',desc:'Vessel delay — monsoon conditions · 24h slip',eta:'ETA slip: 24h'},
+      {sev:'p2',icon:'🟡',loc:'BL-4298 — Mumbai→Jebel Ali Industrial Zone',desc:'Customs duty dispute · Legal review pending',eta:'ETA: 3 days'},
+      {sev:'p3',icon:'🔵',loc:'DPC CFS-1 — Reefer Zone',desc:'Temperature log variance · Below threshold',eta:'Monitoring'},
+      {sev:'p3',icon:'🔵',loc:'AWB-1386 — Frankfurt→DXB',desc:'Minor clearance delay · Agent following up',eta:'ETA: 6h'}
+    ],
+    routes:{labels:['Shanghai→JA','Mumbai→DXB','Rotterdam→JA','Singapore→DA','Karachi→DXB','Frankfurt→DXB'],vol:[218,182,152,136,112,88],rev:[2.2,1.7,1.5,1.3,1.1,0.8]}
+  },
+  Q4:{
+    label:'Q4 2024 · Oct – Dec',
+    kpis:{shipments:'1,284',teu:'28,440',tat:'18',sla:'94.6',rev:'8.4M',delays:'38'},
+    kd:{shipments:{c:'up',t:'↑ 14% vs Q3'},teu:{c:'up',t:'↑ 9.2% vs Q3'},tat:{c:'up',t:'↓ 3hrs faster'},sla:{c:'neutral',t:'Target: 95%'},rev:{c:'up',t:'↑ 11.2% vs Q3'},delays:{c:'down',t:'2.96% delay rate'}},
+    months:['Oct','Nov','Dec'],
+    shipVol:[402,428,454],
+    shipRev:[2.6,2.8,3.0],
+    mode:{labels:['Sea FCL','Sea LCL','Air Freight','Road','Rail'],values:[51,19,18,9,3]},
+    cargo:{labels:['Electronics','Machinery','Consumer Goods','Auto Parts','Food & Bev','Chemicals'],values:[31,21,18,13,11,6]},
+    customs:[
+      {label:'Awaiting Lodge',count:118,pct:100,color:'#C9A84C'},
+      {label:'Under Review',count:76,pct:64,color:'#3B82F6'},
+      {label:'Docs Requested',count:28,pct:24,color:'#F59E0B'},
+      {label:'Cleared',count:1162,pct:100,color:'#22C55E'},
+      {label:'On Hold',count:12,pct:10,color:'#EF4444'}
+    ],
+    tatVal:'18h',clearRate:'96.4%',holdsVal:'12',
+    wh:[
+      {icon:'🏭',name:'Jebel Ali Industrial Zone WH-1',pct:78,status:'ok'},
+      {icon:'🏭',name:'Jebel Ali Industrial Zone WH-2',pct:74,status:'ok'},
+      {icon:'🏭',name:'Jebel Ali Industrial Zone WH-3',pct:84,status:'warn'},
+      {icon:'🏢',name:'Dubai Airport Cargo Zone A1',pct:66,status:'ok'},
+      {icon:'🏢',name:'Dubai Airport Cargo Zone A2',pct:62,status:'ok'},
+      {icon:'🏪',name:'DPC CFS-1',pct:88,status:'warn'}
+    ],
+    clients:[
+      {name:'Emirates Trading LLC',init:'ET',color:'#C9A84C',shipments:196,sla:'96.2%',pct:100},
+      {name:'Al Futtaim Logistics',init:'AF',color:'#06B6D4',shipments:164,sla:'95.8%',pct:84},
+      {name:'HarbourLink Group Direct',init:'DW',color:'#3B82F6',shipments:132,sla:'94.4%',pct:67},
+      {name:'Carrefour ME Dist.',init:'CM',color:'#22C55E',shipments:114,sla:'93.6%',pct:58},
+      {name:'Gulf Bridge Intl',init:'GB',color:'#A78BFA',shipments:92,sla:'92.8%',pct:47}
+    ],
+    alerts:[
+      {sev:'p1',icon:'🔴',loc:'BL-4834 — Singapore→Dubai Airport Cargo Zone',desc:'Customs hold — docs incomplete · 48h breach risk',eta:'Urgent'},
+      {sev:'p2',icon:'🟡',loc:'BL-4798 — Mumbai→Dubai',desc:'Port congestion delay · 6h ETA slip logged',eta:'ETA slip: 6h'},
+      {sev:'p2',icon:'🟡',loc:'Jebel Ali Industrial Zone WH-3 — Section B',desc:'Capacity at 84% · Overflow contingency active',eta:'Monitor'},
+      {sev:'p3',icon:'🔵',loc:'DPC CFS-1 — Berth 4',desc:'Crane maintenance window · 2h berth hold',eta:'ETA: 2h'},
+      {sev:'p3',icon:'🔵',loc:'AWB-2241 — Frankfurt→DXB',desc:'Minor clearance query · Within normal TAT',eta:'ETA: 4h'}
+    ],
+    routes:{labels:['Shanghai→JA','Mumbai→DXB','Rotterdam→JA','Singapore→DA','Karachi→DXB','Frankfurt→DXB'],vol:[248,204,168,148,122,96],rev:[2.5,1.9,1.6,1.4,1.2,0.9]}
+  }
+};
+
+// ── PORT FOCUS DATA ──
+var PORT_DATA = {
+  jafza:{name:'Jebel Ali Industrial Zone — Jebel Ali Free Zone',teu:'16,840',tat:'17h',sla:'95.8%',rev:'AED 4.9M'},
+  dafza:{name:'Dubai Airport Cargo Zone — Al Garhoud Free Zone',teu:'6,420',tat:'14h',sla:'96.4%',rev:'AED 1.8M'},
+  dpc:{name:'DPC — Port Rashid',teu:'3,980',tat:'22h',sla:'92.2%',rev:'AED 1.1M'},
+  icad:{name:'ICAD — Abu Dhabi Industrial City',teu:'1,200',tat:'26h',sla:'90.4%',rev:'AED 0.6M'}
+};
+
+// ── SHIPMENT TABLE DATA (static — representative) ──
+var SHIPMENTS = [
+  {id:'BL-4834',origin:'Singapore',dest:'Dubai Airport Cargo Zone',cargo:'Electronics',mode:'🚢 Sea FCL',status:'customs',eta:'Customs Hold'},
+  {id:'BL-4821',origin:'Shanghai',dest:'Jebel Ali',cargo:'Machinery',mode:'🚢 Sea FCL',status:'transit',eta:'ETA: 48h'},
+  {id:'BL-4819',origin:'Karachi',dest:'Jebel Ali',cargo:'Textiles',mode:'🚢 Sea LCL',status:'delivered',eta:'POD ✓'},
+  {id:'BL-4806',origin:'Rotterdam',dest:'Jebel Ali Industrial Zone',cargo:'Chemicals',mode:'🚢 Sea FCL',status:'delivered',eta:'POD ✓'},
+  {id:'BL-4798',origin:'Mumbai',dest:'Dubai',cargo:'Consumer Goods',mode:'🚢 Sea LCL',status:'delayed',eta:'Delayed 6h'},
+  {id:'AIR-2241',origin:'Frankfurt',dest:'DXB',cargo:'Electronics',mode:'✈️ Air',status:'transit',eta:'ETA: 8h'},
+  {id:'BL-4788',origin:'Guangzhou',dest:'Jebel Ali Industrial Zone',cargo:'Auto Parts',mode:'🚢 Sea FCL',status:'warehouse',eta:'Jebel Ali Industrial Zone WH-2'},
+  {id:'AIR-2238',origin:'London',dest:'DXB',cargo:'Pharma',mode:'✈️ Air',status:'delivered',eta:'POD ✓'},
+  {id:'BL-4776',origin:'Colombo',dest:'Port Rashid',cargo:'Food & Bev',mode:'🚢 Sea LCL',status:'customs',eta:'Clearing'},
+  {id:'TRK-841',origin:'Riyadh',dest:'Dubai',cargo:'Consumer Goods',mode:'🚛 Road',status:'transit',eta:'ETA: 6h'}
+];
+
+// ── MODE & CARGO COLORS ──
+var modeColors=['#C9A84C','#06B6D4','#3B82F6','#22C55E','#A78BFA'];
+var cargoColors=['#C9A84C','#3B82F6','#06B6D4','#22C55E','#F59E0B','#EF4444'];
+
+var currentPeriod='Q4';
+
+// ══════════════════════════════════════════
+//  PERIOD SWITCH
+// ══════════════════════════════════════════
+function setPeriod(p,btn){
+  currentPeriod=p;
+  document.querySelectorAll('.pb').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  var d=QDATA[p];
+
+  // Sub-label
+  document.getElementById('pageSub').textContent=d.label+' · Jebel Ali Industrial Zone · Dubai Airport Cargo Zone · DPC · Shipment, Customs & Warehouse Intelligence';
+
+  // Badges
+  document.getElementById('consBadge').textContent='Monthly — '+p;
+  document.getElementById('cargoBadge').textContent=p;
+  document.getElementById('routeBadge').textContent=p;
+
+  // KPI values
+  var kv=['kv1','kv2','kv3','kv4','kv5','kv6'];
+  var kk=['shipments','teu','tat','sla','rev','delays'];
+  kv.forEach(function(id,i){animateVal(document.getElementById(id),d.kpis[kk[i]]);});
+
+  // KPI deltas
+  var kd=['kd1','kd2','kd3','kd4','kd5','kd6'];
+  kk.forEach(function(k,i){
+    var el=document.getElementById(kd[i]);
+    var info=d.kd[k];
+    el.className='kpi-delta '+info.c;
+    el.textContent=info.t;
+  });
+
+  // Mini row
+  var prevMap={Q1:'Q4\'23',Q2:'Q1',Q3:'Q2',Q4:'Q3'};
+  var prevVol={Q1:'926',Q2:'982',Q3:'1,084',Q4:'1,126'};
+  var growthMap={Q1:'+6%',Q2:'+10.4%',Q3:'+3.9%',Q4:'+14%'};
+  document.getElementById('miniCurr').textContent=d.kpis.shipments;
+  document.getElementById('miniCurrLbl').textContent='Shipments '+p;
+  document.getElementById('miniPrev').textContent=prevVol[p];
+  document.getElementById('miniPrevLbl').textContent='Shipments '+prevMap[p];
+  document.getElementById('miniGrowth').textContent=growthMap[p];
+
+  // Customs mini
+  document.getElementById('tatVal').textContent=d.tatVal;
+  document.getElementById('clearRate').textContent=d.clearRate;
+  document.getElementById('holdsVal').textContent=d.holdsVal;
+
+  // Alert badge
+  document.getElementById('alertBadge').textContent=d.alerts.length+' Active';
+
+  buildCustomsFunnel(d.customs);
+  buildWarehouses(d.wh);
+  buildClients(d.clients);
+  buildAlerts(d.alerts);
+  buildShipTable();
+  buildCharts();
+}
+
+// ══════════════════════════════════════════
+//  PORT FILTER
+// ══════════════════════════════════════════
+function filterPort(){
+  var val=document.getElementById('portSelect').value;
+  var banner=document.getElementById('portBanner');
+  if(val!=='all'){
+    var pd=PORT_DATA[val];
+    document.getElementById('portBannerName').textContent=pd.name;
+    document.getElementById('pbTeu').textContent=pd.teu+' TEU';
+    document.getElementById('pbTat').textContent=pd.tat;
+    document.getElementById('pbSla').textContent=pd.sla;
+    document.getElementById('pbRev').textContent=pd.rev;
+    banner.style.display='flex';
+    document.getElementById('pageSub').textContent=QDATA[currentPeriod].label+' · '+pd.name+' · Filtered View';
+  } else {
+    banner.style.display='none';
+    document.getElementById('pageSub').textContent=QDATA[currentPeriod].label+' · Jebel Ali Industrial Zone · Dubai Airport Cargo Zone · DPC · Shipment, Customs & Warehouse Intelligence';
+  }
+}
+
+// ── ANIMATE NUMBER ──
+function animateVal(el,target){
+  if(!el)return;
+  var raw=target.replace(/[^0-9.]/g,'');
+  var targetNum=parseFloat(raw)||0;
+  var isDecimal=target.indexOf('.')!==-1;
+  var current=parseFloat(el.textContent.replace(/[^0-9.]/g,''))||0;
+  var steps=24,step=0;
+  clearInterval(el._t);
+  el._t=setInterval(function(){
+    step++;
+    var val=current+(targetNum-current)*(step/steps);
+    el.textContent=isDecimal?val.toFixed(1):Math.round(val).toLocaleString();
+    if(step>=steps){el.textContent=target;clearInterval(el._t);}
+  },18);
+}
+
+// ── BUILD SHIPMENT TABLE ──
+function buildShipTable(){
+  var filter=document.getElementById('statusFilter').value;
+  var body=document.getElementById('shipBody');body.innerHTML='';
+  var rows=filter==='all'?SHIPMENTS:SHIPMENTS.filter(function(s){return s.status===filter;});
+  rows.forEach(function(s){
+    var cls={transit:'st-transit',customs:'st-customs',delivered:'st-delivered',delayed:'st-delayed',warehouse:'st-warehouse'}[s.status];
+    var lbl={transit:'In Transit',customs:'Customs',delivered:'Delivered',delayed:'Delayed',warehouse:'Warehouse'}[s.status];
+    body.innerHTML+='<tr>'
+      +'<td><span class="ship-id">'+s.id+'</span></td>'
+      +'<td style="font-size:.79rem;">'+s.origin+' <span class="route-arrow">→</span> '+s.dest+'</td>'
+      +'<td style="font-size:.77rem;color:var(--text3);">'+s.cargo+'</td>'
+      +'<td style="font-size:.77rem;">'+s.mode+'</td>'
+      +'<td><span class="st-pill '+cls+'">'+lbl+'</span></td>'
+      +'<td style="font-size:.77rem;font-weight:600;color:var(--text2);">'+s.eta+'</td>'
+    +'</tr>';
+  });
+}
+
+// ── BUILD CUSTOMS FUNNEL ──
+function buildCustomsFunnel(arr){
+  var el=document.getElementById('customsFunnel');el.innerHTML='';
+  arr.forEach(function(f){
+    el.innerHTML+='<div class="funnel-row">'
+      +'<div class="funnel-label">'+f.label+'</div>'
+      +'<div class="funnel-track"><div class="funnel-fill" style="width:'+Math.min(f.pct,100)+'%;background:linear-gradient(90deg,'+f.color+','+f.color+'99);">'+f.count+'</div></div>'
+      +'<div class="funnel-count">'+f.count+'</div>'
+    +'</div>';
+  });
+}
+
+// ── BUILD WAREHOUSES ──
+function buildWarehouses(arr){
+  var el=document.getElementById('whGrid');el.innerHTML='';
+  arr.forEach(function(w){
+    var sc={ok:'whs-ok',warn:'whs-warn',full:'whs-full'}[w.status];
+    var sl={ok:'Normal',warn:'Near Capacity',full:'Full'}[w.status];
+    var barColor={ok:'#22C55E',warn:'#F59E0B',full:'#EF4444'}[w.status];
+    el.innerHTML+='<div class="wh-card">'
+      +'<div class="wh-icon">'+w.icon+'</div>'
+      +'<div class="wh-name">'+w.name+'</div>'
+      +'<div class="wh-val">'+w.pct+'%</div>'
+      +'<div class="wh-bar" style="width:'+w.pct+'%;background:'+barColor+';"></div>'
+      +'<div class="wh-status '+sc+'">'+sl+'</div>'
+    +'</div>';
+  });
+}
+
+// ── BUILD CLIENTS ──
+function buildClients(arr){
+  var el=document.getElementById('clientList');el.innerHTML='';
+  arr.forEach(function(c,i){
+    el.innerHTML+='<div class="client-row">'
+      +'<div class="client-avatar" style="background:'+c.color+'22;color:'+c.color+';">'+c.init+'</div>'
+      +'<div style="flex:1;">'
+        +'<div class="client-name">'+(i===0?'🥇 ':i===1?'🥈 ':i===2?'🥉 ':'')+c.name+'</div>'
+        +'<div class="client-meta">'+c.shipments+' shipments · SLA: '+c.sla+'</div>'
+        +'<div class="client-bar-track"><div class="client-bar-fill" style="width:'+c.pct+'%;background:'+c.color+';"></div></div>'
+      +'</div>'
+      +'<div class="client-rev">'+c.sla+'</div>'
+    +'</div>';
+  });
+}
+
+// ── BUILD ALERTS ──
+function buildAlerts(arr){
+  var el=document.getElementById('alertList');el.innerHTML='';
+  arr.forEach(function(a){
+    el.innerHTML+='<div class="inc-row">'
+      +'<div class="inc-sev inc-'+a.sev+'">'+a.icon+'</div>'
+      +'<div style="flex:1;">'
+        +'<div class="inc-loc">'+a.loc+'</div>'
+        +'<div class="inc-desc">'+a.desc+'</div>'
+      +'</div>'
+      +'<div class="inc-eta">'+a.eta+'</div>'
+    +'</div>';
+  });
+}
+
+// ══════════════════════════════════════════
+//  CHARTS
+// ══════════════════════════════════════════
+function buildCharts(){
+  destroyAll();
+  var c=cc();
+  var d=QDATA[currentPeriod];
+
+  // Shipment Volume + Revenue
+  charts.ship=new Chart(document.getElementById('shipChart'),{
+    type:'bar',
+    data:{
+      labels:d.months,
+      datasets:[
+        {label:'Shipments',data:d.shipVol,backgroundColor:['rgba(201,168,76,0.65)','rgba(201,168,76,0.80)','rgba(201,168,76,1)'],borderRadius:6,yAxisID:'y'},
+        {label:'Revenue (AED M)',data:d.shipRev,type:'line',borderColor:'#06B6D4',backgroundColor:'rgba(6,182,212,0.08)',pointBackgroundColor:'#06B6D4',pointRadius:5,borderWidth:2.5,fill:true,tension:.4,yAxisID:'y2'}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:true,animation:{duration:500},
+      interaction:{mode:'index',intersect:false},
+      plugins:{legend:{labels:{color:c.txt,font:{size:11},boxWidth:12,padding:16}},tooltip:{callbacks:{label:function(ctx){return ctx.dataset.yAxisID==='y'?' '+ctx.raw+' shipments':' AED '+ctx.raw+'M';}}}},
+      scales:{
+        x:{grid:{color:c.grid},ticks:{color:c.txt}},
+        y:{grid:{color:c.grid},ticks:{color:c.txt},position:'left'},
+        y2:{grid:{display:false},ticks:{color:'#06B6D4',callback:function(v){return 'AED '+v+'M';}},position:'right'}
+      }
+    }
+  });
+
+  // Mode Split Doughnut
+  charts.mode=new Chart(document.getElementById('modeChart'),{
+    type:'doughnut',
+    data:{labels:d.mode.labels,datasets:[{data:d.mode.values,backgroundColor:modeColors,borderWidth:0,hoverOffset:8}]},
+    options:{
+      responsive:true,maintainAspectRatio:false,cutout:'66%',animation:{duration:500},
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){return ' '+ctx.label+': '+ctx.raw+'%';}}}}
+    }
+  });
+  var leg=document.getElementById('modeLegend');leg.innerHTML='';
+  d.mode.labels.forEach(function(l,i){
+    leg.innerHTML+='<div style="display:flex;align-items:center;justify-content:space-between;">'
+      +'<div style="display:flex;align-items:center;gap:7px;"><div style="width:9px;height:9px;border-radius:3px;background:'+modeColors[i]+';flex-shrink:0;"></div>'
+      +'<span style="font-size:.76rem;color:var(--text2);">'+l+'</span></div>'
+      +'<span style="font-size:.76rem;font-weight:700;color:var(--text);">'+d.mode.values[i]+'%</span>'
+    +'</div>';
+  });
+
+  // Cargo Chart (horizontal bar)
+  charts.cargo=new Chart(document.getElementById('cargoChart'),{
+    type:'bar',
+    data:{labels:d.cargo.labels,datasets:[{data:d.cargo.values,backgroundColor:cargoColors,borderRadius:5}]},
+    options:{
+      indexAxis:'y',responsive:true,maintainAspectRatio:false,animation:{duration:500},
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){return ' '+ctx.raw+'% of volume';}}}},
+      scales:{
+        x:{grid:{color:c.grid},ticks:{color:c.txt,callback:function(v){return v+'%';}},max:40},
+        y:{grid:{display:false},ticks:{color:c.txt,font:{size:11}}}
+      }
+    }
+  });
+
+  // YoY
+  var qi={'Q1':0,'Q2':1,'Q3':2,'Q4':3}[currentPeriod];
+  var yoyHL=['rgba(255,255,255,0.10)','rgba(255,255,255,0.10)','rgba(255,255,255,0.10)','rgba(255,255,255,0.10)'];
+  yoyHL[qi]='rgba(201,168,76,0.9)';
+  charts.yoy=new Chart(document.getElementById('yoyChart'),{
+    type:'bar',
+    data:{
+      labels:['Q1','Q2','Q3','Q4'],
+      datasets:[
+        {label:'2022',data:[780,840,860,820],backgroundColor:'rgba(255,255,255,0.10)',borderRadius:5},
+        {label:'2023',data:[880,940,980,940],backgroundColor:'rgba(6,182,212,0.55)',borderRadius:5},
+        {label:'2024',data:[982,1084,1126,1284],backgroundColor:yoyHL,borderRadius:5}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,animation:{duration:500},
+      plugins:{legend:{labels:{color:c.txt,font:{size:11},boxWidth:12}}},
+      scales:{
+        x:{grid:{color:c.grid},ticks:{color:c.txt}},
+        y:{grid:{color:c.grid},ticks:{color:c.txt}}
+      }
+    }
+  });
+
+  // Route Chart
+  charts.route=new Chart(document.getElementById('routeChart'),{
+    type:'bar',
+    data:{
+      labels:d.routes.labels,
+      datasets:[
+        {label:'Volume (shipments)',data:d.routes.vol,backgroundColor:'rgba(201,168,76,0.70)',borderRadius:5,yAxisID:'y'},
+        {label:'Revenue (AED M)',data:d.routes.rev,type:'line',borderColor:'#3B82F6',pointBackgroundColor:'#3B82F6',pointRadius:4,borderWidth:2.2,tension:.3,yAxisID:'y2'}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,animation:{duration:500},
+      interaction:{mode:'index',intersect:false},
+      plugins:{legend:{labels:{color:c.txt,font:{size:11},boxWidth:12,padding:14}}},
+      scales:{
+        x:{grid:{color:c.grid},ticks:{color:c.txt,font:{size:10}}},
+        y:{grid:{color:c.grid},ticks:{color:c.txt},position:'left'},
+        y2:{grid:{display:false},ticks:{color:'#3B82F6',callback:function(v){return 'AED '+v+'M';}},position:'right'}
+      }
+    }
+  });
+}
+
+// ── FADE UP ──
+(function(){
+  if(!('IntersectionObserver' in window))return;
+  var io=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting){x.target.classList.add('visible');io.unobserve(x.target);}});},{threshold:0.05});
+  document.querySelectorAll('.fade-up').forEach(function(el,i){el.style.transitionDelay=(i*0.06)+'s';io.observe(el);});
+})();
+
+// ── INIT ──
+(function(){
+  document.getElementById('portBanner').style.display='none';
+  var d=QDATA[currentPeriod];
+  buildCustomsFunnel(d.customs);
+  buildWarehouses(d.wh);
+  buildClients(d.clients);
+  buildAlerts(d.alerts);
+  buildShipTable();
+  buildCharts();
+})();
+</script>
+</body>
+</html>
