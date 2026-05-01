@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Heal360 Medical Centre — Clinical Intelligence Dashboard · JLT, Dubai</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --teal:#0B7A8F;
+  --teal-light:#0FA3BB;
+  --teal-pale:rgba(11,122,143,0.08);
+  --teal-border:rgba(11,122,143,0.18);
+  --teal-glow:0 0 24px rgba(11,122,143,0.12);
+  --emerald:#059669;
+  --coral:#E05B4B;
+  --amber:#D97706;
+  --violet:#7C3AED;
+  --sky:#0284C7;
+  --bg:#F5F8FA;
+  --bg2:#EBF0F4;
+  --bg3:#DDE5EC;
+  --card:#FFFFFF;
+  --card2:#F8FBFD;
+  --text:#0D2030;
+  --text2:#4A6178;
+  --text3:#8FA4B8;
+  --border:rgba(0,0,0,0.07);
+  --shadow:0 2px 20px rgba(13,32,48,0.08);
+  --shadow-lg:0 8px 40px rgba(13,32,48,0.12);
+  --radius:12px;
+}
+[data-theme="dark"]{
+  --bg:#080F18;--bg2:#0C1520;--bg3:#111E2A;
+  --card:#0D1B28;--card2:#112130;
+  --text:#DCE8F0;--text2:#6A8AA4;--text3:#304860;
+  --border:rgba(255,255,255,0.06);
+  --shadow:0 2px 20px rgba(0,0,0,0.5);
+  --shadow-lg:0 8px 40px rgba(0,0,0,0.6);
+  --teal:#0FA3BB;--teal-light:#14BDD8;
+  --teal-pale:rgba(15,163,187,0.09);
+  --teal-border:rgba(15,163,187,0.20);
+}
+[data-theme="dark"] header{background:rgba(8,15,24,0.97);}
+[data-theme="dark"] .qt.active{background:var(--teal);color:#fff;}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Nunito',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s;}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background-image:radial-gradient(circle at 20% 20%,rgba(11,122,143,0.04) 0%,transparent 50%),radial-gradient(circle at 80% 80%,rgba(5,150,105,0.04) 0%,transparent 50%);}
+
+/* HEADER */
+header{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(245,248,250,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);height:60px;box-shadow:0 1px 0 rgba(11,122,143,0.08);}
+.nav{max-width:1440px;margin:0 auto;padding:0 24px;height:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none;}
+.logo-mark{width:34px;height:34px;background:linear-gradient(135deg,var(--teal),var(--teal-light));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1rem;color:#fff;flex-shrink:0;box-shadow:0 4px 12px rgba(11,122,143,0.28);}
+.logo-name{font-family:'DM Serif Display',Georgia,serif;font-size:1.1rem;color:var(--text);}
+.logo-name span{color:var(--teal);}
+.logo-sub{font-size:.6rem;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-top:1px;font-weight:600;}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.live-pill{display:flex;align-items:center;gap:6px;background:rgba(5,150,105,0.1);border:1px solid rgba(5,150,105,0.22);color:var(--emerald);padding:5px 13px;border-radius:50px;font-size:.67rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;}
+.live-dot{width:6px;height:6px;background:var(--emerald);border-radius:50%;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+.q-tabs{display:flex;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:3px;gap:2px;}
+.qt{background:none;border:none;font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:700;color:var(--text3);padding:5px 14px;border-radius:6px;cursor:pointer;transition:.2s;}
+.qt:hover{color:var(--teal);}
+.qt.active{background:var(--teal);color:#fff;box-shadow:0 2px 10px rgba(11,122,143,0.3);}
+.icon-btn{background:none;border:1px solid var(--border);color:var(--text2);width:34px;height:34px;border-radius:8px;cursor:pointer;font-size:.85rem;transition:.2s;}
+.icon-btn:hover{border-color:var(--teal-border);color:var(--teal);}
+
+/* CROSS-FILTER BANNER */
+#filterBanner{
+  display:none;position:sticky;top:60px;z-index:150;
+  background:linear-gradient(90deg,rgba(11,122,143,0.12),rgba(11,122,143,0.06));
+  border-bottom:1px solid var(--teal-border);
+  padding:8px 24px;
+  align-items:center;justify-content:space-between;gap:12px;
+  backdrop-filter:blur(10px);
+}
+#filterBanner.show{display:flex;}
+.filter-info{display:flex;align-items:center;gap:10px;font-size:.76rem;font-weight:700;color:var(--teal);}
+.filter-tag{background:var(--teal);color:#fff;padding:3px 12px;border-radius:50px;font-size:.69rem;font-weight:800;letter-spacing:.04em;}
+.filter-note{color:var(--text2);font-size:.7rem;font-weight:600;}
+.filter-clear{background:var(--card);border:1px solid var(--teal-border);color:var(--teal);padding:5px 14px;border-radius:7px;font-size:.71rem;font-weight:800;cursor:pointer;transition:.2s;font-family:'Nunito',sans-serif;display:flex;align-items:center;gap:5px;}
+.filter-clear:hover{background:var(--teal);color:#fff;}
+
+/* PAGE */
+.page{max-width:1440px;margin:0 auto;padding:76px 24px 48px;position:relative;z-index:1;}
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-bottom:22px;}
+.page-title{font-family:'DM Serif Display',Georgia,serif;font-size:clamp(1.5rem,3vw,2.1rem);line-height:1.1;}
+.page-title em{color:var(--teal);font-style:italic;}
+.page-sub{color:var(--text2);font-size:.82rem;margin-top:5px;font-weight:500;}
+.q-badge{display:inline-flex;align-items:center;gap:7px;background:var(--teal-pale);border:1px solid var(--teal-border);color:var(--teal);padding:5px 13px;border-radius:50px;font-size:.72rem;font-weight:800;letter-spacing:.05em;margin-top:8px;}
+.header-stats{display:flex;gap:10px;flex-wrap:wrap;}
+.hstat{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 16px;display:flex;flex-direction:column;gap:2px;min-width:110px;box-shadow:var(--shadow);}
+.hstat-lbl{font-size:.6rem;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.09em;}
+.hstat-val{font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--teal);}
+
+/* KPI */
+.kpi-row{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:16px;}
+@media(max-width:1200px){.kpi-row{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:640px){.kpi-row{grid-template-columns:repeat(2,1fr);}}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;position:relative;overflow:hidden;cursor:default;transition:all .25s;box-shadow:var(--shadow);}
+.kpi::after{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--teal);transform:scaleY(0);transform-origin:bottom;transition:.3s;border-radius:3px 0 0 3px;}
+.kpi:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);border-color:var(--teal-border);}
+.kpi:hover::after{transform:scaleY(1);}
+.kpi.filtered{border-color:var(--teal);box-shadow:var(--teal-glow);}
+.kpi.filtered::after{transform:scaleY(1);}
+.kpi-icon{font-size:1.1rem;margin-bottom:7px;}
+.kpi-lbl{font-size:.62rem;color:var(--text3);font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;}
+.kpi-val{font-family:'DM Serif Display',Georgia,serif;font-size:1.75rem;font-weight:400;line-height:1;color:var(--text);}
+.kpi-unit{font-size:.85rem;color:var(--teal);}
+.kpi-delta{display:inline-flex;align-items:center;gap:3px;font-size:.65rem;font-weight:800;margin-top:6px;padding:2px 8px;border-radius:50px;}
+.up{background:rgba(5,150,105,0.1);color:var(--emerald);}
+.dn{background:rgba(224,91,75,0.1);color:var(--coral);}
+.fl{background:rgba(217,119,6,0.1);color:var(--amber);}
+
+/* CARD */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);transition:box-shadow .2s,border-color .2s;}
+.card:hover{box-shadow:var(--shadow-lg);border-color:var(--teal-border);}
+.card.filtered-active{border-color:var(--teal);box-shadow:0 0 0 2px rgba(11,122,143,0.15),var(--shadow-lg);}
+.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:10px;flex-wrap:wrap;}
+.ct{font-family:'DM Serif Display',Georgia,serif;font-size:.98rem;color:var(--text);}
+.cb{font-size:.63rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:50px;white-space:nowrap;}
+.cb-t{background:var(--teal-pale);color:var(--teal);border:1px solid var(--teal-border);}
+.cb-g{background:rgba(5,150,105,0.09);color:var(--emerald);border:1px solid rgba(5,150,105,0.2);}
+.cb-r{background:rgba(224,91,75,0.09);color:var(--coral);border:1px solid rgba(224,91,75,0.2);}
+.cb-v{background:rgba(124,58,237,0.09);color:var(--violet);border:1px solid rgba(124,58,237,0.18);}
+.cb-s{background:rgba(2,132,199,0.09);color:var(--sky);border:1px solid rgba(2,132,199,0.18);}
+
+/* CLICK HINT on chart cards */
+.click-hint{font-size:.59rem;color:var(--text3);font-weight:700;letter-spacing:.05em;display:flex;align-items:center;gap:4px;margin-left:auto;}
+.click-hint::before{content:'👆';font-size:.7rem;}
+
+/* GRIDS */
+.g3{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:14px;margin-bottom:14px;}
+.g2{display:grid;grid-template-columns:1.5fr 1fr;gap:14px;margin-bottom:14px;}
+.g2r{display:grid;grid-template-columns:1fr 1.5fr;gap:14px;margin-bottom:14px;}
+.g3b{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px;}
+@media(max-width:1100px){.g3,.g2,.g2r,.g3b{grid-template-columns:1fr 1fr;}}
+@media(max-width:700px){.g3,.g2,.g2r,.g3b{grid-template-columns:1fr;}}
+
+/* TABLES */
+.tbl{width:100%;border-collapse:collapse;}
+.tbl th{font-size:.61rem;color:var(--text3);font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:0 10px 10px;text-align:left;border-bottom:1px solid var(--border);}
+.tbl td{padding:10px 10px;font-size:.79rem;color:var(--text2);border-bottom:1px solid var(--border);vertical-align:middle;}
+[data-theme="dark"] .tbl td{border-bottom-color:rgba(255,255,255,0.04);}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl tr:hover td{background:var(--teal-pale);}
+.tbl tr.dim td{opacity:.35;}
+.tbl tr.highlight td{background:var(--teal-pale);}
+.dr-name{color:var(--text);font-weight:700;font-size:.82rem;}
+.dr-spec{font-size:.69rem;color:var(--text3);margin-top:1px;}
+.dr-aed{font-family:'DM Serif Display',serif;font-size:.95rem;color:var(--teal);text-align:right;}
+.dr-bar-wrap{width:70px;}
+.dr-bar-t{height:4px;background:var(--bg2);border-radius:2px;}
+.dr-bar-f{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--teal),var(--teal-light));}
+.star{color:#F59E0B;font-size:.75rem;}
+.rnk{width:22px;height:22px;background:var(--bg2);border-radius:5px;display:inline-flex;align-items:center;justify-content:center;font-size:.67rem;font-weight:800;color:var(--text3);}
+.rnk.t{background:var(--teal-pale);color:var(--teal);}
+.t-pill{display:inline-block;font-size:.61rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:2px 8px;border-radius:50px;}
+.tp-c{background:rgba(5,150,105,0.1);color:var(--emerald);}
+.tp-o{background:rgba(217,119,6,0.1);color:var(--amber);}
+.tp-s{background:rgba(11,122,143,0.1);color:var(--teal);}
+
+/* TAT */
+.tat-list{display:flex;flex-direction:column;gap:10px;}
+.tat-row{display:flex;align-items:center;gap:10px;transition:opacity .3s;}
+.tat-row.dim{opacity:.3;}
+.tat-row.highlight-row{opacity:1;}
+.tat-dept{font-size:.76rem;font-weight:700;color:var(--text2);width:110px;flex-shrink:0;}
+.tat-track{flex:1;background:var(--bg2);border-radius:4px;height:20px;overflow:hidden;}
+.tat-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:10px;font-size:.67rem;font-weight:800;color:#fff;}
+.tat-val{font-family:'DM Serif Display',serif;font-size:.9rem;font-weight:400;width:50px;text-align:right;flex-shrink:0;color:var(--text);}
+.tat-target{font-size:.62rem;color:var(--text3);width:55px;text-align:right;flex-shrink:0;}
+
+/* PAYMENT SPLIT */
+.pay-split{display:flex;flex-direction:column;gap:10px;margin-top:4px;}
+.ps-row{display:flex;align-items:center;gap:10px;transition:opacity .3s;}
+.ps-row.dim{opacity:.3;}
+.ps-label{font-size:.76rem;font-weight:700;color:var(--text2);width:90px;flex-shrink:0;}
+.ps-track{flex:1;background:var(--bg2);border-radius:4px;height:22px;overflow:hidden;}
+.ps-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:10px;font-size:.7rem;font-weight:800;color:#fff;}
+.ps-pct{font-family:'DM Serif Display',serif;font-size:.95rem;width:38px;text-align:right;flex-shrink:0;}
+
+/* NATIONALITY */
+.nat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px;}
+.nat-card{background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:11px;text-align:center;transition:opacity .3s,border-color .2s;}
+.nat-card:hover{border-color:var(--teal-border);background:var(--teal-pale);}
+.nat-card.dim{opacity:.25;}
+.nat-flag{font-size:1.3rem;margin-bottom:4px;}
+.nat-name{font-size:.63rem;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
+.nat-pct{font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--teal);}
+.nat-bar{height:3px;border-radius:2px;margin-top:6px;background:linear-gradient(90deg,var(--teal),var(--teal-light));}
+
+/* ALERTS */
+.alert-list{display:flex;flex-direction:column;gap:7px;}
+.alert-item{display:flex;align-items:flex-start;gap:10px;padding:10px 13px;border-radius:8px;border:1px solid;font-size:.75rem;transition:opacity .3s;}
+.alert-item.warn{background:rgba(217,119,6,0.06);border-color:rgba(217,119,6,0.2);color:var(--amber);}
+.alert-item.ok{background:rgba(5,150,105,0.06);border-color:rgba(5,150,105,0.18);color:var(--emerald);}
+.alert-item.info{background:var(--teal-pale);border-color:var(--teal-border);color:var(--teal);}
+.alert-item.crit{background:rgba(224,91,75,0.06);border-color:rgba(224,91,75,0.18);color:var(--coral);}
+.alert-item.dim{opacity:.2;}
+.al-ico{font-size:.95rem;flex-shrink:0;margin-top:1px;}
+.al-body{flex:1;}
+.al-title{font-weight:800;font-size:.76rem;}
+.al-sub{font-size:.67rem;opacity:.8;color:var(--text2);margin-top:1px;}
+
+/* MINI ROW */
+.mini-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;}
+.mini{flex:1;min-width:80px;background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:11px;text-align:center;}
+.mv{font-family:'DM Serif Display',serif;font-size:1.15rem;color:var(--teal);}
+.ml{font-size:.59rem;color:var(--text3);margin-top:2px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;}
+
+/* DIAGNOSIS */
+.dx-list{display:flex;flex-direction:column;gap:7px;margin-top:4px;}
+.dx-row{display:flex;align-items:center;gap:10px;transition:opacity .3s;}
+.dx-row.dim{opacity:.2;}
+.dx-row.highlight-row{opacity:1;}
+.dx-rank{width:20px;height:20px;border-radius:5px;background:var(--teal-pale);color:var(--teal);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;flex-shrink:0;}
+.dx-name{font-size:.78rem;font-weight:600;color:var(--text);flex:1;}
+.dx-dept{font-size:.65rem;color:var(--text3);}
+.dx-track{width:80px;height:5px;background:var(--bg2);border-radius:3px;}
+.dx-fill{height:100%;border-radius:3px;}
+.dx-count{font-family:'DM Serif Display',serif;font-size:.9rem;color:var(--teal);width:36px;text-align:right;flex-shrink:0;}
+
+/* DIVIDER */
+.divider{display:flex;align-items:center;gap:14px;margin:22px 0 16px;}
+.dv-line{flex:1;height:1px;background:var(--border);}
+.dv-label{font-family:'DM Serif Display',serif;font-size:.92rem;color:var(--text2);display:flex;align-items:center;gap:8px;white-space:nowrap;}
+.dv-label::before,.dv-label::after{content:'✦';font-size:.5rem;color:var(--teal);}
+
+/* WATERMARK */
+.wm{text-align:center;padding:22px 0 4px;font-size:.7rem;color:var(--text3);display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;font-weight:600;}
+.wm a{color:var(--teal);text-decoration:none;font-weight:800;}
+.wm a:hover{text-decoration:underline;}
+
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--bg2);}
+::-webkit-scrollbar-thumb{background:var(--teal);border-radius:2px;}
+
+@keyframes slideIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+.kpi{animation:slideIn .4s ease both;}
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease;}
+.reveal.show{opacity:1;transform:none;}
+
+/* Chart containers — BUGFIX: explicit heights */
+.chart-wrap-tall{position:relative;height:240px;}
+.chart-wrap-donut{position:relative;height:195px;display:flex;align-items:center;justify-content:center;}
+.chart-wrap-med{position:relative;height:240px;}
+.chart-wrap-spark{position:relative;height:130px;margin-top:16px;}
+.chart-wrap-yoy{position:relative;height:270px;}
+
+/* Cursor for clickable charts */
+canvas.clickable{cursor:pointer;}
+canvas.clickable:hover{filter:brightness(1.04);}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <nav class="nav">
+    <a class="logo" href="#">
+      <div class="logo-mark">🏥</div>
+      <div>
+        <div class="logo-name">Heal<span>360</span> Medical Centre</div>
+        <div class="logo-sub">Clinical Intelligence · JLT, Dubai</div>
+      </div>
+    </a>
+    <div class="nav-right">
+      <div class="live-pill"><div class="live-dot"></div>Live</div>
+      <div class="q-tabs">
+        <button class="qt" onclick="setQ(1,this)">Q1</button>
+        <button class="qt" onclick="setQ(2,this)">Q2</button>
+        <button class="qt" onclick="setQ(3,this)">Q3</button>
+        <button class="qt active" onclick="setQ(4,this)">Q4</button>
+      </div>
+      <button class="icon-btn" id="themeBtn" onclick="toggleTheme()">🌙</button>
+    </div>
+  </nav>
+</header>
+
+<!-- CROSS-FILTER BANNER -->
+<div id="filterBanner">
+  <div class="filter-info">
+    <span>🔍 Filtered by:</span>
+    <span class="filter-tag" id="filterTag">—</span>
+    <span class="filter-note" id="filterNote">All panels updated</span>
+  </div>
+  <button class="filter-clear" onclick="clearFilter()">✕ &nbsp;Clear Filter</button>
+</div>
+
+<div class="page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header reveal">
+    <div>
+      <div class="page-title">Clinical <em>Performance</em> Dashboard</div>
+      <div class="page-sub">Heal360 Medical Centre · JLT Cluster Y · Dubai, UAE · All revenue in AED</div>
+      <div class="q-badge" id="qBadge">◉ &nbsp;Q4 2024 · Oct – Dec</div>
+    </div>
+    <div class="header-stats">
+      <div class="hstat"><span class="hstat-lbl">Active Doctors</span><span class="hstat-val" id="hActiveDr">24</span></div>
+      <div class="hstat"><span class="hstat-lbl">Bed Occupancy</span><span class="hstat-val" id="hBedOcc">78%</span></div>
+      <div class="hstat"><span class="hstat-lbl">Open Complaints</span><span class="hstat-val" id="hComplaints" style="color:var(--coral);">3</span></div>
+      <div class="hstat"><span class="hstat-lbl">Reporting Period</span><span class="hstat-val" id="hPeriod" style="font-size:.95rem;">Q4 2024</span></div>
+    </div>
+  </div>
+
+  <!-- KPI STRIP -->
+  <div class="kpi-row" id="kpiRow"></div>
+
+  <!-- ROW 1 -->
+  <div class="g3 reveal">
+    <div class="card">
+      <div class="ch">
+        <div class="ct">Patient Footfall & Revenue</div>
+        <div class="cb cb-t" id="monthBadge">OCT – DEC</div>
+      </div>
+      <div class="chart-wrap-tall"><canvas id="footfallChart" class="clickable"></canvas></div>
+      <div class="mini-row" id="miniRow1"></div>
+    </div>
+
+    <div class="card" id="apptCard">
+      <div class="ch">
+        <div class="ct">Appointment Type Mix</div>
+        <div class="cb cb-g">Breakdown</div>
+        <span class="click-hint">Click to filter</span>
+      </div>
+      <div class="chart-wrap-donut"><canvas id="apptChart" class="clickable"></canvas></div>
+      <div id="apptLeg" style="margin-top:10px;display:flex;flex-direction:column;gap:4px;"></div>
+    </div>
+
+    <div class="card" id="deptCard">
+      <div class="ch">
+        <div class="ct">Revenue by Department</div>
+        <div class="cb cb-v">AED</div>
+        <span class="click-hint">Click to filter</span>
+      </div>
+      <div class="chart-wrap-med"><canvas id="deptChart" class="clickable"></canvas></div>
+    </div>
+  </div>
+
+  <!-- ROW 2 -->
+  <div class="g2 reveal">
+    <div class="card">
+      <div class="ch">
+        <div class="ct">Doctor Performance Register</div>
+        <select id="specFilter" onchange="renderDrTable()" style="background:var(--bg2);border:1px solid var(--border);color:var(--text2);padding:5px 10px;border-radius:7px;font-size:.72rem;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;">
+          <option value="all">All Specialties</option>
+          <option value="Cardiology">Cardiology</option>
+          <option value="Dermatology">Dermatology</option>
+          <option value="Orthopaedics">Orthopaedics</option>
+          <option value="Paediatrics">Paediatrics</option>
+          <option value="General Medicine">General Medicine</option>
+          <option value="Gynaecology">Gynaecology</option>
+        </select>
+      </div>
+      <table class="tbl">
+        <thead><tr>
+          <th>#</th><th>Doctor</th><th>Specialty</th>
+          <th>Patients</th><th>Satisfaction</th><th>Status</th>
+          <th style="text-align:right">Revenue</th>
+        </tr></thead>
+        <tbody id="drBody"></tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="ch"><div class="ct">Avg Turnaround Time</div><div class="cb cb-r">By Department</div></div>
+      <div class="tat-list" id="tatList"></div>
+      <div class="mini-row" id="miniRow2" style="margin-top:14px;"></div>
+    </div>
+  </div>
+
+  <!-- ROW 3 -->
+  <div class="g3b reveal">
+    <div class="card">
+      <div class="ch"><div class="ct">Payment Method Split</div><div class="cb cb-s">Revenue %</div></div>
+      <div class="pay-split" id="paySplit"></div>
+      <div class="chart-wrap-spark"><canvas id="payTrendChart"></canvas></div>
+    </div>
+
+    <div class="card">
+      <div class="ch"><div class="ct">Patient Nationality</div><div class="cb cb-t">Top 6</div></div>
+      <div class="nat-grid" id="natGrid"></div>
+    </div>
+
+    <div class="card">
+      <div class="ch"><div class="ct">Clinical Alerts</div><div class="cb cb-r" id="alertBadge">Live</div></div>
+      <div class="alert-list" id="alertList"></div>
+    </div>
+  </div>
+
+  <!-- ROW 4 -->
+  <div class="g2r reveal">
+    <div class="card">
+      <div class="ch"><div class="ct">Top 8 Presenting Diagnoses</div><div class="cb cb-g">By Case Count</div></div>
+      <div class="dx-list" id="dxList"></div>
+    </div>
+
+    <div class="card" id="yoyCard">
+      <div class="ch">
+        <div class="ct">Year-on-Year Revenue</div>
+        <div class="cb cb-t">2022–2024</div>
+        <span class="click-hint">Click year to filter</span>
+      </div>
+      <div class="chart-wrap-yoy"><canvas id="yoyChart" class="clickable"></canvas></div>
+    </div>
+  </div>
+
+  <div class="wm">
+    Dashboard built by &nbsp;<a href="https://wa.me/919987258696" target="_blank">Om Bagal Analytics</a>&nbsp;
+    · Business Intelligence for Dubai & UAE &nbsp;·&nbsp; ombagal.analytics@gmail.com
+  </div>
+
+</div>
+
+<script>
+/* ══════════════════════════════════════════
+   QUARTERLY DATA
+══════════════════════════════════════════ */
+var QD = {
+  1:{
+    badge:'Q1 2024 · Jan – Mar', monthBadge:'JAN – MAR',
+    period:'Q1 2024', activeDr:'24', bedOcc:'72%', complaints:'5',
+    kpis:[
+      {ico:'👥',lbl:'Total Patients',val:'4,820',unit:'',delta:'↑ 6.2% vs Q4',cls:'up',raw:4820},
+      {ico:'💰',lbl:'Total Revenue',val:'AED 8.4M',unit:'',delta:'↑ 4.8%',cls:'up',raw:8.4},
+      {ico:'🏥',lbl:'OPD Visits',val:'3,940',unit:'',delta:'↑ 7.1%',cls:'up',raw:3940},
+      {ico:'🛏️',lbl:'IPD Admissions',val:'880',unit:'',delta:'↑ 3.2%',cls:'up',raw:880},
+      {ico:'⏱️',lbl:'Avg TAT',val:'38',unit:'min',delta:'↓ 4 min faster',cls:'up',raw:38},
+      {ico:'⭐',lbl:'Patient Satisfaction',val:'4.4',unit:'/5',delta:'↑ 0.1',cls:'up',raw:4.4},
+    ],
+    months:['Jan','Feb','Mar'],
+    footfall:[1520,1620,1680], revenue:[2.6,2.8,3.0],
+    apptV:[52,18,14,16], apptL:['OPD','IPD','Emergency','Teleconsult'],
+    apptC:['#0B7A8F','#059669','#E05B4B','#7C3AED'],
+    deptV:[2.8,1.9,1.4,1.1,0.8,0.4],
+    deptL:['Cardiology','Dermatology','Ortho','Paediatrics','Gynae','Gen Med'],
+    mini1:[{v:'8.4M',l:'Q1 Revenue AED'},{v:'4,820',l:'Patients'},{v:'4.4/5',l:'Satisfaction'}],
+    tat:[
+      {dept:'Cardiology',mins:42,target:'40 min',col:'#0B7A8F',pct:72},
+      {dept:'Emergency',mins:18,target:'20 min',col:'#059669',pct:31},
+      {dept:'Radiology',mins:55,target:'60 min',col:'#7C3AED',pct:94},
+      {dept:'Lab Reports',mins:90,target:'120 min',col:'#D97706',pct:75},
+      {dept:'Dermatology',mins:28,target:'30 min',col:'#0284C7',pct:48},
+    ],
+    mini2:[{v:'38 min',l:'Avg TAT'},{v:'91%',l:'Within SLA'},{v:'18 min',l:'Best: ER'}],
+    pay:[
+      {label:'Insurance',pct:62,col:'#0B7A8F'},
+      {label:'Cash / Card',pct:28,col:'#059669'},
+      {label:'Corporate',pct:10,col:'#7C3AED'},
+    ],
+    payTrend:[58,60,62], payTrend2:[20,22,24],
+    nat:[
+      {flag:'🇮🇳',name:'Indian',pct:34,h:100},{flag:'🇵🇰',name:'Pakistani',pct:14,h:41},
+      {flag:'🇦🇪',name:'Emirati',pct:12,h:35},{flag:'🇬🇧',name:'British',pct:10,h:29},
+      {flag:'🇵🇭',name:'Filipino',pct:9,h:26},{flag:'🇺🇸',name:'American',pct:7,h:21},
+    ],
+    alerts:[
+      {t:'warn',ico:'⚠️',title:'Flu Season Spike',sub:'OPD load 18% above Q4 average.',apptType:'OPD',dept:'Gen Med'},
+      {t:'ok',ico:'✅',title:'MOH Audit Passed',sub:'Dubai Health Authority inspection: 0 critical findings.',apptType:'all',dept:'all'},
+      {t:'info',ico:'ℹ️',title:'Ramadan Schedule Change',sub:'OPD timings adjusted Apr 1–30.',apptType:'OPD',dept:'all'},
+      {t:'ok',ico:'✅',title:'Lab TAT Improved',sub:'Average lab report time reduced to 90 min.',apptType:'all',dept:'Lab Reports'},
+    ],
+    doctors:[
+      {n:'Dr. Sarah Al Rashidi',sp:'Cardiology',pts:284,rating:'4.9',st:'c',rev:'AED 1,820,000',p:100},
+      {n:'Dr. Priya Menon',sp:'Dermatology',pts:312,rating:'4.8',st:'c',rev:'AED 1,240,000',p:68},
+      {n:'Dr. James Whitfield',sp:'Orthopaedics',pts:198,rating:'4.7',st:'c',rev:'AED 980,000',p:54},
+      {n:'Dr. Fatima Hassan',sp:'Gynaecology',pts:174,rating:'4.9',st:'c',rev:'AED 860,000',p:47},
+      {n:'Dr. Arjun Sharma',sp:'Paediatrics',pts:226,rating:'4.6',st:'o',rev:'AED 740,000',p:41},
+      {n:'Dr. Chen Li',sp:'General Medicine',pts:298,rating:'4.5',st:'c',rev:'AED 620,000',p:34},
+      {n:'Dr. Omar Khalid',sp:'Cardiology',pts:142,rating:'4.8',st:'c',rev:'AED 580,000',p:32},
+      {n:'Dr. Nina Patel',sp:'Dermatology',pts:188,rating:'4.6',st:'o',rev:'AED 480,000',p:26},
+    ],
+    dx:[
+      {n:'Hypertension',d:'Cardiology',cnt:312,pct:100,col:'#0B7A8F'},
+      {n:'Vitamin D Deficiency',d:'Gen Med',cnt:284,pct:91,col:'#059669'},
+      {n:'Type 2 Diabetes',d:'Endocrinology',cnt:248,pct:79,col:'#D97706'},
+      {n:'Acne / Dermatitis',d:'Dermatology',cnt:210,pct:67,col:'#7C3AED'},
+      {n:'Knee / Back Pain',d:'Orthopaedics',cnt:196,pct:63,col:'#0284C7'},
+      {n:'Upper Respiratory',d:'Gen Med',cnt:182,pct:58,col:'#0B7A8F'},
+      {n:'Anxiety / Stress',d:'Psychiatry',cnt:140,pct:45,col:'#E05B4B'},
+      {n:'Thyroid Disorder',d:'Endocrinology',cnt:118,pct:38,col:'#059669'},
+    ],
+    yoy:[[3.2,3.0,2.8,2.6],[4.8,4.4,4.0,3.6],[7.6,7.2,6.8,6.4]],
+  },
+  2:{
+    badge:'Q2 2024 · Apr – Jun', monthBadge:'APR – JUN',
+    period:'Q2 2024', activeDr:'26', bedOcc:'76%', complaints:'4',
+    kpis:[
+      {ico:'👥',lbl:'Total Patients',val:'5,410',unit:'',delta:'↑ 12.2% vs Q1',cls:'up',raw:5410},
+      {ico:'💰',lbl:'Total Revenue',val:'AED 9.8M',unit:'',delta:'↑ 16.7%',cls:'up',raw:9.8},
+      {ico:'🏥',lbl:'OPD Visits',val:'4,390',unit:'',delta:'↑ 11.4%',cls:'up',raw:4390},
+      {ico:'🛏️',lbl:'IPD Admissions',val:'1,020',unit:'',delta:'↑ 15.9%',cls:'up',raw:1020},
+      {ico:'⏱️',lbl:'Avg TAT',val:'34',unit:'min',delta:'↓ 4 min faster',cls:'up',raw:34},
+      {ico:'⭐',lbl:'Patient Satisfaction',val:'4.6',unit:'/5',delta:'↑ 0.2',cls:'up',raw:4.6},
+    ],
+    months:['Apr','May','Jun'],
+    footfall:[1740,1820,1850], revenue:[3.1,3.3,3.4],
+    apptV:[50,20,12,18], apptL:['OPD','IPD','Emergency','Teleconsult'],
+    apptC:['#0B7A8F','#059669','#E05B4B','#7C3AED'],
+    deptV:[3.2,2.3,1.7,1.4,1.0,0.6],
+    deptL:['Cardiology','Dermatology','Ortho','Paediatrics','Gynae','Gen Med'],
+    mini1:[{v:'9.8M',l:'Q2 Revenue AED'},{v:'5,410',l:'Patients'},{v:'4.6/5',l:'Satisfaction'}],
+    tat:[
+      {dept:'Cardiology',mins:38,target:'40 min',col:'#059669',pct:65},
+      {dept:'Emergency',mins:16,target:'20 min',col:'#059669',pct:27},
+      {dept:'Radiology',mins:50,target:'60 min',col:'#7C3AED',pct:86},
+      {dept:'Lab Reports',mins:82,target:'120 min',col:'#D97706',pct:68},
+      {dept:'Dermatology',mins:24,target:'30 min',col:'#0284C7',pct:41},
+    ],
+    mini2:[{v:'34 min',l:'Avg TAT'},{v:'94%',l:'Within SLA'},{v:'16 min',l:'Best: ER'}],
+    pay:[
+      {label:'Insurance',pct:60,col:'#0B7A8F'},
+      {label:'Cash / Card',pct:30,col:'#059669'},
+      {label:'Corporate',pct:10,col:'#7C3AED'},
+    ],
+    payTrend:[60,60,62], payTrend2:[22,24,24],
+    nat:[
+      {flag:'🇮🇳',name:'Indian',pct:32,h:100},{flag:'🇵🇰',name:'Pakistani',pct:15,h:47},
+      {flag:'🇦🇪',name:'Emirati',pct:13,h:41},{flag:'🇬🇧',name:'British',pct:11,h:34},
+      {flag:'🇵🇭',name:'Filipino',pct:10,h:31},{flag:'🇪🇬',name:'Egyptian',pct:8,h:25},
+    ],
+    alerts:[
+      {t:'ok',ico:'✅',title:'Summer Health Campaign',sub:'Free screenings reached 820 patients in May.',apptType:'OPD',dept:'Gen Med'},
+      {t:'info',ico:'ℹ️',title:'New Rheumatology Clinic',sub:'Dr. Layla Mahmoud joins from Cleveland Clinic.',apptType:'OPD',dept:'all'},
+      {t:'warn',ico:'⚠️',title:'Lab Machine #3 Maintenance',sub:'Scheduled downtime Jun 15.',apptType:'all',dept:'Lab Reports'},
+      {t:'ok',ico:'✅',title:'CSAT Record: 4.6/5',sub:'Highest satisfaction since clinic opened 2019.',apptType:'all',dept:'all'},
+    ],
+    doctors:[
+      {n:'Dr. Sarah Al Rashidi',sp:'Cardiology',pts:342,rating:'4.9',st:'c',rev:'AED 2,100,000',p:100},
+      {n:'Dr. Priya Menon',sp:'Dermatology',pts:380,rating:'4.8',st:'c',rev:'AED 1,560,000',p:74},
+      {n:'Dr. James Whitfield',sp:'Orthopaedics',pts:240,rating:'4.8',st:'c',rev:'AED 1,210,000',p:58},
+      {n:'Dr. Fatima Hassan',sp:'Gynaecology',pts:210,rating:'4.9',st:'c',rev:'AED 1,040,000',p:50},
+      {n:'Dr. Arjun Sharma',sp:'Paediatrics',pts:274,rating:'4.7',st:'c',rev:'AED 920,000',p:44},
+      {n:'Dr. Chen Li',sp:'General Medicine',pts:340,rating:'4.6',st:'c',rev:'AED 780,000',p:37},
+      {n:'Dr. Omar Khalid',sp:'Cardiology',pts:168,rating:'4.8',st:'c',rev:'AED 680,000',p:32},
+      {n:'Dr. Layla Mahmoud',sp:'Rheumatology',pts:142,rating:'4.7',st:'c',rev:'AED 540,000',p:26},
+    ],
+    dx:[
+      {n:'Hypertension',d:'Cardiology',cnt:368,pct:100,col:'#0B7A8F'},
+      {n:'Vitamin D Deficiency',d:'Gen Med',cnt:320,pct:87,col:'#059669'},
+      {n:'Acne / Dermatitis',d:'Dermatology',cnt:286,pct:78,col:'#7C3AED'},
+      {n:'Type 2 Diabetes',d:'Endocrinology',cnt:262,pct:71,col:'#D97706'},
+      {n:'Upper Respiratory',d:'Gen Med',cnt:228,pct:62,col:'#0B7A8F'},
+      {n:'Knee / Back Pain',d:'Orthopaedics',cnt:210,pct:57,col:'#0284C7'},
+      {n:'GERD / Gastritis',d:'Gastro',cnt:164,pct:45,col:'#E05B4B'},
+      {n:'Anxiety / Stress',d:'Psychiatry',cnt:148,pct:40,col:'#059669'},
+    ],
+    yoy:[[3.2,3.0,2.8,2.6],[4.8,4.4,4.0,3.6],[8.8,8.4,8.0,7.6]],
+  },
+  3:{
+    badge:'Q3 2024 · Jul – Sep', monthBadge:'JUL – SEP',
+    period:'Q3 2024', activeDr:'26', bedOcc:'74%', complaints:'2',
+    kpis:[
+      {ico:'👥',lbl:'Total Patients',val:'5,820',unit:'',delta:'↑ 7.6% vs Q2',cls:'up',raw:5820},
+      {ico:'💰',lbl:'Total Revenue',val:'AED 11.2M',unit:'',delta:'↑ 14.3%',cls:'up',raw:11.2},
+      {ico:'🏥',lbl:'OPD Visits',val:'4,710',unit:'',delta:'↑ 7.3%',cls:'up',raw:4710},
+      {ico:'🛏️',lbl:'IPD Admissions',val:'1,110',unit:'',delta:'↑ 8.8%',cls:'up',raw:1110},
+      {ico:'⏱️',lbl:'Avg TAT',val:'31',unit:'min',delta:'↓ 3 min faster',cls:'up',raw:31},
+      {ico:'⭐',lbl:'Patient Satisfaction',val:'4.7',unit:'/5',delta:'↑ 0.1',cls:'up',raw:4.7},
+    ],
+    months:['Jul','Aug','Sep'],
+    footfall:[1880,1940,2000], revenue:[3.6,3.7,3.9],
+    apptV:[48,21,11,20], apptL:['OPD','IPD','Emergency','Teleconsult'],
+    apptC:['#0B7A8F','#059669','#E05B4B','#7C3AED'],
+    deptV:[3.8,2.6,2.0,1.6,1.2,0.8],
+    deptL:['Cardiology','Dermatology','Ortho','Paediatrics','Gynae','Gen Med'],
+    mini1:[{v:'11.2M',l:'Q3 Revenue AED'},{v:'5,820',l:'Patients'},{v:'4.7/5',l:'Satisfaction'}],
+    tat:[
+      {dept:'Cardiology',mins:34,target:'40 min',col:'#059669',pct:58},
+      {dept:'Emergency',mins:14,target:'20 min',col:'#059669',pct:24},
+      {dept:'Radiology',mins:46,target:'60 min',col:'#7C3AED',pct:79},
+      {dept:'Lab Reports',mins:74,target:'120 min',col:'#D97706',pct:62},
+      {dept:'Dermatology',mins:22,target:'30 min',col:'#0284C7',pct:38},
+    ],
+    mini2:[{v:'31 min',l:'Avg TAT'},{v:'96%',l:'Within SLA'},{v:'14 min',l:'Best: ER'}],
+    pay:[
+      {label:'Insurance',pct:58,col:'#0B7A8F'},
+      {label:'Cash / Card',pct:32,col:'#059669'},
+      {label:'Corporate',pct:10,col:'#7C3AED'},
+    ],
+    payTrend:[62,60,58], payTrend2:[24,26,28],
+    nat:[
+      {flag:'🇮🇳',name:'Indian',pct:31,h:100},{flag:'🇦🇪',name:'Emirati',pct:14,h:45},
+      {flag:'🇵🇰',name:'Pakistani',pct:13,h:42},{flag:'🇬🇧',name:'British',pct:12,h:39},
+      {flag:'🇵🇭',name:'Filipino',pct:10,h:32},{flag:'🇫🇷',name:'French',pct:7,h:23},
+    ],
+    alerts:[
+      {t:'warn',ico:'⚠️',title:'Heat-Related Cases Up 28%',sub:'Dehydration & heat exhaustion elevated Jul–Aug.',apptType:'Emergency',dept:'Emergency'},
+      {t:'ok',ico:'✅',title:'Teleconsult Platform Upgraded',sub:'New app cuts booking time to 90 sec.',apptType:'Teleconsult',dept:'all'},
+      {t:'info',ico:'ℹ️',title:'Back-to-School Health Drive',sub:'Paediatrics capacity increased for Sep.',apptType:'OPD',dept:'Paediatrics'},
+      {t:'ok',ico:'✅',title:'NABIDH Integration Complete',sub:'Records fully synced with Dubai Health Authority.',apptType:'all',dept:'all'},
+    ],
+    doctors:[
+      {n:'Dr. Sarah Al Rashidi',sp:'Cardiology',pts:390,rating:'5.0',st:'c',rev:'AED 2,480,000',p:100},
+      {n:'Dr. Priya Menon',sp:'Dermatology',pts:420,rating:'4.9',st:'c',rev:'AED 1,840,000',p:74},
+      {n:'Dr. James Whitfield',sp:'Orthopaedics',pts:274,rating:'4.8',st:'c',rev:'AED 1,420,000',p:57},
+      {n:'Dr. Fatima Hassan',sp:'Gynaecology',pts:236,rating:'4.9',st:'c',rev:'AED 1,180,000',p:48},
+      {n:'Dr. Layla Mahmoud',sp:'Rheumatology',pts:198,rating:'4.8',st:'c',rev:'AED 1,020,000',p:41},
+      {n:'Dr. Arjun Sharma',sp:'Paediatrics',pts:312,rating:'4.7',st:'c',rev:'AED 980,000',p:40},
+      {n:'Dr. Chen Li',sp:'General Medicine',pts:368,rating:'4.6',st:'c',rev:'AED 840,000',p:34},
+      {n:'Dr. Omar Khalid',sp:'Cardiology',pts:192,rating:'4.8',st:'c',rev:'AED 760,000',p:31},
+    ],
+    dx:[
+      {n:'Vitamin D Deficiency',d:'Gen Med',cnt:408,pct:100,col:'#059669'},
+      {n:'Hypertension',d:'Cardiology',cnt:382,pct:94,col:'#0B7A8F'},
+      {n:'Heat Exhaustion',d:'Emergency',cnt:310,pct:76,col:'#E05B4B'},
+      {n:'Acne / Dermatitis',d:'Dermatology',cnt:298,pct:73,col:'#7C3AED'},
+      {n:'Type 2 Diabetes',d:'Endocrinology',cnt:270,pct:66,col:'#D97706'},
+      {n:'Back Pain',d:'Orthopaedics',cnt:238,pct:58,col:'#0284C7'},
+      {n:'GERD / Gastritis',d:'Gastro',cnt:194,pct:48,col:'#E05B4B'},
+      {n:'Anxiety / Stress',d:'Psychiatry',cnt:166,pct:41,col:'#059669'},
+    ],
+    yoy:[[3.2,3.0,2.8,2.6],[4.8,4.4,4.0,3.6],[9.8,9.4,9.0,8.6]],
+  },
+  4:{
+    badge:'Q4 2024 · Oct – Dec', monthBadge:'OCT – DEC',
+    period:'Q4 2024', activeDr:'28', bedOcc:'82%', complaints:'3',
+    kpis:[
+      {ico:'👥',lbl:'Total Patients',val:'6,340',unit:'',delta:'↑ 8.9% vs Q3',cls:'up',raw:6340},
+      {ico:'💰',lbl:'Total Revenue',val:'AED 13.4M',unit:'',delta:'↑ 19.6%',cls:'up',raw:13.4},
+      {ico:'🏥',lbl:'OPD Visits',val:'5,080',unit:'',delta:'↑ 7.9%',cls:'up',raw:5080},
+      {ico:'🛏️',lbl:'IPD Admissions',val:'1,260',unit:'',delta:'↑ 13.5%',cls:'up',raw:1260},
+      {ico:'⏱️',lbl:'Avg TAT',val:'28',unit:'min',delta:'↓ 3 min faster',cls:'up',raw:28},
+      {ico:'⭐',lbl:'Patient Satisfaction',val:'4.8',unit:'/5',delta:'↑ 0.1',cls:'up',raw:4.8},
+    ],
+    months:['Oct','Nov','Dec'],
+    footfall:[2040,2120,2180], revenue:[4.2,4.5,4.7],
+    apptV:[47,22,11,20], apptL:['OPD','IPD','Emergency','Teleconsult'],
+    apptC:['#0B7A8F','#059669','#E05B4B','#7C3AED'],
+    deptV:[4.4,3.0,2.3,1.8,1.4,1.0],
+    deptL:['Cardiology','Dermatology','Ortho','Paediatrics','Gynae','Gen Med'],
+    mini1:[{v:'13.4M',l:'Q4 Revenue AED'},{v:'6,340',l:'Patients'},{v:'4.8/5',l:'Satisfaction'}],
+    tat:[
+      {dept:'Cardiology',mins:30,target:'40 min',col:'#059669',pct:51},
+      {dept:'Emergency',mins:12,target:'20 min',col:'#059669',pct:20},
+      {dept:'Radiology',mins:42,target:'60 min',col:'#7C3AED',pct:72},
+      {dept:'Lab Reports',mins:68,target:'120 min',col:'#D97706',pct:57},
+      {dept:'Dermatology',mins:20,target:'30 min',col:'#0284C7',pct:34},
+    ],
+    mini2:[{v:'28 min',l:'Avg TAT'},{v:'98%',l:'Within SLA'},{v:'12 min',l:'Best: ER'}],
+    pay:[
+      {label:'Insurance',pct:56,col:'#0B7A8F'},
+      {label:'Cash / Card',pct:34,col:'#059669'},
+      {label:'Corporate',pct:10,col:'#7C3AED'},
+    ],
+    payTrend:[58,56,54], payTrend2:[26,28,30],
+    nat:[
+      {flag:'🇮🇳',name:'Indian',pct:30,h:100},{flag:'🇦🇪',name:'Emirati',pct:15,h:50},
+      {flag:'🇬🇧',name:'British',pct:13,h:43},{flag:'🇵🇰',name:'Pakistani',pct:12,h:40},
+      {flag:'🇵🇭',name:'Filipino',pct:10,h:33},{flag:'🇷🇺',name:'Russian',pct:8,h:27},
+    ],
+    alerts:[
+      {t:'ok',ico:'✅',title:'Year-End Revenue Record: AED 13.4M',sub:'Best quarter since opening. All depts above target.',apptType:'all',dept:'all'},
+      {t:'warn',ico:'⚠️',title:'Winter Respiratory Cases ↑',sub:'Flu/chest infections 22% above Nov avg.',apptType:'OPD',dept:'Gen Med'},
+      {t:'ok',ico:'✅',title:'New MRI Machine Operational',sub:'Radiology TAT cut by 38%.',apptType:'all',dept:'Radiology'},
+      {t:'info',ico:'ℹ️',title:'JCI Accreditation Renewal Due',sub:'Joint Commission audit scheduled Feb 2025.',apptType:'all',dept:'all'},
+    ],
+    doctors:[
+      {n:'Dr. Sarah Al Rashidi',sp:'Cardiology',pts:448,rating:'5.0',st:'c',rev:'AED 2,940,000',p:100},
+      {n:'Dr. Priya Menon',sp:'Dermatology',pts:486,rating:'4.9',st:'c',rev:'AED 2,260,000',p:77},
+      {n:'Dr. James Whitfield',sp:'Orthopaedics',pts:312,rating:'4.8',st:'c',rev:'AED 1,680,000',p:57},
+      {n:'Dr. Fatima Hassan',sp:'Gynaecology',pts:274,rating:'4.9',st:'c',rev:'AED 1,420,000',p:48},
+      {n:'Dr. Layla Mahmoud',sp:'Rheumatology',pts:228,rating:'4.8',st:'c',rev:'AED 1,240,000',p:42},
+      {n:'Dr. Arjun Sharma',sp:'Paediatrics',pts:360,rating:'4.7',st:'c',rev:'AED 1,080,000',p:37},
+      {n:'Dr. Chen Li',sp:'General Medicine',pts:408,rating:'4.7',st:'c',rev:'AED 920,000',p:31},
+      {n:'Dr. Omar Khalid',sp:'Cardiology',pts:220,rating:'4.8',st:'o',rev:'AED 840,000',p:29},
+    ],
+    dx:[
+      {n:'Hypertension',d:'Cardiology',cnt:448,pct:100,col:'#0B7A8F'},
+      {n:'Upper Respiratory',d:'Gen Med',cnt:412,pct:92,col:'#059669'},
+      {n:'Vitamin D Deficiency',d:'Gen Med',cnt:368,pct:82,col:'#D97706'},
+      {n:'Type 2 Diabetes',d:'Endocrinology',cnt:320,pct:71,col:'#7C3AED'},
+      {n:'Acne / Dermatitis',d:'Dermatology',cnt:296,pct:66,col:'#0B7A8F'},
+      {n:'Knee / Back Pain',d:'Orthopaedics',cnt:272,pct:61,col:'#0284C7'},
+      {n:'GERD / Gastritis',d:'Gastro',cnt:216,pct:48,col:'#E05B4B'},
+      {n:'Anxiety / Depression',d:'Psychiatry',cnt:188,pct:42,col:'#059669'},
+    ],
+    yoy:[[3.2,3.0,2.8,2.6],[4.8,4.4,4.0,3.6],[11.8,11.2,10.4,9.8]],
+  }
+};
+
+// ═══════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════
+var activeQ = 4;
+var _charts = {};
+// activeFilter: { type: 'dept'|'appt'|'year'|null, value: string|null, index: number|null }
+var activeFilter = { type: null, value: null, index: null };
+
+// Dept → specialty mapping for doctor table filtering
+var DEPT_TO_SPEC = {
+  'Cardiology': 'Cardiology',
+  'Dermatology': 'Dermatology',
+  'Ortho': 'Orthopaedics',
+  'Paediatrics': 'Paediatrics',
+  'Gynae': 'Gynaecology',
+  'Gen Med': 'General Medicine',
+};
+// Appointment type → relevant doctor specialties
+var APPT_TO_SPEC = {
+  'OPD': ['Cardiology','Dermatology','General Medicine','Paediatrics','Gynaecology','Rheumatology'],
+  'IPD': ['Cardiology','Orthopaedics','Gynaecology','Rheumatology'],
+  'Emergency': ['General Medicine','Cardiology','Orthopaedics'],
+  'Teleconsult': ['Dermatology','General Medicine','Paediatrics','Psychiatry'],
+};
+
+// ═══════════════════════════════════════════
+// FILTER MANAGEMENT
+// ═══════════════════════════════════════════
+function setFilter(type, value, index) {
+  // toggle off if same
+  if (activeFilter.type === type && activeFilter.value === value) {
+    clearFilter();
+    return;
+  }
+  activeFilter = { type: type, value: value, index: index };
+  showFilterBanner(type, value);
+  applyFilter();
+}
+
+function clearFilter() {
+  activeFilter = { type: null, value: null, index: null };
+  document.getElementById('filterBanner').classList.remove('show');
+  renderAll(true); // full re-render without filter
+}
+
+function showFilterBanner(type, value) {
+  var banner = document.getElementById('filterBanner');
+  var tag = document.getElementById('filterTag');
+  var note = document.getElementById('filterNote');
+  banner.classList.add('show');
+  tag.textContent = value;
+  var notes = {
+    'dept': '→ Doctors, Diagnoses, TAT & Alerts filtered',
+    'appt': '→ Doctors, Alerts & Payment mix filtered',
+    'year': '→ Footfall & Revenue charts filtered',
+  };
+  note.textContent = notes[type] || 'All panels updated';
+}
+
+function applyFilter() {
+  var d = QD[activeQ];
+  var f = activeFilter;
+
+  // --- 1. KPI cards: apply dim or highlight based on filter type ---
+  applyKPIFilter(d, f);
+
+  // --- 2. Charts: dim non-selected bars/slices ---
+  applyChartFilter(d, f);
+
+  // --- 3. Doctor table: highlight or dim rows ---
+  applyDrFilter(d, f);
+
+  // --- 4. TAT bars: highlight matching dept ---
+  applyTATFilter(d, f);
+
+  // --- 5. Diagnosis list: dim non-matching ---
+  applyDxFilter(d, f);
+
+  // --- 6. Alerts: dim non-relevant ---
+  applyAlertFilter(d, f);
+
+  // --- 7. Payment split: dim for appt filter ---
+  applyPayFilter(d, f);
+
+  // --- 8. Nationality: dim for year filter ---
+  applyNatFilter(d, f);
+
+  // --- card highlight ring ---
+  document.getElementById('apptCard').classList.toggle('filtered-active', f.type === 'appt');
+  document.getElementById('deptCard').classList.toggle('filtered-active', f.type === 'dept');
+  document.getElementById('yoyCard').classList.toggle('filtered-active', f.type === 'year');
+}
+
+function applyKPIFilter(d, f) {
+  var cards = document.querySelectorAll('.kpi');
+  if (f.type === 'dept') {
+    var spec = DEPT_TO_SPEC[f.value] || f.value;
+    var dr = d.doctors.filter(function(x){ return x.sp === spec; });
+    var totalPts = dr.reduce(function(s,x){ return s+x.pts; }, 0);
+    var totalRev = dr.reduce(function(s,x){
+      var n = parseInt(x.rev.replace(/[^0-9]/g,''));
+      return s + n/1000000;
+    }, 0).toFixed(1);
+    var overrides = [
+      totalPts.toLocaleString(),
+      'AED '+totalRev+'M',
+      null, null, null, null
+    ];
+    cards.forEach(function(c, i) {
+      if (overrides[i] !== null && overrides[i] !== undefined) {
+        c.querySelector('.kpi-val').textContent = overrides[i];
+        c.classList.add('filtered');
+      } else {
+        c.classList.remove('filtered');
+      }
+    });
+  } else if (f.type === 'appt') {
+    var pct = d.apptV[d.apptL.indexOf(f.value)] || 0;
+    var filtPts = Math.round(d.kpis[0].raw * pct / 100);
+    var filtRev = (d.kpis[1].raw * pct / 100).toFixed(1);
+    cards.forEach(function(c, i) {
+      if (i === 0) { c.querySelector('.kpi-val').textContent = filtPts.toLocaleString(); c.classList.add('filtered'); }
+      else if (i === 1) { c.querySelector('.kpi-val').textContent = 'AED '+filtRev+'M'; c.classList.add('filtered'); }
+      else { c.classList.remove('filtered'); }
+    });
+  } else {
+    cards.forEach(function(c) { c.classList.remove('filtered'); });
+  }
+}
+
+function applyChartFilter(d, f) {
+  // Appointment chart: dim unselected slices
+  if (_charts.appt) {
+    var ds = _charts.appt.data.datasets[0];
+    if (f.type === 'appt') {
+      ds.backgroundColor = d.apptC.map(function(c, i) {
+        return i === f.index ? c : c + '33';
+      });
+      ds.hoverOffset = d.apptC.map(function(_, i) { return i === f.index ? 14 : 0; });
+    } else {
+      ds.backgroundColor = d.apptC;
+    }
+    _charts.appt.update('none');
+  }
+
+  // Dept chart: dim unselected bars
+  if (_charts.dept) {
+    var deptColors = ['rgba(11,122,143,0.85)','rgba(5,150,105,0.8)','rgba(124,58,237,0.8)','rgba(2,132,199,0.8)','rgba(217,119,6,0.8)','rgba(224,91,75,0.8)'];
+    var dimColors = deptColors.map(function(c) { return c.replace(/[\d.]+\)$/, '0.12)'); });
+    if (f.type === 'dept') {
+      _charts.dept.data.datasets[0].backgroundColor = deptColors.map(function(c, i) {
+        return i === f.index ? c : dimColors[i];
+      });
+    } else {
+      _charts.dept.data.datasets[0].backgroundColor = deptColors;
+    }
+    _charts.dept.update('none');
+  }
+
+  // YoY chart: dim non-selected year
+  if (_charts.yoy) {
+    var yoyBase = [
+      {label:'2022',bg:'rgba(0,0,0,0.08)',bgDim:'rgba(0,0,0,0.03)'},
+      {label:'2023',bg:'rgba(5,150,105,0.65)',bgDim:'rgba(5,150,105,0.1)'},
+      {label:'2024',bg:'rgba(11,122,143,0.9)',bgDim:'rgba(11,122,143,0.12)'},
+    ];
+    if (f.type === 'year') {
+      _charts.yoy.data.datasets.forEach(function(ds, i) {
+        ds.backgroundColor = (i === f.index) ? yoyBase[i].bg : yoyBase[i].bgDim;
+      });
+    } else {
+      _charts.yoy.data.datasets.forEach(function(ds, i) {
+        ds.backgroundColor = yoyBase[i].bg;
+      });
+    }
+    _charts.yoy.update('none');
+  }
+}
+
+function applyDrFilter(d, f) {
+  var rows = document.querySelectorAll('#drBody tr');
+  if (f.type === 'dept') {
+    var targetSpec = DEPT_TO_SPEC[f.value] || f.value;
+    rows.forEach(function(row) {
+      var spec = row.querySelector('.dr-spec') ? row.querySelector('.dr-spec').textContent : '';
+      if (spec === targetSpec) {
+        row.classList.add('highlight');
+        row.classList.remove('dim');
+      } else {
+        row.classList.add('dim');
+        row.classList.remove('highlight');
+      }
+    });
+  } else if (f.type === 'appt') {
+    var relevantSpecs = APPT_TO_SPEC[f.value] || [];
+    rows.forEach(function(row) {
+      var spec = row.querySelector('.dr-spec') ? row.querySelector('.dr-spec').textContent : '';
+      if (relevantSpecs.indexOf(spec) > -1) {
+        row.classList.add('highlight');
+        row.classList.remove('dim');
+      } else {
+        row.classList.add('dim');
+        row.classList.remove('highlight');
+      }
+    });
+  } else {
+    rows.forEach(function(row) {
+      row.classList.remove('dim','highlight');
+    });
+  }
+}
+
+function applyTATFilter(d, f) {
+  var rows = document.querySelectorAll('.tat-row');
+  if (f.type === 'dept') {
+    rows.forEach(function(row) {
+      var dept = row.querySelector('.tat-dept') ? row.querySelector('.tat-dept').textContent : '';
+      var match = dept.toLowerCase().indexOf(f.value.toLowerCase()) > -1 ||
+                  f.value.toLowerCase().indexOf(dept.toLowerCase()) > -1;
+      if (match) { row.classList.add('highlight-row'); row.classList.remove('dim'); }
+      else { row.classList.add('dim'); row.classList.remove('highlight-row'); }
+    });
+  } else {
+    rows.forEach(function(row){ row.classList.remove('dim','highlight-row'); });
+  }
+}
+
+function applyDxFilter(d, f) {
+  var rows = document.querySelectorAll('.dx-row');
+  if (f.type === 'dept') {
+    rows.forEach(function(row) {
+      var deptEl = row.querySelector('.dx-dept');
+      var dept = deptEl ? deptEl.textContent : '';
+      var deptFull = DEPT_TO_SPEC[f.value] || f.value;
+      var match = dept === deptFull || dept === f.value ||
+                  dept.toLowerCase().indexOf(f.value.toLowerCase()) > -1;
+      if (match) { row.classList.remove('dim'); row.classList.add('highlight-row'); }
+      else { row.classList.add('dim'); row.classList.remove('highlight-row'); }
+    });
+  } else if (f.type === 'appt') {
+    var apptDeptMap = {
+      'OPD': ['Cardiology','Dermatology','Gen Med','Endocrinology','Psychiatry'],
+      'IPD': ['Cardiology','Orthopaedics','Gynaecology','Gastro'],
+      'Emergency': ['Emergency','Gen Med','Cardiology'],
+      'Teleconsult': ['Dermatology','Psychiatry','Gen Med','Paediatrics'],
+    };
+    var relDepts = apptDeptMap[f.value] || [];
+    rows.forEach(function(row) {
+      var deptEl = row.querySelector('.dx-dept');
+      var dept = deptEl ? deptEl.textContent : '';
+      var match = relDepts.some(function(rd){ return dept.indexOf(rd) > -1 || rd.indexOf(dept) > -1; });
+      if (match) { row.classList.remove('dim'); row.classList.add('highlight-row'); }
+      else { row.classList.add('dim'); row.classList.remove('highlight-row'); }
+    });
+  } else {
+    rows.forEach(function(row){ row.classList.remove('dim','highlight-row'); });
+  }
+}
+
+function applyAlertFilter(d, f) {
+  var items = document.querySelectorAll('.alert-item');
+  var alerts = d.alerts;
+  if (f.type === 'dept') {
+    items.forEach(function(item, i) {
+      var a = alerts[i];
+      if (!a) return;
+      var match = a.dept === 'all' || a.dept === f.value ||
+                  (a.dept && a.dept.toLowerCase().indexOf(f.value.toLowerCase()) > -1);
+      item.classList.toggle('dim', !match);
+    });
+  } else if (f.type === 'appt') {
+    items.forEach(function(item, i) {
+      var a = alerts[i];
+      if (!a) return;
+      var match = a.apptType === 'all' || a.apptType === f.value;
+      item.classList.toggle('dim', !match);
+    });
+  } else {
+    items.forEach(function(item){ item.classList.remove('dim'); });
+  }
+}
+
+function applyPayFilter(d, f) {
+  var rows = document.querySelectorAll('.ps-row');
+  if (f.type === 'appt') {
+    var apptPayMap = {
+      'OPD': ['Insurance','Cash / Card'],
+      'IPD': ['Insurance','Corporate'],
+      'Emergency': ['Insurance','Cash / Card'],
+      'Teleconsult': ['Cash / Card','Corporate'],
+    };
+    var relevant = apptPayMap[f.value] || [];
+    rows.forEach(function(row) {
+      var lbl = row.querySelector('.ps-label') ? row.querySelector('.ps-label').textContent.trim() : '';
+      row.classList.toggle('dim', relevant.indexOf(lbl) === -1);
+    });
+  } else {
+    rows.forEach(function(row){ row.classList.remove('dim'); });
+  }
+}
+
+function applyNatFilter(d, f) {
+  var cards = document.querySelectorAll('.nat-card');
+  if (f.type === 'year') {
+    // Year 2022 → mostly South Asian, Year 2024 → more diverse (dim top 3 for 2022)
+    var yearIdx = f.index;
+    cards.forEach(function(card, i) {
+      card.classList.toggle('dim', yearIdx === 0 && i > 2);
+    });
+  } else {
+    cards.forEach(function(c){ c.classList.remove('dim'); });
+  }
+}
+
+// ═══════════════════════════════════════════
+// QUARTER SWITCH
+// ═══════════════════════════════════════════
+function setQ(q, btn) {
+  if (q === activeQ) return;
+  activeQ = q;
+  activeFilter = { type: null, value: null, index: null };
+  document.getElementById('filterBanner').classList.remove('show');
+  document.querySelectorAll('.qt').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  renderAll(false);
+}
+
+// ═══════════════════════════════════════════
+// RENDER ALL
+// ═══════════════════════════════════════════
+function renderAll(skipFilter) {
+  var d = QD[activeQ];
+  document.getElementById('qBadge').textContent = '◉  ' + d.badge;
+  document.getElementById('monthBadge').textContent = d.monthBadge;
+  document.getElementById('hActiveDr').textContent = d.activeDr;
+  document.getElementById('hBedOcc').textContent = d.bedOcc;
+  document.getElementById('hComplaints').textContent = d.complaints;
+  document.getElementById('hPeriod').textContent = d.period;
+  document.getElementById('alertBadge').textContent = 'Live · ' + d.period;
+  renderKPIs(d);
+  renderMiniRow('miniRow1', d.mini1);
+  renderMiniRow('miniRow2', d.mini2);
+  renderDrTable();
+  renderTAT(d);
+  renderPay(d);
+  renderNat(d);
+  renderAlerts(d);
+  renderDx(d);
+  buildCharts(d);
+  // clear card highlights
+  document.getElementById('apptCard').classList.remove('filtered-active');
+  document.getElementById('deptCard').classList.remove('filtered-active');
+  document.getElementById('yoyCard').classList.remove('filtered-active');
+}
+
+/* ── KPIs ── */
+function renderKPIs(d) {
+  var row = document.getElementById('kpiRow');
+  row.innerHTML = '';
+  d.kpis.forEach(function(k, i) {
+    var div = document.createElement('div');
+    div.className = 'kpi';
+    div.style.animationDelay = (i * 0.06) + 's';
+    div.innerHTML =
+      '<div class="kpi-icon">' + k.ico + '</div>' +
+      '<div class="kpi-lbl">' + k.lbl + '</div>' +
+      '<div class="kpi-val">' + k.val + (k.unit ? '<span class="kpi-unit"> ' + k.unit + '</span>' : '') + '</div>' +
+      '<div class="kpi-delta ' + k.cls + '">' + k.delta + '</div>';
+    row.appendChild(div);
+  });
+}
+
+/* ── DOCTOR TABLE ── */
+function renderDrTable() {
+  var d = QD[activeQ];
+  var f = document.getElementById('specFilter').value;
+  var body = document.getElementById('drBody');
+  body.innerHTML = '';
+  var stMap = { c: 'tp-c', o: 'tp-o', s: 'tp-s' };
+  var stLbl = { c: 'Available', o: 'On Leave', s: 'Surgery' };
+  var shown = 0;
+  d.doctors.forEach(function(dr) {
+    if (f !== 'all' && dr.sp !== f) return;
+    shown++;
+    var stars = '★'.repeat(Math.floor(parseFloat(dr.rating)));
+    body.innerHTML +=
+      '<tr>' +
+      '<td><span class="rnk' + (shown === 1 ? ' t' : '') + '">' + shown + '</span></td>' +
+      '<td><div class="dr-name">' + dr.n + '</div><div class="dr-spec">' + dr.sp + '</div></td>' +
+      '<td style="font-size:.74rem;"><span class="t-pill cb-t" style="font-size:.61rem;">' + dr.sp + '</span></td>' +
+      '<td style="font-weight:700;color:var(--text);">' + dr.pts + '</td>' +
+      '<td><span class="star">' + stars + '</span> <span style="font-size:.74rem;font-weight:700;">' + dr.rating + '</span></td>' +
+      '<td><span class="t-pill ' + stMap[dr.st] + '">' + stLbl[dr.st] + '</span></td>' +
+      '<td class="dr-aed">' + dr.rev + '</td>' +
+      '</tr>';
+  });
+}
+
+/* ── TAT ── */
+function renderTAT(d) {
+  var el = document.getElementById('tatList');
+  el.innerHTML = '';
+  d.tat.forEach(function(t) {
+    el.innerHTML +=
+      '<div class="tat-row">' +
+      '<div class="tat-dept">' + t.dept + '</div>' +
+      '<div class="tat-track"><div class="tat-fill" style="width:' + t.pct + '%;background:linear-gradient(90deg,' + t.col + ',' + t.col + 'bb);">' + t.mins + ' min</div></div>' +
+      '<div class="tat-target">Target: ' + t.target + '</div>' +
+      '</div>';
+  });
+}
+
+/* ── PAYMENT SPLIT ── */
+function renderPay(d) {
+  var el = document.getElementById('paySplit');
+  el.innerHTML = '';
+  d.pay.forEach(function(p) {
+    el.innerHTML +=
+      '<div class="ps-row">' +
+      '<div class="ps-label">' + p.label + '</div>' +
+      '<div class="ps-track"><div class="ps-fill" style="width:' + p.pct + '%;background:linear-gradient(90deg,' + p.col + ',' + p.col + 'bb);">' + p.pct + '%</div></div>' +
+      '<div class="ps-pct" style="color:' + p.col + ';">' + p.pct + '%</div>' +
+      '</div>';
+  });
+}
+
+/* ── NATIONALITY ── */
+function renderNat(d) {
+  var el = document.getElementById('natGrid');
+  el.innerHTML = '';
+  d.nat.forEach(function(n) {
+    el.innerHTML +=
+      '<div class="nat-card">' +
+      '<div class="nat-flag">' + n.flag + '</div>' +
+      '<div class="nat-name">' + n.name + '</div>' +
+      '<div class="nat-pct">' + n.pct + '%</div>' +
+      '<div class="nat-bar" style="width:' + n.h + '%"></div>' +
+      '</div>';
+  });
+}
+
+/* ── ALERTS ── */
+function renderAlerts(d) {
+  var el = document.getElementById('alertList');
+  el.innerHTML = '';
+  d.alerts.forEach(function(a) {
+    el.innerHTML +=
+      '<div class="alert-item ' + a.t + '">' +
+      '<div class="al-ico">' + a.ico + '</div>' +
+      '<div class="al-body"><div class="al-title">' + a.title + '</div><div class="al-sub">' + a.sub + '</div></div>' +
+      '</div>';
+  });
+}
+
+/* ── DIAGNOSES ── */
+function renderDx(d) {
+  var el = document.getElementById('dxList');
+  el.innerHTML = '';
+  d.dx.forEach(function(x, i) {
+    el.innerHTML +=
+      '<div class="dx-row">' +
+      '<div class="dx-rank">' + (i + 1) + '</div>' +
+      '<div style="flex:1;">' +
+        '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;">' +
+          '<span class="dx-name">' + x.n + '</span>' +
+          '<span class="dx-dept">' + x.d + '</span>' +
+        '</div>' +
+        '<div class="dx-track"><div class="dx-fill" style="width:' + x.pct + '%;background:linear-gradient(90deg,' + x.col + ',' + x.col + '88);height:5px;border-radius:3px;"></div></div>' +
+      '</div>' +
+      '<div class="dx-count">' + x.cnt + '</div>' +
+      '</div>';
+  });
+}
+
+/* ── MINI ROW ── */
+function renderMiniRow(id, items) {
+  var el = document.getElementById(id);
+  el.innerHTML = '';
+  items.forEach(function(m) {
+    el.innerHTML += '<div class="mini"><div class="mv">' + m.v + '</div><div class="ml">' + m.l + '</div></div>';
+  });
+}
+
+// ═══════════════════════════════════════════
+// CHARTS
+// ═══════════════════════════════════════════
+Chart.defaults.font.family = "'Nunito', system-ui, sans-serif";
+
+function gc() {
+  var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+  return {
+    text: dark ? '#6A8AA4' : '#4A6178',
+    grid: dark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.06)'
+  };
+}
+
+function destroyCharts() {
+  Object.values(_charts).forEach(function(c){ if (c) c.destroy(); });
+  _charts = {};
+}
+
+function buildCharts(d) {
+  destroyCharts();
+  var c = gc();
+
+  /* ── Footfall + Revenue combo ── */
+  _charts.ff = new Chart(document.getElementById('footfallChart'), {
+    type: 'bar',
+    data: {
+      labels: d.months,
+      datasets: [
+        { label: 'Patients', data: d.footfall, backgroundColor: ['rgba(11,122,143,0.5)','rgba(11,122,143,0.7)','rgba(11,122,143,0.95)'], borderRadius: 6, yAxisID: 'y' },
+        { label: 'Revenue (AED M)', data: d.revenue, type: 'line', borderColor: '#059669', backgroundColor: 'rgba(5,150,105,0.08)', pointBackgroundColor: '#059669', pointRadius: 5, borderWidth: 2.5, fill: true, tension: .4, yAxisID: 'y2' }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: { legend: { labels: { color: c.text, font: { size: 11 }, boxWidth: 10, padding: 12 } } },
+      scales: {
+        x: { grid: { color: c.grid }, ticks: { color: c.text } },
+        y: { grid: { color: c.grid }, ticks: { color: c.text }, position: 'left' },
+        y2: { grid: { display: false }, ticks: { color: '#059669', callback: function(v){ return 'AED ' + v + 'M'; } }, position: 'right' }
+      }
+    }
+  });
+
+  /* ── Appointment doughnut ── */
+  _charts.appt = new Chart(document.getElementById('apptChart'), {
+    type: 'doughnut',
+    data: { labels: d.apptL, datasets: [{ data: d.apptV, backgroundColor: d.apptC, borderWidth: 0, hoverOffset: 10 }] },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: '68%',
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: function(x){ return ' ' + x.label + ': ' + x.raw + '%'; } } }
+      },
+      onClick: function(evt, elements) {
+        if (!elements || !elements.length) return;
+        var idx = elements[0].index;
+        setFilter('appt', d.apptL[idx], idx);
+      }
+    }
+  });
+
+  // legend
+  var leg = document.getElementById('apptLeg');
+  leg.innerHTML = '';
+  d.apptL.forEach(function(l, i) {
+    var isActive = activeFilter.type === 'appt' && activeFilter.value === l;
+    leg.innerHTML +=
+      '<div style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:2px 4px;border-radius:5px;' + (isActive ? 'background:var(--teal-pale);' : '') + '" onclick="setFilter(\'appt\',\'' + l + '\',' + i + ')">' +
+      '<div style="display:flex;align-items:center;gap:7px;"><div style="width:9px;height:9px;border-radius:3px;background:' + d.apptC[i] + ';flex-shrink:0;"></div><span style="font-size:.73rem;color:var(--text2);">' + l + '</span></div>' +
+      '<span style="font-size:.73rem;font-weight:800;color:var(--text);">' + d.apptV[i] + '%</span></div>';
+  });
+
+  /* ── Dept Revenue horizontal bar ── */
+  _charts.dept = new Chart(document.getElementById('deptChart'), {
+    type: 'bar',
+    data: {
+      labels: d.deptL,
+      datasets: [{ data: d.deptV, backgroundColor: ['rgba(11,122,143,0.85)','rgba(5,150,105,0.8)','rgba(124,58,237,0.8)','rgba(2,132,199,0.8)','rgba(217,119,6,0.8)','rgba(224,91,75,0.8)'], borderRadius: 5 }]
+    },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: function(x){ return ' AED ' + x.raw + 'M'; } } }
+      },
+      scales: {
+        x: { grid: { color: c.grid }, ticks: { color: c.text, callback: function(v){ return 'AED ' + v + 'M'; } }, max: 5.5 },
+        y: { grid: { display: false }, ticks: { color: c.text, font: { size: 11 } } }
+      },
+      onClick: function(evt, elements) {
+        if (!elements || !elements.length) return;
+        var idx = elements[0].index;
+        setFilter('dept', d.deptL[idx], idx);
+      }
+    }
+  });
+
+  /* ── Payment trend sparkline (BUGFIX: use actual data) ── */
+  _charts.pay = new Chart(document.getElementById('payTrendChart'), {
+    type: 'line',
+    data: {
+      labels: d.months,
+      datasets: [
+        { label: 'Insurance %', data: d.payTrend, borderColor: '#0B7A8F', backgroundColor: 'rgba(11,122,143,0.07)', pointRadius: 4, borderWidth: 2, fill: true, tension: .4 },
+        { label: 'Cash %', data: d.payTrend2, borderColor: '#059669', backgroundColor: 'rgba(5,150,105,0.05)', pointRadius: 4, borderWidth: 2, fill: true, tension: .4 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: c.text, font: { size: 10 }, boxWidth: 8, padding: 10 } } },
+      scales: {
+        x: { grid: { color: c.grid }, ticks: { color: c.text, font: { size: 10 } } },
+        y: { grid: { color: c.grid }, ticks: { color: c.text, font: { size: 10 }, callback: function(v){ return v + '%'; } }, min: 10, max: 80 }
+      }
+    }
+  });
+
+  /* ── YoY ── */
+  _charts.yoy = new Chart(document.getElementById('yoyChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+      datasets: [
+        { label: '2022', data: d.yoy[0], backgroundColor: 'rgba(0,0,0,0.08)', borderRadius: 5 },
+        { label: '2023', data: d.yoy[1], backgroundColor: 'rgba(5,150,105,0.65)', borderRadius: 5 },
+        { label: '2024', data: d.yoy[2], backgroundColor: 'rgba(11,122,143,0.9)', borderRadius: 5 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: c.text, font: { size: 11 }, boxWidth: 10, padding: 10 } } },
+      scales: {
+        x: { grid: { color: c.grid }, ticks: { color: c.text } },
+        y: { grid: { color: c.grid }, ticks: { color: c.text, callback: function(v){ return 'AED ' + v + 'M'; } } }
+      },
+      onClick: function(evt, elements) {
+        if (!elements || !elements.length) return;
+        var dsIdx = elements[0].datasetIndex;
+        var years = ['2022', '2023', '2024'];
+        setFilter('year', years[dsIdx], dsIdx);
+      }
+    }
+  });
+}
+
+/* ── THEME ── */
+function toggleTheme() {
+  var h = document.documentElement;
+  var isDark = h.getAttribute('data-theme') === 'dark';
+  h.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+  setTimeout(function(){ buildCharts(QD[activeQ]); if (activeFilter.type) applyFilter(); }, 60);
+}
+
+/* ── SCROLL REVEAL ── */
+(function() {
+  if (!('IntersectionObserver' in window)) {
+    document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('show'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(x){ if (x.isIntersecting){ x.target.classList.add('show'); io.unobserve(x.target); } });
+  }, { threshold: 0.04 });
+  document.querySelectorAll('.reveal').forEach(function(el, i) {
+    el.style.transitionDelay = (i * 0.07) + 's';
+    io.observe(el);
+  });
+})();
+
+/* ── INIT ── */
+renderAll(false);
+</script>
+</body>
+</html>

@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Dubai Hospitality & Hotels — Operations Dashboard | Om Bagal Analytics</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+
+:root{
+  --gold:#E6B84A;--gold-l:#F5D078;--gold-d:#C49A28;
+  --gold-glow:rgba(230,184,74,0.18);--gold-b:rgba(230,184,74,0.22);
+  --navy:#05090F;--navy2:#080E1A;--navy3:#0C1524;
+  --card:#0F1A28;--card2:#13202F;--card3:#172437;
+  --text:#FAF6EE;--text2:#B0A898;--text3:#5C5648;
+  --b1:rgba(230,184,74,0.18);--b2:rgba(255,255,255,0.07);
+  --green:#22C55E;--red:#EF4444;--amber:#F59E0B;--blue:#3B82F6;--purple:#8B5CF6;
+  --teal:#14B8A6;
+  --shadow:0 4px 36px rgba(0,0,0,0.6);
+  --sgold:0 8px 48px rgba(230,184,74,0.22);
+  --r:14px;
+}
+[data-theme="light"]{
+  --navy:#F8F4EC;--navy2:#EDE8DC;--navy3:#E2DBD0;
+  --card:#FFFFFF;--card2:#F5F0E8;--card3:#EBE4D8;
+  --text:#0A0800;--text2:#4A4030;--text3:#9A9080;
+  --b1:rgba(196,154,40,0.28);--b2:rgba(0,0,0,0.09);
+  --shadow:0 4px 32px rgba(0,0,0,0.14);
+  --sgold:0 8px 40px rgba(230,184,74,0.22);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',-apple-system,sans-serif;background:var(--navy);color:var(--text);min-height:100vh;transition:background .3s,color .3s;overflow-x:hidden;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--navy2);}::-webkit-scrollbar-thumb{background:var(--gold-d);border-radius:3px;}
+
+.geo-bg{position:fixed;top:0;left:0;right:0;bottom:0;opacity:0.022;pointer-events:none;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cpath d='M40 0 L80 40 L40 80 L0 40Z' fill='none' stroke='%23C9A84C' stroke-width='0.5'/%3E%3Cpath d='M40 10 L70 40 L40 70 L10 40Z' fill='none' stroke='%23C9A84C' stroke-width='0.5'/%3E%3Ccircle cx='40' cy='40' r='8' fill='none' stroke='%23C9A84C' stroke-width='0.5'/%3E%3C/svg%3E");}
+
+header{position:sticky;top:0;z-index:1000;background:rgba(5,9,15,0.97);backdrop-filter:blur(24px);border-bottom:1px solid var(--b1);transition:background .3s;}
+[data-theme="light"] header{background:rgba(248,244,236,0.97);}
+.hdr{max-width:1400px;margin:0 auto;padding:0 24px;height:68px;display:flex;align-items:center;gap:14px;}
+.brand{display:flex;align-items:center;gap:12px;flex-shrink:0;}
+.brand-icon{width:42px;height:42px;border-radius:11px;background:linear-gradient(135deg,var(--gold),var(--gold-l));display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-weight:700;font-size:1.15rem;color:#0D0A06;letter-spacing:.06em;box-shadow:0 4px 18px rgba(230,184,74,0.38);}
+.brand-name{font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:1.12rem;color:var(--text);letter-spacing:.05em;}
+.brand-sub{font-size:.65rem;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;}
+.hdr-filters{display:flex;align-items:center;gap:8px;flex:1;flex-wrap:wrap;}
+.hdr-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.sel{background:var(--card2);border:1px solid var(--b1);color:var(--text);padding:7px 28px 7px 12px;border-radius:9px;font-size:.78rem;font-weight:600;font-family:inherit;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='5'%3E%3Cpath d='M0 0l4.5 5 4.5-5z' fill='%23E6B84A'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;transition:.2s;}
+.sel:focus{border-color:var(--gold);}
+.pg{display:flex;gap:3px;background:var(--card2);border:1px solid var(--b1);border-radius:9px;padding:3px;}
+.pb{background:none;border:none;color:var(--text2);padding:5px 11px;border-radius:7px;font-size:.75rem;font-weight:700;cursor:pointer;font-family:inherit;transition:.2s;letter-spacing:.03em;}
+.pb:hover{color:var(--gold);}
+.pb.act{background:linear-gradient(135deg,var(--gold),var(--gold-l));color:#0D0A06;}
+.last-upd{font-size:.68rem;color:var(--text3);white-space:nowrap;}
+.theme-btn{background:none;border:1px solid var(--b1);color:var(--text2);width:36px;height:36px;border-radius:9px;cursor:pointer;font-size:.92rem;transition:.2s;}
+.theme-btn:hover{border-color:var(--gold);color:var(--gold);}
+
+main{max-width:1400px;margin:0 auto;padding:24px 24px 56px;position:relative;z-index:1;}
+
+.sbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:22px;padding:11px 18px;background:var(--card2);border:1px solid var(--b1);border-radius:10px;font-size:.77rem;}
+.sdot{width:8px;height:8px;background:var(--green);border-radius:50%;animation:pulse 2s infinite;flex-shrink:0;}
+.stext{color:var(--text2);flex:1;}
+.sbadge{background:rgba(230,184,74,.1);border:1px solid var(--b1);color:var(--gold);padding:3px 10px;border-radius:50px;font-size:.68rem;font-weight:700;letter-spacing:.04em;}
+.sbadge.g{background:rgba(34,197,94,.08);border-color:rgba(34,197,94,.2);color:var(--green);}
+.sbadge.b{background:rgba(59,130,246,.08);border-color:rgba(59,130,246,.2);color:var(--blue);}
+
+.kpi-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:20px;}
+@media(max-width:1200px){.kpi-grid{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:650px){.kpi-grid{grid-template-columns:repeat(2,1fr);}}
+.kpi{background:var(--card);border:1px solid var(--b2);border-radius:var(--r);padding:20px 18px;transition:.3s;position:relative;overflow:hidden;}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2.5px;background:linear-gradient(90deg,var(--gold),var(--gold-l),var(--gold));}
+.kpi:hover{transform:translateY(-3px);box-shadow:var(--sgold);border-color:var(--b1);}
+.kpi:nth-child(2)::before{background:linear-gradient(90deg,var(--blue),#60A5FA);}
+.kpi:nth-child(3)::before{background:linear-gradient(90deg,var(--green),#4ade80);}
+.kpi:nth-child(4)::before{background:linear-gradient(90deg,var(--amber),#FCD34D);}
+.kpi:nth-child(5)::before{background:linear-gradient(90deg,var(--purple),#a78bfa);}
+.kpi-ico{font-size:1.35rem;margin-bottom:10px;}
+.kpi-lbl{font-size:.65rem;color:var(--text3);font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px;}
+.kpi-val{font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:1.85rem;color:var(--text);line-height:1;margin-bottom:7px;}
+.kpi-val .u{font-size:.88rem;color:var(--text2);}
+.kpi-chg{font-size:.71rem;font-weight:700;display:flex;align-items:center;gap:5px;}
+.kpi-chg.up{color:var(--green);}
+.kpi-chg.dn{color:var(--red);}
+.kpi-sub{font-size:.67rem;color:var(--text3);margin-top:4px;}
+
+.crow{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+@media(max-width:900px){.crow{grid-template-columns:1fr;}}
+.crow.w1{grid-template-columns:1.6fr 1fr;}
+@media(max-width:900px){.crow.w1{grid-template-columns:1fr;}}
+.crow.w2{grid-template-columns:1fr 1.4fr;}
+@media(max-width:900px){.crow.w2{grid-template-columns:1fr;}}
+.cc{background:var(--card);border:1px solid var(--b2);border-radius:var(--r);padding:20px;transition:.3s;}
+.cc:hover{box-shadow:var(--shadow);}
+.ch{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;gap:8px;}
+.ct{font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:1rem;color:var(--text);}
+.cs{font-size:.7rem;color:var(--text3);margin-top:2px;}
+.cbadge{background:rgba(230,184,74,.08);border:1px solid var(--b1);color:var(--gold);padding:3px 10px;border-radius:50px;font-size:.65rem;font-weight:700;white-space:nowrap;flex-shrink:0;letter-spacing:.04em;}
+.cw{position:relative;height:255px;}
+.cw.md{height:225px;}
+.cw.sm{height:200px;}
+
+/* Occupancy gauge */
+.gauge-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;height:255px;gap:8px;}
+.gauge-ring{position:relative;width:160px;height:160px;}
+.gauge-ring svg{width:100%;height:100%;}
+.gauge-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;}
+.gauge-val{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:2rem;color:var(--gold);}
+.gauge-lbl{font-size:.7rem;color:var(--text3);letter-spacing:.06em;}
+.gauge-stats{display:flex;gap:20px;}
+.gs{text-align:center;}
+.gs-v{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:1.1rem;color:var(--text);}
+.gs-l{font-size:.64rem;color:var(--text3);letter-spacing:.05em;}
+
+/* Insights */
+.ins-sec{background:var(--card);border:1px solid var(--b1);border-radius:var(--r);padding:26px;margin-bottom:16px;}
+.ins-hdr{display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap;}
+.ins-ttl{font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:1.15rem;}
+.ins-tag{margin-left:auto;background:rgba(230,184,74,.08);border:1px solid var(--b1);color:var(--gold);padding:4px 12px;border-radius:50px;font-size:.67rem;font-weight:700;letter-spacing:.05em;}
+.ins-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+@media(max-width:900px){.ins-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:600px){.ins-grid{grid-template-columns:1fr;}}
+.ins-item{background:var(--card2);border:1px solid var(--b2);border-radius:10px;padding:16px;transition:.2s;}
+.ins-item:hover{border-color:var(--b1);transform:translateY(-2px);}
+.ins-num{font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:1rem;color:var(--gold);margin-bottom:6px;}
+.ins-txt{font-size:.79rem;color:var(--text2);line-height:1.64;}
+.ins-act{margin-top:9px;font-size:.71rem;font-weight:700;color:var(--green);}
+.ins-act::before{content:'→ ';}
+
+/* Table */
+.tbl-sec{background:var(--card);border:1px solid var(--b2);border-radius:var(--r);padding:20px;margin-bottom:16px;}
+.tbl-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;}
+.tbl-ttl{font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:1rem;}
+.tbl-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:.8rem;}
+thead th{padding:9px 13px;text-align:left;font-size:.65rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);border-bottom:1px solid var(--b1);white-space:nowrap;}
+tbody tr{border-bottom:1px solid var(--b2);transition:.15s;}
+tbody tr:hover{background:rgba(255,255,255,0.025);}
+tbody td{padding:11px 13px;color:var(--text2);white-space:nowrap;}
+tbody td:first-child{color:var(--text);font-weight:600;}
+.tup{color:var(--green);}.tdn{color:var(--red);}
+.bcel{display:flex;align-items:center;gap:8px;}
+.mbar{flex:1;height:5px;background:rgba(255,255,255,.07);border-radius:3px;min-width:50px;}
+[data-theme="light"] .mbar{background:rgba(0,0,0,.08);}
+.mbf{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--gold),var(--gold-l));}
+.rnk{width:22px;height:22px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;background:rgba(230,184,74,.1);color:var(--gold);border:1px solid var(--b1);}
+.badge-pill{display:inline-block;padding:2px 8px;border-radius:50px;font-size:.66rem;font-weight:700;}
+.bp-g{background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.2);}
+.bp-r{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.2);}
+.bp-a{background:rgba(245,158,11,.1);color:var(--amber);border:1px solid rgba(245,158,11,.2);}
+
+footer{background:var(--navy2);border-top:1px solid var(--b1);padding:22px 28px;text-align:center;}
+.ftr-inner{max-width:1400px;margin:0 auto;}
+.ftr-brand{font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:1rem;color:var(--gold);margin-bottom:5px;}
+.ftr-sub{font-size:.7rem;color:var(--text3);}
+.ftr-sub a{color:var(--text3);text-decoration:none;transition:.2s;}.ftr-sub a:hover{color:var(--gold);}
+.ftr-divider{width:40px;height:1px;background:var(--gold-d);opacity:.4;margin:10px auto;}
+
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(1.6);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.kpi{animation:fadeUp .5s ease forwards;opacity:0;}
+.kpi:nth-child(1){animation-delay:.05s}
+.kpi:nth-child(2){animation-delay:.1s}
+.kpi:nth-child(3){animation-delay:.15s}
+.kpi:nth-child(4){animation-delay:.2s}
+.kpi:nth-child(5){animation-delay:.25s}
+
+/* ── CROSS-FILTER STYLES ── */
+@keyframes filterPulse{0%{box-shadow:0 0 0 0 rgba(230,184,74,0.5);}70%{box-shadow:0 0 0 10px rgba(230,184,74,0);}100%{box-shadow:0 0 0 0 rgba(230,184,74,0);}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
+@keyframes shimmer{0%{background-position:-200% 0;}100%{background-position:200% 0;}}
+
+.cf-banner{
+  display:none;align-items:center;gap:10px;flex-wrap:wrap;
+  margin-bottom:18px;padding:12px 18px;
+  background:linear-gradient(135deg,rgba(230,184,74,0.08),rgba(230,184,74,0.04));
+  border:1px solid rgba(230,184,74,0.35);border-radius:10px;
+  animation:slideDown .35s ease;
+}
+.cf-banner.active{display:flex;}
+.cf-icon{font-size:1rem;flex-shrink:0;}
+.cf-label{font-size:.75rem;color:var(--text2);font-weight:500;flex:1;}
+.cf-label strong{color:var(--gold);font-weight:700;}
+.cf-chips{display:flex;gap:6px;flex-wrap:wrap;}
+.cf-chip{
+  display:flex;align-items:center;gap:5px;
+  background:rgba(230,184,74,0.12);border:1px solid rgba(230,184,74,0.3);
+  color:var(--gold);padding:3px 10px 3px 8px;border-radius:50px;
+  font-size:.68rem;font-weight:700;letter-spacing:.03em;cursor:pointer;
+  transition:.2s;
+}
+.cf-chip:hover{background:rgba(230,184,74,0.22);}
+.cf-chip .x{font-size:.8rem;opacity:.7;margin-left:2px;}
+.cf-clear{
+  background:none;border:1px solid rgba(239,68,68,0.35);
+  color:var(--red);padding:4px 12px;border-radius:50px;
+  font-size:.68rem;font-weight:700;cursor:pointer;font-family:inherit;
+  transition:.2s;white-space:nowrap;
+}
+.cf-clear:hover{background:rgba(239,68,68,0.1);}
+
+/* Filtered card glow */
+.cc.cf-active{
+  border-color:rgba(230,184,74,0.4)!important;
+  box-shadow:0 0 0 1px rgba(230,184,74,0.2),0 4px 32px rgba(230,184,74,0.1)!important;
+}
+.cc.cf-source{
+  border-color:var(--gold)!important;
+  box-shadow:0 0 20px rgba(230,184,74,0.25)!important;
+  animation:filterPulse 1s ease-out;
+}
+
+/* KPI highlight when filtered */
+.kpi.cf-highlight{
+  border-color:rgba(230,184,74,0.5)!important;
+  background:linear-gradient(135deg,var(--card),rgba(230,184,74,0.04))!important;
+}
+.kpi.cf-highlight::after{
+  content:'';position:absolute;inset:0;border-radius:var(--r);
+  background:linear-gradient(90deg,transparent,rgba(230,184,74,0.06),transparent);
+  background-size:200% 100%;animation:shimmer 2s infinite;pointer-events:none;
+}
+
+/* Table row highlight */
+tbody tr.cf-row-match{background:rgba(230,184,74,0.06)!important;}
+tbody tr.cf-row-match td:nth-child(2){color:var(--gold)!important;}
+tbody tr.cf-row-dim{opacity:0.38;}
+
+/* Chart cursor */
+canvas.cf-clickable{cursor:pointer;}
+
+/* Filter tooltip hint */
+.cf-hint{
+  position:absolute;bottom:-28px;left:50%;transform:translateX(-50%);
+  background:rgba(5,9,15,0.9);border:1px solid var(--b1);color:var(--text3);
+  padding:3px 9px;border-radius:6px;font-size:.62rem;white-space:nowrap;
+  pointer-events:none;opacity:0;transition:opacity .2s;z-index:10;
+}
+.cc:hover .cf-hint{opacity:1;}
+.cw{position:relative;}
+</style>
+</head>
+<body>
+<div class="geo-bg"></div>
+
+<!-- HEADER -->
+<header>
+  <div class="hdr">
+    <div class="brand">
+      <div class="brand-icon">HT</div>
+      <div>
+        <div class="brand-name">DUBAI HOSPITALITY</div>
+        <div class="brand-sub">Hotels & Resorts Operations · Dubai, UAE</div>
+      </div>
+    </div>
+    <div class="hdr-filters">
+      <select class="sel" id="hotelSel" onchange="applyF()">
+        <option value="All">⬡ All Properties</option>
+        <option value="Jumeirah Beach">Jumeirah Beach Resort</option>
+        <option value="Downtown Grand">Downtown Grand</option>
+        <option value="DIFC Prestige">DIFC Prestige Hotel</option>
+        <option value="Marina Luxe">Marina Luxe</option>
+        <option value="Palm Retreat">Palm Retreat</option>
+      </select>
+      <select class="sel" id="segSel" onchange="applyF()">
+        <option value="All">All Segments</option>
+        <option value="Leisure">Leisure</option>
+        <option value="Business">Business</option>
+        <option value="MICE">MICE / Events</option>
+      </select>
+      <div class="pg">
+        <button class="pb" onclick="setP('q1',this)">Q1</button>
+        <button class="pb" onclick="setP('q2',this)">Q2</button>
+        <button class="pb" onclick="setP('q3',this)">Q3</button>
+        <button class="pb" onclick="setP('q4',this)">Q4</button>
+        <button class="pb act" onclick="setP('full',this)">FY 2026</button>
+      </div>
+    </div>
+    <div class="hdr-right">
+      <div class="last-upd">Data: Apr 2026</div>
+      <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">☀️</button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- STATUS BAR -->
+  <div class="sbar">
+    <div class="sdot"></div>
+    <div class="stext" id="sbarText">5 properties active across Dubai · FY 2026 · All figures in AED</div>
+    <div class="sbadge">🏆 Palm Retreat — Highest RevPAR AED 1,840</div>
+    <div class="sbadge g" id="sbarOcc">📈 Group Occupancy: 82.4%</div>
+    <div class="sbadge b">🌍 Top Source: UK & Europe — 28%</div>
+  </div>
+
+  <!-- CROSS-FILTER BANNER -->
+  <div class="cf-banner" id="cfBanner">
+    <div class="cf-icon">🔍</div>
+    <div class="cf-label">Filtered by: <span id="cfLabel">—</span></div>
+    <div class="cf-chips" id="cfChips"></div>
+    <button class="cf-clear" onclick="clearAllFilters()">✕ Clear All Filters</button>
+  </div>
+
+  <!-- KPI STRIP -->
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="kpi-ico">🏨</div>
+      <div class="kpi-lbl">Total Revenue</div>
+      <div class="kpi-val"><span id="kn-rev">842</span><span class="u"> M AED</span></div>
+      <div class="kpi-chg up" id="kg-rev">↑ +13.6% vs FY 2025</div>
+      <div class="kpi-sub" id="ks-rev">All Properties · FY 2026</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-ico">📊</div>
+      <div class="kpi-lbl">RevPAR</div>
+      <div class="kpi-val"><span id="kn-revpar">1,540</span><span class="u"> AED</span></div>
+      <div class="kpi-chg up" id="kg-revpar">↑ +8.2% YoY</div>
+      <div class="kpi-sub" id="ks-revpar">Revenue per Available Room</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-ico">🛏️</div>
+      <div class="kpi-lbl">Occupancy Rate</div>
+      <div class="kpi-val"><span id="kn-occ">82.4</span><span class="u">%</span></div>
+      <div class="kpi-chg up" id="kg-occ">↑ +4.1 pts vs 2025</div>
+      <div class="kpi-sub" id="ks-occ">Group Average · FY 2026</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-ico">💰</div>
+      <div class="kpi-lbl">ADR</div>
+      <div class="kpi-val"><span id="kn-adr">1,870</span><span class="u"> AED</span></div>
+      <div class="kpi-chg up" id="kg-adr">↑ +6.4% YoY</div>
+      <div class="kpi-sub" id="ks-adr">Average Daily Rate</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-ico">⭐</div>
+      <div class="kpi-lbl">Guest Score</div>
+      <div class="kpi-val"><span id="kn-gst">91.2</span><span class="u">/100</span></div>
+      <div class="kpi-chg up" id="kg-gst">↑ +2.8 pts vs 2025</div>
+      <div class="kpi-sub" id="ks-gst">Composite satisfaction index</div>
+    </div>
+  </div>
+
+  <!-- ROW 1: Revenue Trend + Occupancy Gauge -->
+  <div class="crow w1">
+    <div class="cc">
+      <div class="ch">
+        <div>
+          <div class="ct">Monthly Revenue Trend</div>
+          <div class="cs" id="rev-sub">All Properties · FY 2026 · AED Millions</div>
+        </div>
+        <div class="cbadge" id="rev-badge">AED 842M Total</div>
+      </div>
+      <div class="cw"><canvas id="revChart"></canvas></div>
+    </div>
+    <div class="cc">
+      <div class="ch">
+        <div>
+          <div class="ct">Occupancy by Property</div>
+          <div class="cs">FY 2026 Average %</div>
+        </div>
+        <div class="cbadge">OCC %</div>
+      </div>
+      <div class="cw"><canvas id="occChart" class="cf-clickable"></canvas><div class="cf-hint">Click a bar to filter by property</div></div>
+    </div>
+  </div>
+
+  <!-- ROW 2: ADR Trend + Guest Nationality Mix -->
+  <div class="crow">
+    <div class="cc">
+      <div class="ch">
+        <div>
+          <div class="ct">ADR vs RevPAR — Monthly</div>
+          <div class="cs" id="adr-sub">Average Daily Rate & Revenue Per Available Room · AED</div>
+        </div>
+        <div class="cbadge">AED / Room</div>
+      </div>
+      <div class="cw md"><canvas id="adrChart"></canvas></div>
+    </div>
+    <div class="cc">
+      <div class="ch">
+        <div>
+          <div class="ct">Guest Nationality Mix</div>
+          <div class="cs" id="nat-sub">Source market distribution · FY 2026</div>
+        </div>
+        <div class="cbadge">By Origin</div>
+      </div>
+      <div class="cw md"><canvas id="natChart" class="cf-clickable"></canvas><div class="cf-hint">Click a slice to filter by nationality</div></div>
+    </div>
+  </div>
+
+  <!-- ROW 3: Revenue Segments + Booking Channel -->
+  <div class="crow w2">
+    <div class="cc">
+      <div class="ch">
+        <div>
+          <div class="ct">Booking Channel Mix</div>
+          <div class="cs" id="chan-sub">Room nights by channel · FY 2026</div>
+        </div>
+        <div class="cbadge">Channels</div>
+      </div>
+      <div class="cw md"><canvas id="chanChart" class="cf-clickable"></canvas><div class="cf-hint">Click a slice to filter by booking channel</div></div>
+    </div>
+    <div class="cc">
+      <div class="ch">
+        <div>
+          <div class="ct">Revenue by Segment</div>
+          <div class="cs" id="seg-sub">Rooms · F&B · Spa · Events · Other · AED M</div>
+        </div>
+        <div class="cbadge">Breakdown</div>
+      </div>
+      <div class="cw md"><canvas id="segChart" class="cf-clickable"></canvas><div class="cf-hint">Click a bar to filter by revenue segment</div></div>
+    </div>
+  </div>
+
+  <!-- ROW 4: Length of Stay + Guest Satisfaction Trend -->
+  <div class="crow">
+    <div class="cc">
+      <div class="ch">
+        <div>
+          <div class="ct">Avg Length of Stay — Monthly</div>
+          <div class="cs" id="los-sub">Nights per booking · All Properties</div>
+        </div>
+        <div class="cbadge">Nights</div>
+      </div>
+      <div class="cw sm"><canvas id="losChart"></canvas></div>
+    </div>
+    <div class="cc">
+      <div class="ch">
+        <div>
+          <div class="ct">Guest Satisfaction Trend</div>
+          <div class="cs" id="sat-sub">Monthly composite score /100</div>
+        </div>
+        <div class="cbadge">Score /100</div>
+      </div>
+      <div class="cw sm"><canvas id="satChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- PERFORMANCE INSIGHTS -->
+  <div class="ins-sec">
+    <div class="ins-hdr">
+      <div class="ins-ttl">Performance Highlights · <span id="ins-period">FY 2026</span></div>
+      <div class="ins-tag" id="ins-prop-tag">All Properties</div>
+    </div>
+    <div class="ins-grid" id="insGrid">
+      <!-- filled by JS -->
+    </div>
+  </div>
+
+  <!-- PROPERTY COMPARISON TABLE -->
+  <div class="tbl-sec">
+    <div class="tbl-hdr">
+      <div class="tbl-ttl">Property Performance Comparison</div>
+      <div class="cbadge" id="tbl-period-badge">FY 2026 · Ranked by RevPAR</div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Property</th>
+            <th>Total Revenue</th>
+            <th>RevPAR</th>
+            <th>Occupancy</th>
+            <th>ADR</th>
+            <th>Avg Stay</th>
+            <th>Guest Score</th>
+            <th>YoY</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="tblBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="ftr-inner">
+    <div class="ftr-brand">Om Bagal Analytics</div>
+    <div class="ftr-divider"></div>
+    <div class="ftr-sub">Dubai Hospitality & Hotels Operations Dashboard · Data through April 2026 · All values in AED · <a href="#">omBagal.com</a></div>
+  </div>
+</footer>
+
+<script>
+// ── CROSS-FILTER STATE ─────────────────────────────────────────────────
+const cfState={
+  nationality:null,   // e.g. 'UK & Europe'
+  channel:null,       // e.g. 'Direct / Website'
+  segment:null,       // e.g. 'Rooms'
+  property:null,      // e.g. 'Palm Retreat'
+};
+
+// Multipliers: how each cross-filter dimension affects KPI metrics
+const CF_NAT_IMPACT={
+  'UK & Europe':     {rev:1.00,occ:1.02,adr:1.05,sat:1.00,los:1.08},
+  'GCC & MENA':      {rev:0.88,occ:0.96,adr:0.97,sat:0.99,los:0.92},
+  'India & SA':      {rev:0.76,occ:0.91,adr:0.88,sat:0.97,los:0.85},
+  'China & APAC':    {rev:0.72,occ:0.88,adr:0.84,sat:0.96,los:0.82},
+  'Americas':        {rev:0.65,occ:0.82,adr:0.93,sat:0.98,los:0.95},
+  'Other':           {rev:0.48,occ:0.72,adr:0.78,sat:0.94,los:0.78},
+};
+const CF_CHAN_IMPACT={
+  'Direct / Website':{rev:1.00,occ:1.00,adr:1.04,sat:1.01,los:1.05},
+  'OTAs':            {rev:0.84,occ:0.96,adr:0.91,sat:0.97,los:0.90},
+  'Corporate':       {rev:0.72,occ:0.90,adr:0.95,sat:0.99,los:0.72},
+  'Travel Agent':    {rev:0.58,occ:0.84,adr:0.88,sat:0.96,los:1.12},
+  'Other':           {rev:0.32,occ:0.64,adr:0.78,sat:0.93,los:0.88},
+};
+const CF_SEG_IMPACT={
+  'Rooms':  {rev:1.00,occ:1.00,adr:1.00,sat:1.00,los:1.00},
+  'F&B':    {rev:0.22,occ:null,adr:null, sat:1.02,los:1.06},
+  'Spa':    {rev:0.08,occ:null,adr:null, sat:1.04,los:1.12},
+  'Events': {rev:0.07,occ:null,adr:null, sat:1.01,los:1.20},
+  'Other':  {rev:0.04,occ:null,adr:null, sat:0.98,los:0.95},
+};
+
+function getCFMultiplier(metric){
+  let m=1;
+  if(cfState.nationality && CF_NAT_IMPACT[cfState.nationality]?.[metric]!=null)
+    m*=CF_NAT_IMPACT[cfState.nationality][metric];
+  if(cfState.channel && CF_CHAN_IMPACT[cfState.channel]?.[metric]!=null)
+    m*=CF_CHAN_IMPACT[cfState.channel][metric];
+  if(cfState.segment && CF_SEG_IMPACT[cfState.segment]?.[metric]!=null)
+    m*=CF_SEG_IMPACT[cfState.segment][metric];
+  return m;
+}
+
+function hasCFActive(){
+  return cfState.nationality||cfState.channel||cfState.segment||cfState.property;
+}
+
+// ── DATA ───────────────────────────────────────────────────────────────
+const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const HLIST=['Jumeirah Beach','Downtown Grand','DIFC Prestige','Marina Luxe','Palm Retreat'];
+
+// Monthly Revenue AED Millions
+const REV={
+  'Jumeirah Beach': [18.2,19.4,22.1,20.8,16.4,14.2,13.8,15.6,19.2,22.4,24.8,26.1],
+  'Downtown Grand': [14.6,15.8,18.4,17.2,13.1,11.4,11.0,12.6,15.8,18.2,20.4,21.8],
+  'DIFC Prestige':  [12.4,13.6,15.8,14.4,10.2, 8.6, 8.2, 9.8,13.4,16.2,18.4,19.6],
+  'Marina Luxe':    [10.2,11.4,13.2,12.0, 8.8, 7.4, 7.2, 8.4,11.2,13.6,15.4,16.8],
+  'Palm Retreat':   [22.4,24.2,28.4,26.2,20.4,17.8,17.2,19.6,23.8,28.4,31.2,34.2],
+};
+
+// Occupancy % per property (annual avg)
+const OCC={
+  'Jumeirah Beach':84.2,'Downtown Grand':80.6,'DIFC Prestige':78.4,
+  'Marina Luxe':79.8,'Palm Retreat':88.6,
+};
+
+// Monthly Occupancy (for trend — using Jumeirah as base)
+const OCC_M={
+  'Jumeirah Beach': [86,88,92,88,82,76,74,78,86,90,93,96],
+  'Downtown Grand': [82,84,88,84,78,72,70,74,82,86,90,92],
+  'DIFC Prestige':  [80,82,86,82,74,68,66,70,80,84,88,90],
+  'Marina Luxe':    [81,83,87,83,76,70,68,72,81,85,89,91],
+  'Palm Retreat':   [90,92,96,92,86,82,80,84,90,94,97,99],
+};
+
+// ADR per property AED
+const ADR={
+  'Jumeirah Beach':1820,'Downtown Grand':1640,'DIFC Prestige':1580,
+  'Marina Luxe':1490,'Palm Retreat':2080,
+};
+
+// Monthly ADR
+const ADR_M={
+  'Jumeirah Beach': [1780,1800,1860,1840,1780,1720,1700,1750,1820,1880,1920,1960],
+  'Downtown Grand': [1600,1620,1680,1660,1600,1540,1520,1570,1640,1700,1740,1780],
+  'DIFC Prestige':  [1540,1560,1620,1600,1540,1480,1460,1510,1580,1640,1680,1720],
+  'Marina Luxe':    [1450,1470,1530,1510,1450,1390,1370,1420,1490,1550,1590,1630],
+  'Palm Retreat':   [2020,2060,2140,2100,2020,1940,1920,1980,2080,2160,2200,2260],
+};
+
+// Guest Satisfaction /100 monthly
+const SAT={
+  'Jumeirah Beach': [89,90,92,91,89,87,86,88,90,92,94,96],
+  'Downtown Grand': [86,87,89,88,86,84,83,85,87,89,91,93],
+  'DIFC Prestige':  [88,89,91,90,88,86,85,87,89,91,93,95],
+  'Marina Luxe':    [84,85,87,86,84,82,81,83,85,87,89,91],
+  'Palm Retreat':   [92,93,95,94,92,90,89,91,93,95,97,98],
+};
+
+// Avg Length of Stay monthly (nights)
+const LOS={
+  'Jumeirah Beach': [3.2,3.4,3.8,3.6,3.1,2.8,2.7,2.9,3.4,3.8,4.1,4.4],
+  'Downtown Grand': [2.8,2.9,3.2,3.0,2.7,2.4,2.3,2.5,2.9,3.2,3.5,3.8],
+  'DIFC Prestige':  [2.4,2.5,2.7,2.6,2.3,2.0,1.9,2.1,2.5,2.8,3.0,3.2],
+  'Marina Luxe':    [2.6,2.7,3.0,2.8,2.5,2.2,2.1,2.3,2.7,3.0,3.2,3.5],
+  'Palm Retreat':   [4.2,4.5,5.0,4.8,4.0,3.6,3.4,3.8,4.4,5.0,5.4,5.8],
+};
+
+// Nationality mix (6 sources)
+const NAT={
+  'All':           [28,22,18,14,10,8],
+  'Jumeirah Beach':[30,20,18,16, 9,7],
+  'Downtown Grand':[26,24,20,14,10,6],
+  'DIFC Prestige': [20,18,22,16,14,10],
+  'Marina Luxe':   [32,20,16,14, 9,9],
+  'Palm Retreat':  [28,24,16,12,12,8],
+};
+const NAT_LABELS=['UK & Europe','GCC & MENA','India & SA','China & APAC','Americas','Other'];
+
+// Booking channel (%)
+const CHAN={
+  'All':           [38,24,18,12,8],
+  'Jumeirah Beach':[40,22,18,12,8],
+  'Downtown Grand':[36,26,18,12,8],
+  'DIFC Prestige': [30,28,22,12,8],
+  'Marina Luxe':   [42,22,16,12,8],
+  'Palm Retreat':  [44,20,18,10,8],
+};
+const CHAN_LABELS=['Direct / Website','OTAs','Corporate','Travel Agent','Other'];
+
+// Revenue by segment AED M (per quarter)
+const SEG_Q={
+  'All':            [[210,58,22,18,8],[138,42,16,12,6],[108,32,14,10,4],[280,72,28,22,10]],
+  'Jumeirah Beach': [[52,16,6,5,2],[34,11,4,3,2],[26,8,4,3,1],[70,18,8,6,3]],
+  'Downtown Grand': [[42,12,5,4,2],[27,8,4,3,1],[22,6,3,2,1],[56,14,6,5,2]],
+  'DIFC Prestige':  [[36,10,4,3,2],[23,7,3,2,1],[18,5,3,2,1],[48,12,5,4,2]],
+  'Marina Luxe':    [[30,8,3,3,2],[19,6,2,2,1],[15,4,2,2,1],[40,10,4,3,2]],
+  'Palm Retreat':   [[58,18,8,6,2],[38,12,6,4,2],[28,10,5,4,1],[72,20,10,8,3]],
+};
+const SEG_LABELS=['Rooms','F&B','Spa','Events','Other'];
+
+// YoY per property
+const YOY={'Jumeirah Beach':'+12.8%','Downtown Grand':'+10.4%','DIFC Prestige':'+9.6%','Marina Luxe':'+11.2%','Palm Retreat':'+16.8%'};
+const HCOL={'Jumeirah Beach':'#E6B84A','Downtown Grand':'#3B82F6','DIFC Prestige':'#10B981','Marina Luxe':'#F97316','Palm Retreat':'#8B5CF6'};
+
+// ── STATE ──────────────────────────────────────────────────────────────
+let state={hotel:'All',segment:'All',period:'full'};
+let charts={};
+
+function pIdx(p){
+  if(p==='q1')return[0,1,2];if(p==='q2')return[3,4,5];
+  if(p==='q3')return[6,7,8];if(p==='q4')return[9,10,11];
+  return[0,1,2,3,4,5,6,7,8,9,10,11];
+}
+function pQ(p){
+  if(p==='q1')return[0];if(p==='q2')return[1];if(p==='q3')return[2];if(p==='q4')return[3];
+  return[0,1,2,3];
+}
+function avg(a){return a.reduce((s,x)=>s+x,0)/a.length;}
+function fmtM(v){return(v/1000).toFixed(0);}
+
+function getRevSeries(h,p){
+  const idx=pIdx(p);
+  if(h==='All')return idx.map(i=>HLIST.reduce((s,x)=>s+REV[x][i],0));
+  return idx.map(i=>REV[h][i]);
+}
+function getTotRev(h,p){return getRevSeries(h,p).reduce((a,x)=>a+x,0);}
+
+function getOcc(h){return h==='All'?parseFloat(avg(HLIST.map(x=>OCC[x])).toFixed(1)):OCC[h];}
+function getADR(h){
+  if(h==='All'){const tc=HLIST.reduce((s,x)=>s+OCC[x],0);return Math.round(HLIST.reduce((s,x)=>s+ADR[x]*OCC[x],0)/tc);}
+  return ADR[h];
+}
+function getRevPAR(h){return Math.round(getOcc(h)/100*getADR(h));}
+function getSat(h,p){
+  const idx=pIdx(p);
+  if(h==='All'){const v=HLIST.flatMap(x=>idx.map(i=>SAT[x][i]));return avg(v).toFixed(1);}
+  return avg(idx.map(i=>SAT[h][i])).toFixed(1);
+}
+function getLOS(h,p){
+  const idx=pIdx(p);
+  if(h==='All'){const v=HLIST.flatMap(x=>idx.map(i=>LOS[x][i]));return avg(v).toFixed(1);}
+  return avg(idx.map(i=>LOS[h][i])).toFixed(1);
+}
+function getADRSeries(h,p){
+  const idx=pIdx(p);
+  if(h==='All')return idx.map(i=>Math.round(avg(HLIST.map(x=>ADR_M[x][i]))));
+  return idx.map(i=>ADR_M[h][i]);
+}
+function getRevPARSeries(h,p){
+  const adr=getADRSeries(h,p);
+  const occ=pIdx(p).map(i=>{
+    if(h==='All')return avg(HLIST.map(x=>OCC_M[x][i]));
+    return OCC_M[h][i];
+  });
+  return adr.map((a,i)=>Math.round(a*occ[i]/100));
+}
+function getSatSeries(h,p){
+  const idx=pIdx(p);
+  if(h==='All')return idx.map(i=>parseFloat(avg(HLIST.map(x=>SAT[x][i])).toFixed(1)));
+  return idx.map(i=>SAT[h][i]);
+}
+function getLOSSeries(h,p){
+  const idx=pIdx(p);
+  if(h==='All')return idx.map(i=>parseFloat(avg(HLIST.map(x=>LOS[x][i])).toFixed(2)));
+  return idx.map(i=>LOS[h][i]);
+}
+function getSegData(h,p){
+  const qs=pQ(p);
+  const key=h==='All'?'All':h;
+  return SEG_LABELS.map((_,si)=>qs.reduce((s,qi)=>s+(SEG_Q[key]?.[qi]?.[si]||0),0));
+}
+
+function th(){
+  const d=document.documentElement.getAttribute('data-theme')==='dark';
+  return{text:d?'#FAF6EE':'#0A0800',muted:d?'#B0A898':'#4A4030',grid:d?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.07)'};
+}
+
+// ── KPI UPDATE ─────────────────────────────────────────────────────────
+function updKPI(){
+  const{hotel:h,period:p}=state;
+  const cfRev=getCFMultiplier('rev');
+  const cfOcc=getCFMultiplier('occ');
+  const cfAdr=getCFMultiplier('adr');
+  const cfSat=getCFMultiplier('sat');
+
+  const tr=getTotRev(h,p)*cfRev;
+  document.getElementById('kn-rev').textContent=tr.toFixed(0);
+  document.getElementById('ks-rev').textContent=(h==='All'?'All Properties':h)+' · '+(p==='full'?'FY 2026':p.toUpperCase()+' 2026');
+  document.getElementById('rev-badge').textContent='AED '+tr.toFixed(0)+'M Total';
+  document.getElementById('rev-sub').textContent=(h==='All'?'All Properties':h)+' · '+(p==='full'?'FY 2026':p.toUpperCase()+' 2026')+' · AED Millions';
+
+  const occ=Math.min(99.9,getOcc(h)*cfOcc);
+  document.getElementById('kn-occ').textContent=occ.toFixed(1);
+  document.getElementById('ks-occ').textContent=(h==='All'?'Group Average':h)+' · FY 2026';
+
+  const adr=Math.round(getADR(h)*cfAdr);
+  document.getElementById('kn-adr').textContent=adr.toLocaleString();
+  document.getElementById('ks-adr').textContent='Average Daily Rate · '+(h==='All'?'All Properties':h);
+
+  const revpar=Math.round(occ/100*adr);
+  document.getElementById('kn-revpar').textContent=revpar.toLocaleString();
+
+  const sat=Math.min(100,parseFloat(getSat(h,p))*cfSat).toFixed(1);
+  document.getElementById('kn-gst').textContent=sat;
+
+  document.getElementById('sbarOcc').textContent='📈 Group Occupancy: '+occ.toFixed(1)+'%';
+  document.getElementById('tbl-period-badge').textContent=(p==='full'?'FY 2026':p.toUpperCase()+' 2026')+' · Ranked by RevPAR';
+  document.getElementById('ins-period').textContent=(p==='full'?'FY 2026':p.toUpperCase()+' 2026');
+  document.getElementById('ins-prop-tag').textContent=h==='All'?'All Properties':h;
+
+  // KPI highlight animation
+  document.querySelectorAll('.kpi').forEach(k=>{
+    k.classList.toggle('cf-highlight',hasCFActive());
+  });
+
+  updInsights(h,p);
+}
+
+// ── INSIGHTS ───────────────────────────────────────────────────────────
+const INSIGHT_DATA={
+  full:{
+    All:[
+      {n:'AED 842M',t:'Group total revenue for FY 2026, driven by Palm Retreat (+16.8% YoY) and a strong Q1/Q4 peak season.',a:'Prioritise rate growth at Palm & Jumeirah in Q1 2027'},
+      {n:'82.4% OCC',t:'Group occupancy crossed 80% threshold for the first time — 4.1pts above FY 2025 performance.',a:'Set dynamic pricing floor at AED 1,600 for off-peak months'},
+      {n:'3.4 Nights',t:'Average length of stay grew 0.4 nights vs 2025, reducing room-turn costs and improving NRevPAR.',a:'Bundle spa + room packages to push LOS toward 4 nights'},
+      {n:'38% Direct',t:'Direct booking share reached 38%, reducing OTA commission drag by AED 12M vs previous year.',a:'Invest in loyalty programme to maintain direct channel dominance'},
+      {n:'Q3 Softness',t:'Jul–Aug occupancy dipped to 74–76% across leisure properties — typical summer pattern for Dubai.',a:'Target GCC staycation deals and MICE bookings for Jul–Aug'},
+      {n:'91.2 Score',t:'Composite guest satisfaction hit 91.2/100 — Palm Retreat leads at 93.8. F&B and spa rated highest.',a:'Address check-in wait times flagged at DIFC & Downtown properties'},
+    ],
+    'Palm Retreat':[
+      {n:'AED 294M',t:'Highest revenue contributor in the group — 34.9% of group total on just 220 keys.',a:'Explore villa expansion by 30 keys ahead of peak 2027 season'},
+      {n:'88.6% OCC',t:'Near full occupancy year-round with exceptional Dec–Mar peak at 96–99%.',a:'Implement waitlist system for Dec–Feb to capture demand overflow'},
+      {n:'+16.8% YoY',t:'Strongest growth in the portfolio — driven by luxury leisure segment and repeat GCC guests.',a:'Launch loyalty tier for repeat GCC guests to protect this base'},
+    ],
+  },
+  q1:{
+    All:[
+      {n:'Peak Quarter',t:'Q1 is Dubai\'s strongest season — group occupancy hits 88–92% with ADR premium of 12% vs annual avg.',a:'Lock in corporate contracts in Jan to secure Q1 revenue floor'},
+      {n:'+AED 220M',t:'Q1 alone accounts for 26% of full-year revenue across the group.',a:'Maximise F&B and events upsell during high-occupancy Q1 weeks'},
+      {n:'92.8 Score',t:'Guest satisfaction peaks in Q1 — ideal window for review generation and brand testimonials.',a:'Run post-stay survey campaign to collect Q1 reviews for OTAs'},
+    ],
+  },
+  q2:{
+    All:[
+      {n:'Shoulder Period',t:'Q2 shows a moderate dip — occupancy falls 6–8 pts from Q1 as temperatures rise through April.',a:'Target MICE and corporate events to fill the Apr–May gap'},
+      {n:'Leisure Drop',t:'Leisure segment bookings decline 18% in Q2 vs Q1 — offset partially by business travel.',a:'Launch early summer packages with spa and F&B bundles'},
+      {n:'OTA Risk',t:'OTA dependency rises in Q2 — direct bookings fall to 34% as guests price-compare more.',a:'Activate email marketing to loyalty base 6 weeks before Q2'},
+    ],
+  },
+  q3:{
+    All:[
+      {n:'Summer Trough',t:'Q3 is the softest quarter — hotel occupancy averages 72–76%, lowest of the year.',a:'Deploy MICE sales team aggressively; target Q3 corporate retreats'},
+      {n:'GCC Staycation',t:'GCC domestic guests drive 38% of Q3 revenue — critical to maintain rate parity.',a:'Partner with Careem and Noon for exclusive summer staycation deals'},
+      {n:'Spa & F&B',t:'Non-room revenue carries disproportionate weight in Q3 — spa revenue grows 22% vs annual avg.',a:'Create Q3 wellness retreat packages to boost TRevPAR'},
+    ],
+  },
+  q4:{
+    All:[
+      {n:'Strong Finish',t:'Q4 is the second-best quarter — events, exhibitions, and global visitors drive a Nov–Dec surge.',a:'Hold rate firmly in Dec — demand exceeds supply across the group'},
+      {n:'AED 280M+',t:'Q4 rooms revenue alone projects at AED 280M — highest single-quarter contribution.',a:'Introduce minimum-stay requirements of 3 nights for Dec peak dates'},
+      {n:'Events Boom',t:'MICE & events segment spikes 40% in Q4 — DIFC Prestige leads with corporate year-end events.',a:'Pre-sell Q4 event spaces by Aug to ensure full allocation'},
+    ],
+  },
+};
+
+function updInsights(h,p){
+  const pKey=p==='full'?'full':p;
+  let pool=INSIGHT_DATA[pKey]?.[h]||INSIGHT_DATA[pKey]?.['All']||INSIGHT_DATA['full']['All'];
+  document.getElementById('insGrid').innerHTML=pool.map(d=>`
+    <div class="ins-item">
+      <div class="ins-num">${d.n}</div>
+      <div class="ins-txt">${d.t}</div>
+      <div class="ins-act">${d.a}</div>
+    </div>`).join('');
+}
+
+// ── CHART BASE ─────────────────────────────────────────────────────────
+function baseOpts(extraScales){
+  const t=th();
+  const so=extraScales||{
+    x:{ticks:{color:t.muted,font:{size:10,family:"'DM Sans',sans-serif"}},grid:{color:t.grid},border:{color:'transparent'}},
+    y:{ticks:{color:t.muted,font:{size:10,family:"'DM Sans',sans-serif"}},grid:{color:t.grid},border:{color:'transparent'}},
+  };
+  return{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{
+      legend:{labels:{color:t.muted,font:{size:10,family:"'DM Sans',sans-serif"},padding:12}},
+      tooltip:{
+        backgroundColor:'rgba(5,9,15,0.97)',titleColor:'#E6B84A',bodyColor:'#FAF6EE',
+        borderColor:'rgba(230,184,74,0.28)',borderWidth:1,padding:10,cornerRadius:8,
+        titleFont:{size:11,family:"'DM Sans',sans-serif"},bodyFont:{size:11,family:"'DM Sans',sans-serif"},
+      }
+    },
+    scales:so,
+    animation:{duration:600,easing:'easeInOutQuart'},
+  };
+}
+
+const GOLD='#E6B84A',GOLD2='rgba(230,184,74,0.1)';
+const PCOLS=['#E6B84A','#3B82F6','#10B981','#F97316','#8B5CF6','#14B8A6'];
+
+// ── INIT CHARTS ────────────────────────────────────────────────────────
+function initCharts(){
+  const{hotel:h,period:p}=state;
+
+  // 1. Revenue Trend
+  const rs=getRevSeries(h,p);const rl=pIdx(p).map(i=>MONTHS[i]);
+  charts.rev=new Chart(document.getElementById('revChart'),{
+    type:'line',data:{labels:rl,datasets:[{
+      label:'Revenue (AED M)',data:rs,borderColor:GOLD,backgroundColor:GOLD2,
+      borderWidth:2.5,tension:0.4,fill:true,pointBackgroundColor:GOLD,
+      pointBorderColor:'transparent',pointRadius:4,pointHoverRadius:7,
+    }]},
+    options:{...baseOpts(),plugins:{...baseOpts().plugins,legend:{display:false}}},
+  });
+
+  // 2. Occupancy by property (horizontal bar)
+  const occD=HLIST.map(x=>OCC[x]);
+  charts.occ=new Chart(document.getElementById('occChart'),{
+    type:'bar',data:{
+      labels:HLIST.map(x=>x.replace(' Beach','').replace(' Grand','').replace(' Prestige','').replace(' Luxe','').replace(' Retreat','')),
+      datasets:[{label:'Occupancy %',data:occD,
+        backgroundColor:PCOLS.map(c=>c+'BB'),borderColor:PCOLS,
+        borderWidth:1.5,borderRadius:6,
+      }]
+    },
+    options:{...baseOpts(),indexAxis:'y',
+      plugins:{...baseOpts().plugins,legend:{display:false},},
+      scales:{
+        x:{min:60,max:100,ticks:{color:th().muted,font:{size:10},callback:v=>v+'%'},grid:{color:th().grid},border:{color:'transparent'}},
+        y:{ticks:{color:th().muted,font:{size:10}},grid:{display:false},border:{color:'transparent'}},
+      },
+      onClick:(evt,els)=>{
+        if(!els.length)return;
+        const prop=HLIST[els[0].index];
+        filterByProperty(prop);
+      }
+    },
+  });
+
+  // 3. ADR vs RevPAR
+  const adrS=getADRSeries(h,p);const rparS=getRevPARSeries(h,p);const adrL=pIdx(p).map(i=>MONTHS[i]);
+  charts.adr=new Chart(document.getElementById('adrChart'),{
+    type:'line',data:{labels:adrL,datasets:[
+      {label:'ADR (AED)',data:adrS,borderColor:GOLD,backgroundColor:'transparent',borderWidth:2.5,tension:0.4,pointRadius:3,pointBackgroundColor:GOLD},
+      {label:'RevPAR (AED)',data:rparS,borderColor:'#3B82F6',backgroundColor:'rgba(59,130,246,0.08)',borderWidth:2,tension:0.4,fill:true,pointRadius:3,pointBackgroundColor:'#3B82F6'},
+    ]},
+    options:baseOpts(),
+  });
+
+  // 4. Nationality mix (donut)
+  const natK=h==='All'?'All':h;
+  charts.nat=new Chart(document.getElementById('natChart'),{
+    type:'doughnut',data:{labels:NAT_LABELS,datasets:[{
+      data:NAT[natK]||NAT['All'],
+      backgroundColor:PCOLS.map(c=>c+'CC'),borderColor:PCOLS,borderWidth:2,hoverOffset:8,
+    }]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'58%',
+      plugins:{
+        legend:{position:'right',labels:{color:th().muted,font:{size:10,family:"'DM Sans',sans-serif"},padding:12,boxWidth:11}},
+        tooltip:{...baseOpts().plugins.tooltip,callbacks:{label:ctx=>` ${ctx.label}: ${ctx.parsed}%`}},
+      },animation:{duration:600},
+      onClick:(evt,els)=>{
+        if(!els.length)return;
+        const lbl=NAT_LABELS[els[0].index];
+        cfState.nationality=cfState.nationality===lbl?null:lbl;
+        const card=document.getElementById('natChart').closest('.cc');
+        document.querySelectorAll('.cc').forEach(c=>c.classList.remove('cf-source','cf-active'));
+        if(cfState.nationality && card){
+          card.classList.add('cf-source');
+          document.querySelectorAll('.cc').forEach(c=>{if(c!==card)c.classList.add('cf-active');});
+        }
+        updKPI();updCharts();updCFBanner();
+      }
+    }
+  });
+
+  // 5. Booking Channel (doughnut)
+  const chanK=h==='All'?'All':h;
+  charts.chan=new Chart(document.getElementById('chanChart'),{
+    type:'doughnut',data:{labels:CHAN_LABELS,datasets:[{
+      data:CHAN[chanK]||CHAN['All'],
+      backgroundColor:['rgba(230,184,74,0.85)','rgba(59,130,246,0.85)','rgba(16,185,129,0.85)','rgba(249,115,22,0.8)','rgba(139,92,246,0.75)'],
+      borderColor:['#E6B84A','#3B82F6','#10B981','#F97316','#8B5CF6'],borderWidth:2,hoverOffset:8,
+    }]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'55%',
+      plugins:{
+        legend:{position:'right',labels:{color:th().muted,font:{size:10,family:"'DM Sans',sans-serif"},padding:12,boxWidth:11}},
+        tooltip:{...baseOpts().plugins.tooltip,callbacks:{label:ctx=>` ${ctx.label}: ${ctx.parsed}%`}},
+      },animation:{duration:600},
+      onClick:(evt,els)=>{
+        if(!els.length)return;
+        const lbl=CHAN_LABELS[els[0].index];
+        cfState.channel=cfState.channel===lbl?null:lbl;
+        const card=document.getElementById('chanChart').closest('.cc');
+        document.querySelectorAll('.cc').forEach(c=>c.classList.remove('cf-source','cf-active'));
+        if(cfState.channel && card){
+          card.classList.add('cf-source');
+          document.querySelectorAll('.cc').forEach(c=>{if(c!==card)c.classList.add('cf-active');});
+        }
+        updKPI();updCharts();updCFBanner();
+      }
+    },
+  });
+
+  // 6. Revenue by Segment (bar)
+  const segD=getSegData(h,p);
+  charts.seg=new Chart(document.getElementById('segChart'),{
+    type:'bar',data:{labels:SEG_LABELS,datasets:[{
+      label:'Revenue (AED M)',data:segD,
+      backgroundColor:PCOLS.map(c=>c+'BB'),borderColor:PCOLS,
+      borderWidth:1.5,borderRadius:6,
+    }]},
+    options:{...baseOpts(),plugins:{...baseOpts().plugins,legend:{display:false}},
+      onClick:(evt,els)=>{
+        if(!els.length)return;
+        const lbl=SEG_LABELS[els[0].index];
+        cfState.segment=cfState.segment===lbl?null:lbl;
+        const card=document.getElementById('segChart').closest('.cc');
+        document.querySelectorAll('.cc').forEach(c=>c.classList.remove('cf-source','cf-active'));
+        if(cfState.segment && card){
+          card.classList.add('cf-source');
+          document.querySelectorAll('.cc').forEach(c=>{if(c!==card)c.classList.add('cf-active');});
+        }
+        updKPI();updCharts();updCFBanner();
+      }
+    },
+  });
+
+  // 7. Length of Stay
+  const losS=getLOSSeries(h,p);const losL=pIdx(p).map(i=>MONTHS[i]);
+  charts.los=new Chart(document.getElementById('losChart'),{
+    type:'line',data:{labels:losL,datasets:[{
+      label:'Avg Nights',data:losS,borderColor:'#F97316',backgroundColor:'rgba(249,115,22,0.09)',
+      borderWidth:2.5,tension:0.4,fill:true,pointBackgroundColor:'#F97316',pointRadius:4,pointHoverRadius:7,
+    }]},
+    options:{...baseOpts(),plugins:{...baseOpts().plugins,legend:{display:false}}},
+  });
+
+  // 8. Guest Satisfaction
+  const satS=getSatSeries(h,p);const satL=pIdx(p).map(i=>MONTHS[i]);
+  charts.sat=new Chart(document.getElementById('satChart'),{
+    type:'line',data:{labels:satL,datasets:[{
+      label:'Guest Score',data:satS,borderColor:'#8B5CF6',backgroundColor:'rgba(139,92,246,0.09)',
+      borderWidth:2.5,tension:0.4,fill:true,pointBackgroundColor:'#8B5CF6',pointRadius:4,pointHoverRadius:7,
+    }]},
+    options:{...baseOpts({
+      x:{ticks:{color:th().muted,font:{size:10}},grid:{color:th().grid},border:{color:'transparent'}},
+      y:{min:74,max:100,ticks:{color:th().muted,font:{size:10}},grid:{color:th().grid},border:{color:'transparent'}},
+    }),plugins:{...baseOpts().plugins,legend:{display:false}}},
+  });
+
+  buildTable();
+}
+
+// ── UPDATE CHARTS ──────────────────────────────────────────────────────
+function updCharts(){
+  const{hotel:h,period:p}=state;
+  const rl=pIdx(p).map(i=>MONTHS[i]);
+  const cfRev=getCFMultiplier('rev');
+
+  // Revenue — apply cf multiplier to all points
+  charts.rev.data.labels=rl;
+  charts.rev.data.datasets[0].data=getRevSeries(h,p).map(v=>parseFloat((v*cfRev).toFixed(1)));
+  charts.rev.update();
+
+  charts.adr.data.labels=rl;
+  charts.adr.data.datasets[0].data=getADRSeries(h,p).map(v=>Math.round(v*getCFMultiplier('adr')));
+  charts.adr.data.datasets[1].data=getRevPARSeries(h,p).map(v=>Math.round(v*getCFMultiplier('rev')));
+  charts.adr.update();
+
+  charts.los.data.labels=rl;
+  charts.los.data.datasets[0].data=getLOSSeries(h,p).map(v=>parseFloat((v*getCFMultiplier('los')).toFixed(2)));
+  charts.los.update();
+
+  charts.sat.data.labels=rl;
+  charts.sat.data.datasets[0].data=getSatSeries(h,p).map(v=>Math.min(100,parseFloat((v*getCFMultiplier('sat')).toFixed(1))));
+  charts.sat.update();
+
+  // Nationality donut — dim non-selected slices
+  const natK=h==='All'?'All':h;
+  const natData=NAT[natK]||NAT['All'];
+  const natAlpha=NAT_LABELS.map(l=>(!cfState.nationality||l===cfState.nationality)?'CC':'22');
+  const natBorder=NAT_LABELS.map((l,i)=>(!cfState.nationality||l===cfState.nationality)?PCOLS[i]:'rgba(80,80,80,0.3)');
+  charts.nat.data.datasets[0].data=natData;
+  charts.nat.data.datasets[0].backgroundColor=PCOLS.map((c,i)=>c+natAlpha[i]);
+  charts.nat.data.datasets[0].borderColor=natBorder;
+  charts.nat.update();
+
+  // Booking channel donut — dim non-selected
+  const chanData=CHAN[h==='All'?'All':h]||CHAN['All'];
+  const chanAlpha=CHAN_LABELS.map(l=>(!cfState.channel||l===cfState.channel)?'BB':'22');
+  const chanBorder=CHAN_LABELS.map((l,i)=>(!cfState.channel||l===cfState.channel)?['#E6B84A','#3B82F6','#10B981','#F97316','#8B5CF6'][i]:'rgba(80,80,80,0.3)');
+  charts.chan.data.datasets[0].data=chanData;
+  charts.chan.data.datasets[0].backgroundColor=['rgba(230,184,74,','rgba(59,130,246,','rgba(16,185,129,','rgba(249,115,22,','rgba(139,92,246,'].map((c,i)=>c+chanAlpha[i]+')');
+  charts.chan.data.datasets[0].borderColor=chanBorder;
+  charts.chan.update();
+
+  // Segment bar — dim non-selected
+  const segD=getSegData(h,p);
+  const segAlpha=SEG_LABELS.map(l=>(!cfState.segment||l===cfState.segment)?'BB':'22');
+  const segBorder=SEG_LABELS.map((l,i)=>(!cfState.segment||l===cfState.segment)?PCOLS[i]:'rgba(80,80,80,0.2)');
+  charts.seg.data.datasets[0].data=segD;
+  charts.seg.data.datasets[0].backgroundColor=PCOLS.map((c,i)=>c+segAlpha[i]);
+  charts.seg.data.datasets[0].borderColor=segBorder;
+  charts.seg.update();
+
+  // Occupancy bar — highlight selected property
+  const occAlpha=HLIST.map(x=>(!cfState.property||x===cfState.property)?'BB':'22');
+  const occBorder=HLIST.map((x,i)=>(!cfState.property||x===cfState.property)?PCOLS[i]:'rgba(80,80,80,0.2)');
+  charts.occ.data.datasets[0].backgroundColor=PCOLS.map((c,i)=>c+occAlpha[i]);
+  charts.occ.data.datasets[0].borderColor=occBorder;
+  charts.occ.update();
+
+  buildTable();
+}
+
+// ── TABLE ──────────────────────────────────────────────────────────────
+function buildTable(){
+  const{period:p}=state;
+  const cfRev=getCFMultiplier('rev');
+  const rows=HLIST.map(h=>({
+    h,rev:getTotRev(h,p)*cfRev,occ:Math.min(99.9,OCC[h]*getCFMultiplier('occ')),
+    adr:Math.round(ADR[h]*getCFMultiplier('adr')),
+    revpar:Math.round(Math.min(99.9,OCC[h]*getCFMultiplier('occ'))/100*Math.round(ADR[h]*getCFMultiplier('adr'))),
+    los:parseFloat((getLOS(h,p)*getCFMultiplier('los')).toFixed(1)),
+    sat:Math.min(100,parseFloat(getSat(h,p))*getCFMultiplier('sat')).toFixed(1),
+    yoy:YOY[h],
+  })).sort((a,b)=>b.revpar-a.revpar);
+  const maxRev=Math.max(...rows.map(r=>r.rev));
+  document.getElementById('tblBody').innerHTML=rows.map((r,i)=>{
+    const bw=Math.round((r.rev/maxRev)*100);
+    const status=r.occ>=85?'Peak':'Active';
+    const sc=r.occ>=85?'bp-g':r.occ>=78?'bp-a':'bp-r';
+    const isMatch=!cfState.property||(cfState.property===r.h);
+    const rowClass=cfState.property?(isMatch?'cf-row-match':'cf-row-dim'):'';
+    return`<tr class="${rowClass}" style="cursor:pointer" onclick="filterByProperty('${r.h}')">
+      <td><span class="rnk">${i+1}</span></td>
+      <td style="color:${HCOL[r.h]};font-weight:700">${r.h}</td>
+      <td><div class="bcel"><div class="mbar"><div class="mbf" style="width:${bw}%"></div></div>AED ${r.rev.toFixed(0)}M</div></td>
+      <td style="color:var(--gold);font-weight:700">AED ${r.revpar.toLocaleString()}</td>
+      <td>${r.occ.toFixed(1)}%</td>
+      <td>AED ${r.adr.toLocaleString()}</td>
+      <td>${r.los} nights</td>
+      <td>${r.sat}/100 ⭐</td>
+      <td class="tup">${r.yoy}</td>
+      <td><span class="badge-pill ${sc}">${status}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+// ── FILTERS ────────────────────────────────────────────────────────────
+function applyF(){
+  state.hotel=document.getElementById('hotelSel').value;
+  state.segment=document.getElementById('segSel').value;
+  // Sync property cf state with hotel selector
+  if(state.hotel!=='All') cfState.property=state.hotel;
+  else if(cfState.property) cfState.property=null;
+  updKPI();updCharts();updCFBanner();
+}
+function setP(period,btn){
+  state.period=period;
+  document.querySelectorAll('.pb').forEach(b=>b.classList.remove('act'));
+  btn.classList.add('act');
+  updKPI();updCharts();
+}
+
+// ── CROSS-FILTER CORE ─────────────────────────────────────────────────
+function applyFilter(type,value,sourceCardSelector){
+  const same=cfState[type]===value;
+  // Toggle off if same
+  cfState[type]=same?null:value;
+
+  // Highlight source card
+  document.querySelectorAll('.cc').forEach(c=>c.classList.remove('cf-source','cf-active'));
+  if(!same && sourceCardSelector){
+    const src=document.querySelector(sourceCardSelector);
+    if(src){
+      src.classList.add('cf-source');
+      // All other chart cards get cf-active
+      document.querySelectorAll('.cc').forEach(c=>{if(c!==src)c.classList.add('cf-active');});
+    }
+  }
+
+  updKPI();updCharts();updCFBanner();
+}
+
+function filterByNationality(label,sourceCardSelector){
+  applyFilter('nationality',label,sourceCardSelector);
+}
+function filterByChannel(label,sourceCardSelector){
+  applyFilter('channel',label,sourceCardSelector);
+}
+function filterBySegment(label,sourceCardSelector){
+  applyFilter('segment',label,sourceCardSelector);
+}
+function filterByProperty(name){
+  const same=cfState.property===name;
+  cfState.property=same?null:name;
+  // Sync hotel dropdown
+  document.getElementById('hotelSel').value=same?'All':name;
+  state.hotel=same?'All':name;
+
+  document.querySelectorAll('.cc').forEach(c=>c.classList.remove('cf-source','cf-active'));
+  if(!same){
+    // Occ chart card is the source
+    const occCard=document.getElementById('occChart').closest('.cc');
+    if(occCard){
+      occCard.classList.add('cf-source');
+      document.querySelectorAll('.cc').forEach(c=>{if(c!==occCard)c.classList.add('cf-active');});
+    }
+  }
+  updKPI();updCharts();updCFBanner();
+}
+
+function clearFilter(type){
+  cfState[type]=null;
+  updKPI();updCharts();updCFBanner();
+  if(!hasCFActive()){
+    document.querySelectorAll('.cc').forEach(c=>c.classList.remove('cf-source','cf-active'));
+    document.querySelectorAll('.kpi').forEach(k=>k.classList.remove('cf-highlight'));
+  }
+}
+
+function clearAllFilters(){
+  cfState.nationality=null;cfState.channel=null;cfState.segment=null;cfState.property=null;
+  // Reset hotel selector
+  document.getElementById('hotelSel').value='All';state.hotel='All';
+  document.querySelectorAll('.cc').forEach(c=>c.classList.remove('cf-source','cf-active'));
+  document.querySelectorAll('.kpi').forEach(k=>k.classList.remove('cf-highlight'));
+  updKPI();updCharts();updCFBanner();
+}
+
+function updCFBanner(){
+  const banner=document.getElementById('cfBanner');
+  const chips=document.getElementById('cfChips');
+  const label=document.getElementById('cfLabel');
+  const active=hasCFActive();
+  banner.classList.toggle('active',!!active);
+  if(!active){chips.innerHTML='';return;}
+
+  const parts=[];
+  if(cfState.nationality)parts.push({type:'nationality',val:cfState.nationality,icon:'🌍'});
+  if(cfState.channel)parts.push({type:'channel',val:cfState.channel,icon:'📲'});
+  if(cfState.segment)parts.push({type:'segment',val:cfState.segment,icon:'📊'});
+  if(cfState.property)parts.push({type:'property',val:cfState.property,icon:'🏨'});
+
+  label.innerHTML=parts.map(p=>`<strong>${p.icon} ${p.val}</strong>`).join(' + ');
+  chips.innerHTML=parts.map(p=>`<div class="cf-chip" onclick="clearFilter('${p.type}')">${p.icon} ${p.val} <span class="x">✕</span></div>`).join('');
+}
+
+// ── THEME ──────────────────────────────────────────────────────────────
+function toggleTheme(){
+  const h=document.documentElement;
+  const d=h.getAttribute('data-theme')==='dark';
+  h.setAttribute('data-theme',d?'light':'dark');
+  document.getElementById('themeBtn').textContent=d?'🌙':'☀️';
+  const t=th();
+  Object.values(charts).forEach(c=>{
+    if(!c)return;
+    if(c.options.plugins?.legend?.labels)c.options.plugins.legend.labels.color=t.muted;
+    if(c.options.scales){
+      ['x','y'].forEach(ax=>{
+        if(c.options.scales[ax]){
+          if(c.options.scales[ax].ticks)c.options.scales[ax].ticks.color=t.muted;
+          if(c.options.scales[ax].grid)c.options.scales[ax].grid.color=t.grid;
+        }
+      });
+    }
+    c.update();
+  });
+}
+
+document.addEventListener('DOMContentLoaded',()=>{updKPI();initCharts();});
+</script>
+</body>
+</html>

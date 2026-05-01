@@ -1,0 +1,1679 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Dubai Utilities Company — Infrastructure KPI Dashboard | Om Bagal Analytics</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root {
+  --gold:#C9A84C;
+  --gold-light:#E2C46A;
+  --gold-pale:rgba(201,168,76,0.12);
+  --gold-border:rgba(201,168,76,0.25);
+  --bg:#060C14;
+  --bg2:#0B1220;
+  --bg3:#101828;
+  --card:#0D1826;
+  --card2:#112034;
+  --text:#EEE9DE;
+  --text2:#8A96A8;
+  --text3:#424F62;
+  --green:#22C55E;
+  --green-pale:rgba(34,197,94,0.12);
+  --teal:#06B6D4;
+  --teal-pale:rgba(6,182,212,0.12);
+  --amber:#F59E0B;
+  --amber-pale:rgba(245,158,11,0.12);
+  --red:#EF4444;
+  --red-pale:rgba(239,68,68,0.12);
+  --blue:#3B82F6;
+  --blue-pale:rgba(59,130,246,0.12);
+  --border:rgba(255,255,255,0.055);
+  --shadow:0 4px 36px rgba(0,0,0,0.5);
+  --shadow-gold:0 0 44px rgba(201,168,76,0.10);
+  --radius:14px;
+}
+[data-theme="light"]{
+  --bg:#F2EDE4;--bg2:#E9E3D8;--bg3:#DFD8CC;
+  --card:#FFFFFF;--card2:#F7F3EC;
+  --text:#16120A;--text2:#4E4535;--text3:#9A9080;
+  --border:rgba(0,0,0,0.07);
+  --shadow:0 4px 24px rgba(0,0,0,0.10);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'DM Sans',system-ui,sans-serif;
+  background:var(--bg);color:var(--text);
+  min-height:100vh;overflow-x:hidden;
+}
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cpath d='M30 0L60 30L30 60L0 30Z' fill='none' stroke='%23C9A84C' stroke-width='0.3' opacity='0.04'/%3E%3C/svg%3E");
+}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:var(--bg2);}
+::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px;}
+
+/* ── HEADER ── */
+header{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(6,12,20,0.94);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--gold-border);height:62px;
+}
+[data-theme="light"] header{background:rgba(242,237,228,0.96);}
+.header-inner{
+  max-width:1480px;margin:0 auto;padding:0 28px;
+  height:100%;display:flex;align-items:center;justify-content:space-between;gap:14px;
+}
+.logo{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:1.22rem;font-weight:700;color:var(--text);
+  display:flex;align-items:center;gap:10px;letter-spacing:.02em;white-space:nowrap;
+}
+.logo-mark{
+  width:30px;height:30px;background:linear-gradient(135deg,var(--gold),var(--gold-light));
+  border-radius:8px;display:flex;align-items:center;justify-content:center;
+  font-size:.8rem;font-weight:700;color:#0A0600;letter-spacing:.04em;flex-shrink:0;
+}
+.logo span{color:var(--gold);}
+.header-center{display:flex;align-items:center;gap:8px;}
+.zone-select{
+  background:var(--card);border:1px solid var(--border);color:var(--text);
+  padding:6px 14px;border-radius:8px;font-size:.8rem;cursor:pointer;
+  font-family:'DM Sans',sans-serif;font-weight:500;
+}
+.zone-select:focus{outline:none;border-color:var(--gold-border);}
+.period-btns{display:flex;gap:4px;}
+.pb{
+  background:none;border:1px solid var(--border);
+  color:var(--text2);padding:5px 14px;border-radius:7px;
+  font-size:.78rem;font-weight:500;cursor:pointer;transition:.2s;font-family:inherit;
+}
+.pb:hover,.pb.active{background:var(--gold-pale);border-color:var(--gold-border);color:var(--gold);}
+.header-right{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.live-badge{
+  display:flex;align-items:center;gap:7px;
+  background:rgba(34,197,94,0.10);border:1px solid rgba(34,197,94,0.22);
+  color:var(--green);padding:5px 14px;border-radius:50px;
+  font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  white-space:nowrap;
+}
+.live-dot{width:7px;height:7px;background:var(--green);border-radius:50%;animation:lv 2s infinite;}
+@keyframes lv{0%,100%{opacity:1;}50%{opacity:.25;}}
+.theme-toggle{
+  background:none;border:1px solid var(--border);
+  color:var(--text2);width:34px;height:34px;border-radius:8px;
+  cursor:pointer;font-size:.9rem;transition:.2s;
+}
+.theme-toggle:hover{border-color:var(--gold-border);color:var(--gold);}
+
+/* ── PAGE ── */
+.page{max-width:1480px;margin:0 auto;padding:80px 28px 44px;position:relative;z-index:1;}
+
+/* ── TICKER ── */
+.ticker-wrap{
+  background:var(--card);border:1px solid var(--gold-border);
+  border-radius:10px;padding:11px 20px;margin-bottom:26px;
+  display:flex;align-items:center;gap:16px;overflow:hidden;
+}
+.ticker-label{
+  font-size:.67rem;font-weight:700;color:var(--gold);
+  letter-spacing:.12em;text-transform:uppercase;
+  white-space:nowrap;flex-shrink:0;
+}
+.ticker-scroll{flex:1;overflow:hidden;}
+.ticker-track{display:flex;gap:40px;animation:tick 36s linear infinite;white-space:nowrap;}
+@keyframes tick{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.tick-item{display:inline-flex;align-items:center;gap:7px;font-size:.77rem;color:var(--text2);flex-shrink:0;}
+.tick-item b{color:var(--text);}
+.tick-item .ok{color:var(--green);}
+.tick-item .warn{color:var(--amber);}
+.tick-item .crit{color:var(--red);}
+
+/* ── PAGE HEADER ── */
+.page-header{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  margin-bottom:28px;flex-wrap:wrap;gap:14px;
+}
+.page-title{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:clamp(1.55rem,3vw,2.3rem);font-weight:700;
+  line-height:1.15;letter-spacing:.01em;
+}
+.page-title span{color:var(--gold);}
+.page-sub{color:var(--text2);font-size:.86rem;margin-top:5px;line-height:1.5;}
+.updated{
+  display:flex;align-items:center;gap:7px;
+  font-size:.73rem;color:var(--text3);
+  background:var(--card);border:1px solid var(--border);
+  padding:8px 16px;border-radius:8px;white-space:nowrap;
+}
+.updated b{color:var(--text2);}
+
+/* ── KPI STRIP ── */
+.kpi-strip{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));
+  gap:14px;margin-bottom:22px;
+}
+.kpi{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:20px 22px;
+  position:relative;overflow:hidden;transition:.3s;cursor:default;
+}
+.kpi::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--gold),transparent);
+  opacity:0;transition:.3s;
+}
+.kpi:hover{border-color:var(--gold-border);box-shadow:var(--shadow-gold);}
+.kpi:hover::before{opacity:1;}
+.kpi-icon{font-size:1.25rem;margin-bottom:8px;}
+.kpi-label{font-size:.69rem;color:var(--text3);font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px;}
+.kpi-value{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:1.85rem;font-weight:700;line-height:1;color:var(--text);
+}
+.kpi-value .unit{font-size:.95rem;color:var(--gold);margin-right:2px;}
+.kpi-delta{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:.71rem;font-weight:700;margin-top:7px;
+  padding:3px 8px;border-radius:50px;
+}
+.kpi-delta.up{background:var(--green-pale);color:var(--green);}
+.kpi-delta.down{background:var(--red-pale);color:var(--red);}
+.kpi-delta.neutral{background:var(--gold-pale);color:var(--gold);}
+.kpi-delta.warn{background:var(--amber-pale);color:var(--amber);}
+
+/* ── GRIDS ── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px;}
+.grid-3{display:grid;grid-template-columns:1.7fr 1fr 1fr;gap:18px;margin-bottom:18px;}
+.grid-side{display:grid;grid-template-columns:2fr 1fr;gap:18px;margin-bottom:18px;}
+.grid-3b{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-bottom:18px;}
+@media(max-width:1100px){.grid-3,.grid-side,.grid-3b{grid-template-columns:1fr 1fr;}}
+@media(max-width:700px){.grid-2,.grid-3,.grid-side,.grid-3b{grid-template-columns:1fr;}}
+
+/* ── CARD ── */
+.card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:22px;
+  box-shadow:var(--shadow);transition:.2s;
+}
+.card:hover{border-color:rgba(201,168,76,0.14);}
+.card-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:18px;
+}
+.card-title{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:1.04rem;font-weight:700;letter-spacing:.01em;
+}
+.card-badge{
+  font-size:.68rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+  padding:4px 12px;border-radius:50px;
+  background:var(--gold-pale);color:var(--gold);border:1px solid var(--gold-border);
+}
+.card-badge.teal{background:var(--teal-pale);color:var(--teal);border-color:rgba(6,182,212,0.22);}
+.card-badge.green{background:var(--green-pale);color:var(--green);border-color:rgba(34,197,94,0.22);}
+.card-badge.red{background:var(--red-pale);color:var(--red);border-color:rgba(239,68,68,0.22);}
+.card-badge.blue{background:var(--blue-pale);color:var(--blue);border-color:rgba(59,130,246,0.22);}
+.card-badge.amber{background:var(--amber-pale);color:var(--amber);border-color:rgba(245,158,11,0.22);}
+
+/* ── CHART ── */
+.chart-wrap{position:relative;width:100%;}
+.chart-wrap canvas{max-height:260px;}
+.chart-wrap.tall canvas{max-height:310px;}
+.chart-wrap.sm canvas{max-height:200px;}
+
+/* ── ZONE TABLE ── */
+.zone-table{width:100%;border-collapse:collapse;}
+.zone-table th{
+  font-size:.67rem;font-weight:700;color:var(--text3);
+  letter-spacing:.09em;text-transform:uppercase;
+  padding:0 12px 10px;text-align:left;border-bottom:1px solid var(--border);
+}
+.zone-table th:last-child,.zone-table th:nth-child(3){text-align:right;}
+.zone-table td{
+  padding:10px 12px;font-size:.82rem;color:var(--text2);
+  border-bottom:1px solid rgba(255,255,255,0.03);vertical-align:middle;
+}
+[data-theme="light"] .zone-table td{border-bottom-color:rgba(0,0,0,0.04);}
+.zone-table tr:last-child td{border-bottom:none;}
+.zone-table tr:hover td{background:var(--gold-pale);}
+.zone-name{color:var(--text);font-weight:600;}
+.zone-mw{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:1rem;font-weight:700;color:var(--gold);text-align:right;
+}
+.bar-cell{padding:10px 12px!important;}
+.inline-bar{
+  height:6px;border-radius:3px;
+  background:linear-gradient(90deg,var(--gold),var(--gold-light));
+  transition:width .6s ease;
+}
+.sla-pill{
+  display:inline-block;font-size:.66rem;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;
+  padding:3px 9px;border-radius:50px;
+}
+.sla-ok{background:var(--green-pale);color:var(--green);}
+.sla-warn{background:var(--amber-pale);color:var(--amber);}
+.sla-crit{background:var(--red-pale);color:var(--red);}
+
+/* ── SLA METER ── */
+.sla-meters{display:flex;flex-direction:column;gap:12px;margin-top:4px;}
+.sla-row{display:flex;align-items:center;gap:12px;}
+.sla-label{font-size:.78rem;color:var(--text2);width:120px;flex-shrink:0;}
+.sla-track{flex:1;background:rgba(255,255,255,.05);border-radius:4px;height:8px;overflow:hidden;}
+.sla-fill{height:100%;border-radius:4px;transition:width 1s ease;}
+.sla-pct{font-size:.75rem;font-weight:700;width:38px;text-align:right;flex-shrink:0;}
+
+/* ── ASSET GRID ── */
+.asset-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px;}
+.asset-card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;padding:14px 12px;text-align:center;transition:.25s;
+}
+.asset-card:hover{border-color:var(--gold-border);}
+.asset-icon{font-size:1.4rem;margin-bottom:6px;}
+.asset-name{font-size:.7rem;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;}
+.asset-val{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:1.25rem;font-weight:700;color:var(--text);
+}
+.asset-status{font-size:.65rem;font-weight:700;margin-top:5px;padding:2px 8px;border-radius:50px;}
+.as-ok{color:var(--green);background:var(--green-pale);}
+.as-warn{color:var(--amber);background:var(--amber-pale);}
+
+/* ── INCIDENT TABLE ── */
+.incident-list{display:flex;flex-direction:column;gap:9px;margin-top:4px;}
+.incident-row{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 14px;background:var(--bg2);
+  border:1px solid var(--border);border-radius:10px;transition:.2s;
+}
+.incident-row:hover{border-color:var(--gold-border);}
+.inc-sev{
+  width:32px;height:32px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.85rem;flex-shrink:0;
+}
+.inc-p1{background:var(--red-pale);}
+.inc-p2{background:var(--amber-pale);}
+.inc-p3{background:var(--blue-pale);}
+.inc-loc{font-size:.83rem;font-weight:600;color:var(--text);flex:1;}
+.inc-desc{font-size:.72rem;color:var(--text3);margin-top:2px;}
+.inc-eta{font-size:.73rem;font-weight:700;color:var(--gold);white-space:nowrap;}
+
+/* ── MINI KPI ROW ── */
+.mini-row{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;}
+.mini-kpi{
+  flex:1;min-width:80px;background:var(--bg2);
+  border:1px solid var(--border);border-radius:10px;padding:11px;text-align:center;
+}
+.mki-val{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:1.3rem;font-weight:700;color:var(--gold);
+}
+.mki-lbl{font-size:.65rem;color:var(--text3);margin-top:2px;text-transform:uppercase;letter-spacing:.06em;}
+
+/* ── BUDGET PROGRESS ── */
+.budget-rows{display:flex;flex-direction:column;gap:14px;margin-top:4px;}
+.budget-row{}
+.budget-row-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px;}
+.budget-label{font-size:.8rem;color:var(--text);font-weight:600;}
+.budget-nums{font-size:.75rem;color:var(--text3);}
+.budget-nums b{color:var(--text);}
+.budget-track{height:8px;background:rgba(255,255,255,.05);border-radius:4px;overflow:hidden;}
+.budget-fill{height:100%;border-radius:4px;transition:width 1.1s ease;}
+
+/* ── SOLAR STRIP ── */
+.solar-strip{
+  background:linear-gradient(135deg,rgba(34,197,94,.06),rgba(6,182,212,.04));
+  border:1px solid rgba(34,197,94,.15);
+  border-radius:12px;padding:18px 22px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;
+  margin-bottom:18px;
+}
+.solar-left{display:flex;align-items:center;gap:14px;}
+.solar-icon{font-size:2rem;}
+.solar-title{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;color:var(--text);}
+.solar-sub{font-size:.78rem;color:var(--text2);margin-top:3px;}
+.solar-stats{display:flex;gap:24px;flex-wrap:wrap;}
+.solar-stat{text-align:center;}
+.solar-stat-val{
+  font-family:'Cormorant Garamond',serif;font-size:1.5rem;
+  font-weight:700;color:var(--green);
+}
+.solar-stat-lbl{font-size:.68rem;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;}
+
+/* ── WATERMARK ── */
+.watermark{
+  text-align:center;padding:24px 0 0;
+  font-size:.74rem;color:var(--text3);
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.watermark a{
+  color:var(--gold);text-decoration:none;font-weight:600;
+  font-family:'Cormorant Garamond',serif;font-size:.9rem;
+}
+.watermark a:hover{text-decoration:underline;}
+
+/* ── FADE UP ── */
+.fade-up{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease;}
+.fade-up.visible{opacity:1;transform:translateY(0);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-mark">⚡</div>
+      Dubai <span>Utilities Co.</span> &nbsp;·&nbsp; KPI Intelligence
+    </div>
+    <div class="header-center">
+      <select class="zone-select" id="zoneSelect" onchange="filterZone()">
+        <option value="all">All Zones — Dubai</option>
+        <option value="downtown">Downtown & Business Bay</option>
+        <option value="marina">Dubai Marina & JLT</option>
+        <option value="deira">Deira & Bur Dubai</option>
+        <option value="south">Al Quoz & Dubai South</option>
+        <option value="jebel">Jebel Ali & DIC</option>
+      </select>
+      <div class="period-btns">
+        <button class="pb" onclick="setPeriod('Q1',this)">Q1</button>
+        <button class="pb" onclick="setPeriod('Q2',this)">Q2</button>
+        <button class="pb" onclick="setPeriod('Q3',this)">Q3</button>
+        <button class="pb active" onclick="setPeriod('Q4',this)">Q4</button>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="live-badge"><div class="live-dot"></div>Grid Live</div>
+      <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()">🌙</button>
+    </div>
+  </div>
+</header>
+
+<div class="page">
+
+  <!-- TICKER -->
+  <div class="ticker-wrap fade-up">
+    <div class="ticker-label">⚡ Grid Status</div>
+    <div class="ticker-scroll">
+      <div class="ticker-track">
+        <span class="tick-item">Downtown — Peak Load <b>1,842 MW</b> <span class="ok">● Normal</span></span>
+        <span class="tick-item">Dubai Marina — Consumption <b>↑ 6.2%</b> <span class="warn">● Elevated</span></span>
+        <span class="tick-item">Jebel Ali Power Plant — Output <b>2,640 MW</b> <span class="ok">● Optimal</span></span>
+        <span class="tick-item">Water Desalination — MIGD <b>470 MIGD</b> <span class="ok">● Running</span></span>
+        <span class="tick-item">Solar (Noor) — <b>1,013 MW Active</b> <span class="ok">● Peak Generation</span></span>
+        <span class="tick-item">Deira Grid — Planned Maintenance <b>Sector D4</b> <span class="warn">● Scheduled</span></span>
+        <span class="tick-item">Smart Meters — <b>99.1%</b> Online <span class="ok">● Connected</span></span>
+        <span class="tick-item">Business Bay — SLA Compliance <b>97.4%</b> <span class="ok">● On Target</span></span>
+        <!-- duplicate -->
+        <span class="tick-item">Downtown — Peak Load <b>1,842 MW</b> <span class="ok">● Normal</span></span>
+        <span class="tick-item">Dubai Marina — Consumption <b>↑ 6.2%</b> <span class="warn">● Elevated</span></span>
+        <span class="tick-item">Jebel Ali Power Plant — Output <b>2,640 MW</b> <span class="ok">● Optimal</span></span>
+        <span class="tick-item">Water Desalination — MIGD <b>470 MIGD</b> <span class="ok">● Running</span></span>
+        <span class="tick-item">Solar (Noor) — <b>1,013 MW Active</b> <span class="ok">● Peak Generation</span></span>
+        <span class="tick-item">Deira Grid — Planned Maintenance <b>Sector D4</b> <span class="warn">● Scheduled</span></span>
+        <span class="tick-item">Smart Meters — <b>99.1%</b> Online <span class="ok">● Connected</span></span>
+        <span class="tick-item">Business Bay — SLA Compliance <b>97.4%</b> <span class="ok">● On Target</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ZONE FOCUS BANNER (hidden by default, shown when a zone is selected) -->
+  <div id="zoneBanner" style="display:none;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;
+    background:linear-gradient(135deg,rgba(201,168,76,0.07),rgba(201,168,76,0.03));
+    border:1px solid var(--gold-border);border-radius:12px;padding:16px 22px;margin-bottom:18px;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div style="font-size:1.5rem;">🗺️</div>
+      <div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:700;color:var(--text);" id="zoneBannerName">Zone Name</div>
+        <div style="font-size:.75rem;color:var(--text3);margin-top:2px;">Zone Focus Mode — showing filtered data for selected district</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:center;">
+      <div style="text-align:center;">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;color:var(--gold);" id="zoneBannerCons">—</div>
+        <div style="font-size:.67rem;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;">Consumption</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;color:var(--teal);" id="zoneBannerPeak">—</div>
+        <div style="font-size:.67rem;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;">Peak Load</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;" id="zoneBannerVs">—</div>
+        <div style="font-size:.67rem;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;">vs Target</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:.82rem;font-weight:600;color:var(--green);" id="zoneBannerSla">—</div>
+        <div style="font-size:.67rem;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;">SLA Status</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:.82rem;font-weight:600;color:var(--text2);" id="zoneBannerMeters">—</div>
+        <div style="font-size:.67rem;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;">Coverage</div>
+      </div>
+    </div>
+    <button onclick="document.getElementById('zoneSelect').value='all';filterZone();"
+      style="background:var(--gold-pale);border:1px solid var(--gold-border);color:var(--gold);
+      padding:7px 16px;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;">
+      ✕ Clear Filter
+    </button>
+  </div>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header fade-up">
+    <div>
+      <div class="page-title">Dubai Utilities Co. — Infrastructure <span>Command</span> &nbsp;<span style="font-size:.55rem;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,74,0.3);color:var(--gold);padding:3px 10px;border-radius:20px;letter-spacing:.1em;vertical-align:middle;">DEMO</span></div>
+      <div class="page-sub" id="pageSub">Q4 2024 · Oct – Dec · Dubai Grid Operations · Electricity, Water & Renewable Energy</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <div style="font-size:.72rem;color:var(--text3);display:flex;align-items:center;gap:5px;">
+        <span>👆</span> Click any chart segment to drill down
+      </div>
+      <div class="updated"><span>🕐</span> Live sync: <b>Today, 08:42 GST</b></div>
+    </div>
+  </div>
+
+  <!-- DRILL-DOWN ACTIVE BANNER -->
+  <div id="drillBanner" style="display:none;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
+    background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.3);
+    border-radius:10px;padding:12px 20px;margin-bottom:18px;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <span style="font-size:1.1rem;">🔍</span>
+      <div>
+        <div style="font-size:.72rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px;" id="drillType">Drill-down active</div>
+        <div style="font-size:.92rem;font-weight:700;" id="drillLabel">—</div>
+      </div>
+      <div style="font-size:.76rem;color:var(--text2);margin-left:8px;">All KPIs, zones, incidents & budget filtered to this segment</div>
+    </div>
+    <button onclick="clearDrill()" style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.25);color:#EF4444;
+      padding:6px 16px;border-radius:7px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;transition:.2s;">
+      ✕ Clear Filter — Show All
+    </button>
+  </div>
+
+  <!-- KPI STRIP -->
+  <div class="kpi-strip fade-up">
+    <div class="kpi">
+      <div class="kpi-icon">⚡</div>
+      <div class="kpi-label">Total Power Generated</div>
+      <div class="kpi-value"><span id="kv1">14,820</span><span class="unit" style="font-size:.85rem;margin-left:4px;">MW</span></div>
+      <div class="kpi-delta up">↑ 3.8% vs Q3</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-icon">💧</div>
+      <div class="kpi-label">Water Produced</div>
+      <div class="kpi-value"><span id="kv2">470</span><span class="unit" style="font-size:.85rem;margin-left:4px;">MIGD</span></div>
+      <div class="kpi-delta up">↑ 2.1% vs Q3</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-icon">🌞</div>
+      <div class="kpi-label">Solar Contribution</div>
+      <div class="kpi-value"><span id="kv3">32</span><span class="unit">%</span></div>
+      <div class="kpi-delta up">↑ 4pts — Record</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-icon">🔧</div>
+      <div class="kpi-label">Maintenance SLA</div>
+      <div class="kpi-value"><span id="kv4">96.8</span><span class="unit">%</span></div>
+      <div class="kpi-delta neutral">Target: 97%</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-icon">🔌</div>
+      <div class="kpi-label">Grid Availability</div>
+      <div class="kpi-value"><span id="kv5">99.97</span><span class="unit">%</span></div>
+      <div class="kpi-delta up">↑ World-class</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-icon">📊</div>
+      <div class="kpi-label">Budget Utilised</div>
+      <div class="kpi-value"><span id="kv6">74</span><span class="unit">%</span></div>
+      <div class="kpi-delta warn">AED 2.1B of 2.84B</div>
+    </div>
+  </div>
+
+  <!-- SOLAR STRIP -->
+  <div class="solar-strip fade-up">
+    <div class="solar-left">
+      <div class="solar-icon">☀️</div>
+      <div>
+        <div class="solar-title">Mohammed Bin Rashid Solar Park — Live Output</div>
+        <div class="solar-sub">World's largest single-site solar park · Phase 6 operational · 5,000 MW target by 2030</div>
+      </div>
+    </div>
+    <div class="solar-stats">
+      <div class="solar-stat"><div class="solar-stat-val" id="solarOutput">1,013 MW</div><div class="solar-stat-lbl">Current Output</div></div>
+      <div class="solar-stat"><div class="solar-stat-val" id="solarHomes">4.2M</div><div class="solar-stat-lbl">Homes Powered</div></div>
+      <div class="solar-stat"><div class="solar-stat-val" id="solarCO2">2.4M T</div><div class="solar-stat-lbl">CO₂ Avoided YTD</div></div>
+      <div class="solar-stat"><div class="solar-stat-val" id="solarCost">AED 1.78</div><div class="solar-stat-lbl">Cost / kWh</div></div>
+    </div>
+  </div>
+
+  <!-- ROW 1: Consumption Chart + SLA Meters + Asset Health -->
+  <div class="grid-3 fade-up">
+
+    <!-- Consumption Trend -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Power & Water Consumption Trend</div>
+        <div class="card-badge" id="consBadge">Monthly — Q4</div>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="consumptionChart"></canvas>
+      </div>
+      <div class="mini-row">
+        <div class="mini-kpi"><div class="mki-val" id="miniCurr">14,820</div><div class="mki-lbl" id="miniCurrLbl">MW Q4</div></div>
+        <div class="mini-kpi"><div class="mki-val" id="miniPrev">14,282</div><div class="mki-lbl" id="miniPrevLbl">MW Q3</div></div>
+        <div class="mini-kpi"><div class="mki-val" id="miniGrowth">+3.8%</div><div class="mki-lbl">Growth</div></div>
+      </div>
+    </div>
+
+    <!-- SLA Compliance Meters -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Maintenance SLA Compliance</div>
+        <div class="card-badge green" id="slaBadge">Q4 Live</div>
+      </div>
+      <div class="sla-meters" id="slaMeters"></div>
+    </div>
+
+    <!-- Asset Health -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Critical Asset Health</div>
+        <div class="card-badge teal">Real-Time</div>
+      </div>
+      <div class="asset-grid" id="assetGrid"></div>
+    </div>
+  </div>
+
+  <!-- ROW 2: Zone Consumption Table + Incident Tracker -->
+  <div class="grid-side fade-up">
+
+    <!-- Zone Table -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Zone-Wise Consumption & Performance</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <select id="utilType" onchange="buildZoneTable()" style="background:var(--bg2);border:1px solid var(--border);color:var(--text2);padding:5px 10px;border-radius:7px;font-size:.75rem;cursor:pointer;font-family:inherit;">
+            <option value="electricity">Electricity</option>
+            <option value="water">Water</option>
+          </select>
+        </div>
+      </div>
+      <table class="zone-table" id="zoneTable">
+        <thead>
+          <tr>
+            <th>Zone / District</th>
+            <th>Consumption</th>
+            <th style="text-align:right">Peak Load</th>
+            <th>vs Target</th>
+            <th>SLA</th>
+            <th style="text-align:right">Smart Meters</th>
+          </tr>
+        </thead>
+        <tbody id="zoneBody"></tbody>
+      </table>
+    </div>
+
+    <!-- Incident Tracker -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Active Incidents & Maintenance</div>
+        <div class="card-badge amber" id="incidentBadge">4 Open</div>
+      </div>
+      <div class="incident-list" id="incidentList"></div>
+    </div>
+  </div>
+
+  <!-- ROW 3: Budget vs Actuals + YoY + Renewable Mix -->
+  <div class="grid-3b fade-up">
+
+    <!-- Budget vs Actuals -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Budget vs Actuals — Q4</div>
+        <div class="card-badge blue">AED Billions</div>
+      </div>
+      <div class="budget-rows" id="budgetRows"></div>
+    </div>
+
+    <!-- YoY Comparison -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Consumption Year-on-Year</div>
+        <div class="card-badge">2022–2024</div>
+      </div>
+      <div class="chart-wrap tall">
+        <canvas id="yoyChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Energy Mix -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Energy Generation Mix</div>
+        <div class="card-badge green">Clean 32%</div>
+      </div>
+      <div class="chart-wrap" style="display:flex;align-items:center;justify-content:center;height:220px;">
+        <canvas id="mixChart"></canvas>
+      </div>
+      <div id="mixLegend" style="margin-top:12px;display:flex;flex-direction:column;gap:5px;"></div>
+    </div>
+  </div>
+
+  <!-- ROW 4: Outage History Chart + Cost Variance -->
+  <div class="grid-2 fade-up">
+
+    <!-- Outage / Restoration -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Outage Events & Restoration Time (MTTR)</div>
+        <div class="card-badge red">Monthly</div>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="outageChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Cost per kWh by Zone -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Cost per kWh / MIGD by Zone</div>
+        <div class="card-badge teal">AED Benchmark</div>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="costChart"></canvas>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- WATERMARK -->
+  <div class="watermark fade-up">
+    Dashboard built by &nbsp;<a href="https://wa.me/919987258696" target="_blank">Om Bagal Analytics</a>&nbsp; · Business Intelligence for Dubai &nbsp;·&nbsp; ombagal.official@gmail.com
+  </div>
+
+</div>
+
+<script>
+// ── TOGGLE THEME ──
+function toggleTheme(){
+  var h=document.documentElement,d=h.getAttribute('data-theme')==='dark';
+  h.setAttribute('data-theme',d?'light':'dark');
+  document.getElementById('themeBtn').textContent=d?'🌙':'☀️';
+  setTimeout(buildCharts,50);
+}
+function setPeriodByTheme(){ buildCharts(); }
+
+// ── CHART HELPERS ──
+function cc(){
+  var d=document.documentElement.getAttribute('data-theme')==='dark';
+  return{txt:d?'#8A96A8':'#4E4535',grid:d?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.07)'};
+}
+Chart.defaults.font.family="'DM Sans',system-ui,sans-serif";
+var charts={};
+function destroyAll(){Object.values(charts).forEach(function(c){if(c)c.destroy();});charts={};}
+
+// ─────────────────────────────────────────────
+// ── ALL DATA BY QUARTER ──
+// ─────────────────────────────────────────────
+var QDATA = {
+  Q1: {
+    label:'Q1 2024 · Jan – Mar',
+    kpis:{ power:'13,800', water:'448', solar:'26', sla:'94.2', avail:'99.94', budget:'18' },
+    kpiDeltas:{
+      power:{cls:'up',txt:'↑ 2.1% vs Q4 2023'},
+      water:{cls:'up',txt:'↑ 1.4% vs Q4 2023'},
+      solar:{cls:'neutral',txt:'Ramp-up phase'},
+      sla:{cls:'down',txt:'↓ Below 95% target'},
+      avail:{cls:'neutral',txt:'On par with 2023'},
+      budget:{cls:'up',txt:'AED 0.51B of 2.84B'}
+    },
+    months:['Jan','Feb','Mar'],
+    elec:[4420,4560,4820],
+    waterL:[140,144,148],
+    sla:[
+      {label:'Emergency Repair',pct:93.6,color:'#22C55E'},
+      {label:'Planned Maintenance',pct:94.2,color:'#C9A84C'},
+      {label:'Smart Meter Rollout',pct:96.8,color:'#06B6D4'},
+      {label:'Water Network SLA',pct:91.4,color:'#3B82F6'},
+      {label:'Transformer Checks',pct:95.0,color:'#A78BFA'}
+    ],
+    assets:[
+      {icon:'🏭',name:'Jebel Ali PS',val:'2,480 MW',status:'ok',lbl:'Optimal'},
+      {icon:'🔆',name:'Noor Solar',val:'680 MW',status:'ok',lbl:'Phase 5'},
+      {icon:'💧',name:'Desal Plants',val:'448 MIGD',status:'ok',lbl:'Running'},
+      {icon:'🔋',name:'Grid Storage',val:'620 MWh',status:'warn',lbl:'Charging'},
+      {icon:'🌬️',name:'Gas Turbines',val:'8,140 MW',status:'ok',lbl:'Normal'},
+      {icon:'📡',name:'SCADA Network',val:'14 Nodes',status:'ok',lbl:'Connected'}
+    ],
+    zonesElec:[
+      {name:'Downtown & Business Bay',consumption:'1,620 MW',peak:'1,880 MW',vs:'+2.1%',vsColor:'#EF4444',sla:'ok',meters:'98.4%'},
+      {name:'Dubai Marina & JLT',consumption:'1,240 MW',peak:'1,440 MW',vs:'+3.4%',vsColor:'#EF4444',sla:'warn',meters:'97.6%'},
+      {name:'Deira & Bur Dubai',consumption:'1,560 MW',peak:'1,720 MW',vs:'-0.6%',vsColor:'#22C55E',sla:'ok',meters:'96.8%'},
+      {name:'Jumeirah & Al Safa',consumption:'880 MW',peak:'1,020 MW',vs:'+1.8%',vsColor:'#EF4444',sla:'ok',meters:'98.4%'},
+      {name:'Al Quoz & Dubai South',consumption:'1,140 MW',peak:'1,280 MW',vs:'+0.2%',vsColor:'#C9A84C',sla:'warn',meters:'97.0%'},
+      {name:'Jebel Ali & DIC',consumption:'2,020 MW',peak:'2,280 MW',vs:'+3.6%',vsColor:'#EF4444',sla:'ok',meters:'95.8%'},
+      {name:'Palm Jumeirah',consumption:'580 MW',peak:'640 MW',vs:'-0.4%',vsColor:'#22C55E',sla:'ok',meters:'99.2%'},
+      {name:'Dubai Hills & MBR City',consumption:'680 MW',peak:'780 MW',vs:'+5.4%',vsColor:'#EF4444',sla:'ok',meters:'99.6%'}
+    ],
+    zonesWater:[
+      {name:'Downtown & Business Bay',consumption:'24.8 MIGD',peak:'29.6 MIGD',vs:'+1.8%',vsColor:'#EF4444',sla:'ok',meters:'97.8%'},
+      {name:'Dubai Marina & JLT',consumption:'20.4 MIGD',peak:'24.2 MIGD',vs:'+2.6%',vsColor:'#EF4444',sla:'ok',meters:'97.2%'},
+      {name:'Deira & Bur Dubai',consumption:'35.4 MIGD',peak:'39.8 MIGD',vs:'-0.4%',vsColor:'#22C55E',sla:'warn',meters:'95.4%'},
+      {name:'Jumeirah & Al Safa',consumption:'16.4 MIGD',peak:'19.8 MIGD',vs:'+1.6%',vsColor:'#C9A84C',sla:'ok',meters:'98.0%'},
+      {name:'Al Quoz & Dubai South',consumption:'39.2 MIGD',peak:'44.6 MIGD',vs:'+1.0%',vsColor:'#C9A84C',sla:'ok',meters:'96.4%'},
+      {name:'Jebel Ali & DIC',consumption:'50.4 MIGD',peak:'57.2 MIGD',vs:'+3.2%',vsColor:'#EF4444',sla:'warn',meters:'95.0%'},
+      {name:'Palm Jumeirah',consumption:'13.2 MIGD',peak:'14.8 MIGD',vs:'-0.8%',vsColor:'#22C55E',sla:'ok',meters:'99.2%'},
+      {name:'Dubai Hills & MBR City',consumption:'13.8 MIGD',peak:'15.6 MIGD',vs:'+4.2%',vsColor:'#EF4444',sla:'ok',meters:'99.4%'}
+    ],
+    incidents:[
+      {sev:'p1',icon:'🔴',loc:'Jebel Ali — Turbine T-3',desc:'Major overhaul in progress · Backup online',eta:'ETA: 5 days'},
+      {sev:'p2',icon:'🟡',loc:'Deira — Water Pump P8',desc:'Low pressure detected · Engineer dispatched',eta:'ETA: 6 hrs'},
+      {sev:'p2',icon:'🟡',loc:'Al Quoz — Grid Feeder F4',desc:'Overcurrent relay triggered · Investigating',eta:'ETA: 4 hrs'},
+      {sev:'p3',icon:'🔵',loc:'MBR City — Smart Meter Batch 14',desc:'Commissioning in progress · 94% complete',eta:'Ongoing'}
+    ],
+    budget:[
+      {label:'Infrastructure Capex',spent:0.21,total:1.20,color:'#C9A84C'},
+      {label:'O&M Expenditure',spent:0.10,total:0.58,color:'#06B6D4'},
+      {label:'Solar Expansion',spent:0.12,total:0.72,color:'#22C55E'},
+      {label:'Smart Grid Rollout',spent:0.08,total:0.34,color:'#3B82F6'}
+    ],
+    outageEvents:[4,3,5],
+    outageMTTR:[1.8,1.4,2.1],
+    outageMonths:['Jan','Feb','Mar'],
+    costElec:[0.22,0.23,0.20,0.21,0.19,0.17,0.24,0.23],
+    costWater:[8.0,8.2,7.5,7.8,7.1,6.8,8.8,8.6],
+    mix:{values:[52,26,14,6,2],labels:['Gas (CCGT)','Solar (MBR Park)','Nuclear (Barakah)','Gas (Peakers)','Waste-to-Energy']}
+  },
+  Q2: {
+    label:'Q2 2024 · Apr – Jun',
+    kpis:{ power:'14,400', water:'458', solar:'29', sla:'95.8', avail:'99.96', budget:'38' },
+    kpiDeltas:{
+      power:{cls:'up',txt:'↑ 4.3% vs Q1'},
+      water:{cls:'up',txt:'↑ 2.2% vs Q1'},
+      solar:{cls:'up',txt:'↑ 3pts — Growing'},
+      sla:{cls:'up',txt:'↑ Improving'},
+      avail:{cls:'up',txt:'↑ +0.02pts vs Q1'},
+      budget:{cls:'up',txt:'AED 1.08B of 2.84B'}
+    },
+    months:['Apr','May','Jun'],
+    elec:[4640,4880,4880],
+    waterL:[148,154,156],
+    sla:[
+      {label:'Emergency Repair',pct:96.2,color:'#22C55E'},
+      {label:'Planned Maintenance',pct:95.8,color:'#C9A84C'},
+      {label:'Smart Meter Rollout',pct:98.0,color:'#06B6D4'},
+      {label:'Water Network SLA',pct:93.6,color:'#3B82F6'},
+      {label:'Transformer Checks',pct:96.4,color:'#A78BFA'}
+    ],
+    assets:[
+      {icon:'🏭',name:'Jebel Ali PS',val:'2,560 MW',status:'ok',lbl:'Optimal'},
+      {icon:'🔆',name:'Noor Solar',val:'820 MW',status:'ok',lbl:'Ramping'},
+      {icon:'💧',name:'Desal Plants',val:'458 MIGD',status:'ok',lbl:'Running'},
+      {icon:'🔋',name:'Grid Storage',val:'740 MWh',status:'ok',lbl:'Charged'},
+      {icon:'🌬️',name:'Gas Turbines',val:'8,200 MW',status:'ok',lbl:'Normal'},
+      {icon:'📡',name:'SCADA Network',val:'14 Nodes',status:'ok',lbl:'Connected'}
+    ],
+    zonesElec:[
+      {name:'Downtown & Business Bay',consumption:'1,720 MW',peak:'2,010 MW',vs:'+3.4%',vsColor:'#EF4444',sla:'ok',meters:'98.8%'},
+      {name:'Dubai Marina & JLT',consumption:'1,340 MW',peak:'1,570 MW',vs:'+4.8%',vsColor:'#EF4444',sla:'ok',meters:'98.2%'},
+      {name:'Deira & Bur Dubai',consumption:'1,600 MW',peak:'1,780 MW',vs:'-0.2%',vsColor:'#22C55E',sla:'ok',meters:'97.2%'},
+      {name:'Jumeirah & Al Safa',consumption:'940 MW',peak:'1,080 MW',vs:'+2.4%',vsColor:'#EF4444',sla:'ok',meters:'98.8%'},
+      {name:'Al Quoz & Dubai South',consumption:'1,220 MW',peak:'1,360 MW',vs:'+0.8%',vsColor:'#C9A84C',sla:'ok',meters:'97.8%'},
+      {name:'Jebel Ali & DIC',consumption:'2,100 MW',peak:'2,400 MW',vs:'+4.4%',vsColor:'#EF4444',sla:'warn',meters:'96.4%'},
+      {name:'Palm Jumeirah',consumption:'620 MW',peak:'700 MW',vs:'+0.2%',vsColor:'#C9A84C',sla:'ok',meters:'99.4%'},
+      {name:'Dubai Hills & MBR City',consumption:'760 MW',peak:'870 MW',vs:'+6.8%',vsColor:'#EF4444',sla:'ok',meters:'99.8%'}
+    ],
+    zonesWater:[
+      {name:'Downtown & Business Bay',consumption:'26.4 MIGD',peak:'31.8 MIGD',vs:'+2.4%',vsColor:'#EF4444',sla:'ok',meters:'98.2%'},
+      {name:'Dubai Marina & JLT',consumption:'21.6 MIGD',peak:'25.8 MIGD',vs:'+3.8%',vsColor:'#EF4444',sla:'ok',meters:'97.8%'},
+      {name:'Deira & Bur Dubai',consumption:'37.2 MIGD',peak:'42.4 MIGD',vs:'-0.2%',vsColor:'#22C55E',sla:'ok',meters:'96.2%'},
+      {name:'Jumeirah & Al Safa',consumption:'17.4 MIGD',peak:'21.2 MIGD',vs:'+1.8%',vsColor:'#C9A84C',sla:'ok',meters:'98.4%'},
+      {name:'Al Quoz & Dubai South',consumption:'40.8 MIGD',peak:'46.6 MIGD',vs:'+1.4%',vsColor:'#C9A84C',sla:'ok',meters:'97.0%'},
+      {name:'Jebel Ali & DIC',consumption:'52.4 MIGD',peak:'59.8 MIGD',vs:'+4.0%',vsColor:'#EF4444',sla:'warn',meters:'95.8%'},
+      {name:'Palm Jumeirah',consumption:'14.2 MIGD',peak:'15.8 MIGD',vs:'-0.6%',vsColor:'#22C55E',sla:'ok',meters:'99.4%'},
+      {name:'Dubai Hills & MBR City',consumption:'15.4 MIGD',peak:'17.8 MIGD',vs:'+5.4%',vsColor:'#EF4444',sla:'ok',meters:'99.6%'}
+    ],
+    incidents:[
+      {sev:'p1',icon:'🔴',loc:'Jumeirah — Feeder J2',desc:'Cable fault · Emergency crew deployed',eta:'ETA: 3 hrs'},
+      {sev:'p2',icon:'🟡',loc:'Downtown — HV Substation D1',desc:'Voltage fluctuation · Load balancing active',eta:'ETA: 1 hr'},
+      {sev:'p3',icon:'🔵',loc:'Dubai Hills — Water Main W4',desc:'Minor leak detected · Non-critical',eta:'ETA: Tomorrow'},
+      {sev:'p3',icon:'🔵',loc:'MBR City — Meter Rollout',desc:'Phase 3 commissioning · 97% complete',eta:'Ongoing'}
+    ],
+    budget:[
+      {label:'Infrastructure Capex',spent:0.44,total:1.20,color:'#C9A84C'},
+      {label:'O&M Expenditure',spent:0.22,total:0.58,color:'#06B6D4'},
+      {label:'Solar Expansion',spent:0.28,total:0.72,color:'#22C55E'},
+      {label:'Smart Grid Rollout',spent:0.14,total:0.34,color:'#3B82F6'}
+    ],
+    outageEvents:[2,3,6],
+    outageMTTR:[1.2,1.5,2.4],
+    outageMonths:['Apr','May','Jun'],
+    costElec:[0.22,0.23,0.21,0.21,0.19,0.18,0.25,0.24],
+    costWater:[8.2,8.4,7.6,7.9,7.2,6.9,8.9,8.7],
+    mix:{values:[50,29,14,5,2],labels:['Gas (CCGT)','Solar (MBR Park)','Nuclear (Barakah)','Gas (Peakers)','Waste-to-Energy']}
+  },
+  Q3: {
+    label:'Q3 2024 · Jul – Sep',
+    kpis:{ power:'14,282', water:'462', solar:'30', sla:'95.4', avail:'99.95', budget:'56' },
+    kpiDeltas:{
+      power:{cls:'down',txt:'↓ 0.8% vs Q2 (summer dip)'},
+      water:{cls:'up',txt:'↑ 0.9% vs Q2'},
+      solar:{cls:'up',txt:'↑ 1pt — Peak summer'},
+      sla:{cls:'down',txt:'↓ Slight summer pressure'},
+      avail:{cls:'down',txt:'↓ Summer heat impact'},
+      budget:{cls:'warn',txt:'AED 1.59B of 2.84B'}
+    },
+    months:['Jul','Aug','Sep'],
+    elec:[4880,4960,4442],
+    waterL:[158,162,142],
+    sla:[
+      {label:'Emergency Repair',pct:95.8,color:'#22C55E'},
+      {label:'Planned Maintenance',pct:95.4,color:'#C9A84C'},
+      {label:'Smart Meter Rollout',pct:98.6,color:'#06B6D4'},
+      {label:'Water Network SLA',pct:92.8,color:'#3B82F6'},
+      {label:'Transformer Checks',pct:96.8,color:'#A78BFA'}
+    ],
+    assets:[
+      {icon:'🏭',name:'Jebel Ali PS',val:'2,600 MW',status:'ok',lbl:'Peak Load'},
+      {icon:'🔆',name:'Noor Solar',val:'940 MW',status:'ok',lbl:'Summer Peak'},
+      {icon:'💧',name:'Desal Plants',val:'462 MIGD',status:'ok',lbl:'Running'},
+      {icon:'🔋',name:'Grid Storage',val:'780 MWh',status:'ok',lbl:'Charged'},
+      {icon:'🌬️',name:'Gas Turbines',val:'8,220 MW',status:'warn',lbl:'High Demand'},
+      {icon:'📡',name:'SCADA Network',val:'14 Nodes',status:'ok',lbl:'Connected'}
+    ],
+    zonesElec:[
+      {name:'Downtown & Business Bay',consumption:'1,800 MW',peak:'2,100 MW',vs:'+5.1%',vsColor:'#EF4444',sla:'ok',meters:'99.0%'},
+      {name:'Dubai Marina & JLT',consumption:'1,390 MW',peak:'1,640 MW',vs:'+5.8%',vsColor:'#EF4444',sla:'warn',meters:'98.6%'},
+      {name:'Deira & Bur Dubai',consumption:'1,630 MW',peak:'1,810 MW',vs:'-0.8%',vsColor:'#22C55E',sla:'ok',meters:'97.4%'},
+      {name:'Jumeirah & Al Safa',consumption:'962 MW',peak:'1,120 MW',vs:'+2.6%',vsColor:'#EF4444',sla:'ok',meters:'98.9%'},
+      {name:'Al Quoz & Dubai South',consumption:'1,260 MW',peak:'1,420 MW',vs:'+0.6%',vsColor:'#C9A84C',sla:'ok',meters:'98.0%'},
+      {name:'Jebel Ali & DIC',consumption:'2,160 MW',peak:'2,490 MW',vs:'+5.4%',vsColor:'#EF4444',sla:'warn',meters:'96.6%'},
+      {name:'Palm Jumeirah',consumption:'628 MW',peak:'710 MW',vs:'-0.4%',vsColor:'#22C55E',sla:'ok',meters:'99.6%'},
+      {name:'Dubai Hills & MBR City',consumption:'800 MW',peak:'920 MW',vs:'+7.6%',vsColor:'#EF4444',sla:'ok',meters:'99.9%'}
+    ],
+    zonesWater:[
+      {name:'Downtown & Business Bay',consumption:'27.6 MIGD',peak:'33.2 MIGD',vs:'+2.8%',vsColor:'#EF4444',sla:'ok',meters:'98.6%'},
+      {name:'Dubai Marina & JLT',consumption:'22.2 MIGD',peak:'26.6 MIGD',vs:'+4.2%',vsColor:'#EF4444',sla:'ok',meters:'98.2%'},
+      {name:'Deira & Bur Dubai',consumption:'38.0 MIGD',peak:'43.4 MIGD',vs:'-0.6%',vsColor:'#22C55E',sla:'warn',meters:'96.6%'},
+      {name:'Jumeirah & Al Safa',consumption:'17.8 MIGD',peak:'22.0 MIGD',vs:'+2.0%',vsColor:'#C9A84C',sla:'ok',meters:'98.6%'},
+      {name:'Al Quoz & Dubai South',consumption:'41.6 MIGD',peak:'47.8 MIGD',vs:'+1.4%',vsColor:'#C9A84C',sla:'ok',meters:'97.2%'},
+      {name:'Jebel Ali & DIC',consumption:'53.8 MIGD',peak:'61.4 MIGD',vs:'+4.6%',vsColor:'#EF4444',sla:'warn',meters:'96.0%'},
+      {name:'Palm Jumeirah',consumption:'14.6 MIGD',peak:'16.2 MIGD',vs:'-1.0%',vsColor:'#22C55E',sla:'ok',meters:'99.4%'},
+      {name:'Dubai Hills & MBR City',consumption:'16.0 MIGD',peak:'18.6 MIGD',vs:'+6.0%',vsColor:'#EF4444',sla:'ok',meters:'99.8%'}
+    ],
+    incidents:[
+      {sev:'p1',icon:'🔴',loc:'Al Quoz — Industrial Zone',desc:'Peak overload event · Load shedding averted',eta:'Resolved'},
+      {sev:'p2',icon:'🟡',loc:'Deira — Cooling Network C3',desc:'High demand alert · Chiller backup active',eta:'Monitoring'},
+      {sev:'p2',icon:'🟡',loc:'Jebel Ali — Turbine T-6',desc:'Temperature variance · Under observation',eta:'ETA: 2 days'},
+      {sev:'p3',icon:'🔵',loc:'Palm Jumeirah — Water Pressure W9',desc:'Minor variance logged · Within tolerance',eta:'ETA: Tomorrow'}
+    ],
+    budget:[
+      {label:'Infrastructure Capex',spent:0.66,total:1.20,color:'#C9A84C'},
+      {label:'O&M Expenditure',spent:0.34,total:0.58,color:'#06B6D4'},
+      {label:'Solar Expansion',spent:0.40,total:0.72,color:'#22C55E'},
+      {label:'Smart Grid Rollout',spent:0.19,total:0.34,color:'#3B82F6'}
+    ],
+    outageEvents:[8,7,5],
+    outageMTTR:[2.8,2.6,1.9],
+    outageMonths:['Jul','Aug','Sep'],
+    costElec:[0.23,0.24,0.21,0.22,0.20,0.18,0.26,0.25],
+    costWater:[8.3,8.5,7.7,8.1,7.3,7.0,9.1,8.9],
+    mix:{values:[48,30,14,6,2],labels:['Gas (CCGT)','Solar (MBR Park)','Nuclear (Barakah)','Gas (Peakers)','Waste-to-Energy']}
+  },
+  Q4: {
+    label:'Q4 2024 · Oct – Dec',
+    kpis:{ power:'14,820', water:'470', solar:'32', sla:'96.8', avail:'99.97', budget:'74' },
+    kpiDeltas:{
+      power:{cls:'up',txt:'↑ 3.8% vs Q3'},
+      water:{cls:'up',txt:'↑ 2.1% vs Q3'},
+      solar:{cls:'up',txt:'↑ 4pts — Record'},
+      sla:{cls:'neutral',txt:'Target: 97%'},
+      avail:{cls:'up',txt:'↑ World-class'},
+      budget:{cls:'warn',txt:'AED 2.1B of 2.84B'}
+    },
+    months:['Oct','Nov','Dec'],
+    elec:[4680,4920,5220],
+    waterL:[152,158,160],
+    sla:[
+      {label:'Emergency Repair',pct:98.4,color:'#22C55E'},
+      {label:'Planned Maintenance',pct:96.8,color:'#C9A84C'},
+      {label:'Smart Meter Rollout',pct:99.1,color:'#06B6D4'},
+      {label:'Water Network SLA',pct:95.2,color:'#3B82F6'},
+      {label:'Transformer Checks',pct:97.6,color:'#A78BFA'}
+    ],
+    assets:[
+      {icon:'🏭',name:'Jebel Ali PS',val:'2,640 MW',status:'ok',lbl:'Optimal'},
+      {icon:'🔆',name:'Noor Solar',val:'1,013 MW',status:'ok',lbl:'Peak'},
+      {icon:'💧',name:'Desal Plants',val:'470 MIGD',status:'ok',lbl:'Running'},
+      {icon:'🔋',name:'Grid Storage',val:'820 MWh',status:'ok',lbl:'Charged'},
+      {icon:'🌬️',name:'Gas Turbines',val:'8,240 MW',status:'warn',lbl:'T-6 Sched.'},
+      {icon:'📡',name:'SCADA Network',val:'14 Nodes',status:'ok',lbl:'Connected'}
+    ],
+    zonesElec:[
+      {name:'Downtown & Business Bay',consumption:'1,842 MW',peak:'2,140 MW',vs:'+4.2%',vsColor:'#EF4444',sla:'ok',meters:'99.4%'},
+      {name:'Dubai Marina & JLT',consumption:'1,420 MW',peak:'1,680 MW',vs:'+6.2%',vsColor:'#EF4444',sla:'warn',meters:'98.8%'},
+      {name:'Deira & Bur Dubai',consumption:'1,640 MW',peak:'1,820 MW',vs:'-1.1%',vsColor:'#22C55E',sla:'ok',meters:'97.6%'},
+      {name:'Jumeirah & Al Safa',consumption:'980 MW',peak:'1,140 MW',vs:'+2.8%',vsColor:'#EF4444',sla:'ok',meters:'99.1%'},
+      {name:'Al Quoz & Dubai South',consumption:'1,280 MW',peak:'1,440 MW',vs:'+0.4%',vsColor:'#C9A84C',sla:'ok',meters:'98.2%'},
+      {name:'Jebel Ali & DIC',consumption:'2,180 MW',peak:'2,520 MW',vs:'+5.8%',vsColor:'#EF4444',sla:'warn',meters:'96.8%'},
+      {name:'Palm Jumeirah',consumption:'640 MW',peak:'720 MW',vs:'-0.6%',vsColor:'#22C55E',sla:'ok',meters:'99.8%'},
+      {name:'Dubai Hills & MBR City',consumption:'820 MW',peak:'940 MW',vs:'+8.1%',vsColor:'#EF4444',sla:'ok',meters:'100%'}
+    ],
+    zonesWater:[
+      {name:'Downtown & Business Bay',consumption:'28.4 MIGD',peak:'34.2 MIGD',vs:'+3.1%',vsColor:'#EF4444',sla:'ok',meters:'98.9%'},
+      {name:'Dubai Marina & JLT',consumption:'22.8 MIGD',peak:'27.4 MIGD',vs:'+4.6%',vsColor:'#EF4444',sla:'ok',meters:'98.4%'},
+      {name:'Deira & Bur Dubai',consumption:'38.6 MIGD',peak:'44.2 MIGD',vs:'-0.8%',vsColor:'#22C55E',sla:'warn',meters:'96.8%'},
+      {name:'Jumeirah & Al Safa',consumption:'18.2 MIGD',peak:'22.6 MIGD',vs:'+2.2%',vsColor:'#C9A84C',sla:'ok',meters:'99.0%'},
+      {name:'Al Quoz & Dubai South',consumption:'42.4 MIGD',peak:'48.8 MIGD',vs:'+1.6%',vsColor:'#C9A84C',sla:'ok',meters:'97.5%'},
+      {name:'Jebel Ali & DIC',consumption:'54.6 MIGD',peak:'62.4 MIGD',vs:'+4.8%',vsColor:'#EF4444',sla:'warn',meters:'96.2%'},
+      {name:'Palm Jumeirah',consumption:'14.8 MIGD',peak:'16.4 MIGD',vs:'-1.2%',vsColor:'#22C55E',sla:'ok',meters:'99.6%'},
+      {name:'Dubai Hills & MBR City',consumption:'16.4 MIGD',peak:'19.2 MIGD',vs:'+6.4%',vsColor:'#EF4444',sla:'ok',meters:'99.8%'}
+    ],
+    incidents:[
+      {sev:'p1',icon:'🔴',loc:'Deira — Sector D4',desc:'Planned transformer maintenance · Cust. notified',eta:'ETA: 14:00 GST'},
+      {sev:'p2',icon:'🟡',loc:'Dubai Marina — Zone M7',desc:'Elevated consumption alert · Monitoring active',eta:'Ongoing'},
+      {sev:'p2',icon:'🟡',loc:'Jebel Ali — Turbine T-6',desc:'Scheduled inspection · Backup unit online',eta:'ETA: 2 days'},
+      {sev:'p3',icon:'🔵',loc:'Al Quoz — Water Line W12',desc:'Pressure variance within tolerance · Logged',eta:'ETA: Tomorrow'}
+    ],
+    budget:[
+      {label:'Infrastructure Capex',spent:0.88,total:1.20,color:'#C9A84C'},
+      {label:'O&M Expenditure',spent:0.42,total:0.58,color:'#06B6D4'},
+      {label:'Solar Expansion',spent:0.54,total:0.72,color:'#22C55E'},
+      {label:'Smart Grid Rollout',spent:0.26,total:0.34,color:'#3B82F6'}
+    ],
+    outageEvents:[3,2,3],
+    outageMTTR:[1.4,1.1,1.3],
+    outageMonths:['Oct','Nov','Dec'],
+    costElec:[0.23,0.24,0.21,0.22,0.20,0.18,0.26,0.25],
+    costWater:[8.4,8.6,7.8,8.2,7.4,7.1,9.2,9.0],
+    mix:{values:[46,32,14,6,2],labels:['Gas (CCGT)','Solar (MBR Park)','Nuclear (Barakah)','Gas (Peakers)','Waste-to-Energy']}
+  }
+};
+
+var currentPeriod = 'Q4';
+var currentZone = 'all';
+var energyMixColors = ['#C9A84C','#22C55E','#06B6D4','#F59E0B','#A78BFA'];
+
+// ── ZONE-SPECIFIC KPI OVERRIDES (power MW, water MIGD, solar %, sla %, avail %, budget %) ──
+// Each zone has values per quarter so KPIs change when zone + quarter changes
+var ZONE_KPIS = {
+  all: {
+    Q1:{kpis:{power:'13,800',water:'448',solar:'26',sla:'94.2',avail:'99.94',budget:'18'},kpiDeltas:{power:{cls:'up',txt:'↑ 2.1% vs Q4 2023'},water:{cls:'up',txt:'↑ 1.4% vs Q4 2023'},solar:{cls:'neutral',txt:'Ramp-up phase'},sla:{cls:'down',txt:'↓ Below 95% target'},avail:{cls:'neutral',txt:'On par with 2023'},budget:{cls:'up',txt:'AED 0.51B of 2.84B'}}},
+    Q2:{kpis:{power:'14,400',water:'458',solar:'29',sla:'95.8',avail:'99.96',budget:'38'},kpiDeltas:{power:{cls:'up',txt:'↑ 4.3% vs Q1'},water:{cls:'up',txt:'↑ 2.2% vs Q1'},solar:{cls:'up',txt:'↑ 3pts — Growing'},sla:{cls:'up',txt:'↑ Improving'},avail:{cls:'up',txt:'↑ +0.02pts vs Q1'},budget:{cls:'up',txt:'AED 1.08B of 2.84B'}}},
+    Q3:{kpis:{power:'14,282',water:'462',solar:'30',sla:'95.4',avail:'99.95',budget:'56'},kpiDeltas:{power:{cls:'down',txt:'↓ 0.8% vs Q2 (summer dip)'},water:{cls:'up',txt:'↑ 0.9% vs Q2'},solar:{cls:'up',txt:'↑ 1pt — Peak summer'},sla:{cls:'down',txt:'↓ Slight summer pressure'},avail:{cls:'down',txt:'↓ Summer heat impact'},budget:{cls:'warn',txt:'AED 1.59B of 2.84B'}}},
+    Q4:{kpis:{power:'14,820',water:'471',solar:'32',sla:'96.4',avail:'99.97',budget:'76'},kpiDeltas:{power:{cls:'up',txt:'↑ 3.8% vs Q3'},water:{cls:'up',txt:'↑ 1.9% vs Q3'},solar:{cls:'up',txt:'New peak — 32%'},sla:{cls:'up',txt:'↑ Best quarter'},avail:{cls:'up',txt:'↑ Best of year'},budget:{cls:'warn',txt:'AED 2.16B of 2.84B'}}}
+  },
+  downtown: {
+    Q1:{kpis:{power:'1,620',water:'24.8',solar:'22',sla:'96.2',avail:'99.96',budget:'14'},kpiDeltas:{power:{cls:'up',txt:'↑ 2.1% vs Q4 2023'},water:{cls:'up',txt:'↑ 1.8% demand rise'},solar:{cls:'neutral',txt:'Rooftop installations'},sla:{cls:'up',txt:'↑ Above zone avg'},avail:{cls:'up',txt:'Premium grid zone'},budget:{cls:'up',txt:'AED 0.14B allocated'}}},
+    Q2:{kpis:{power:'1,720',water:'26.4',solar:'24',sla:'97.0',avail:'99.97',budget:'32'},kpiDeltas:{power:{cls:'up',txt:'↑ 6.2% — Events season'},water:{cls:'up',txt:'↑ 6.5% hotel demand'},solar:{cls:'up',txt:'↑ Summer ramp'},sla:{cls:'up',txt:'↑ Improving'},avail:{cls:'up',txt:'Stable grid'},budget:{cls:'up',txt:'AED 0.32B allocated'}}},
+    Q3:{kpis:{power:'1,800',water:'27.6',solar:'25',sla:'96.8',avail:'99.96',budget:'51'},kpiDeltas:{power:{cls:'up',txt:'↑ 4.7% summer peak'},water:{cls:'up',txt:'↑ 4.5% cooling demand'},solar:{cls:'up',txt:'Peak solar output'},sla:{cls:'down',txt:'↓ Summer pressure'},avail:{cls:'neutral',txt:'Stable'},budget:{cls:'warn',txt:'AED 0.51B of 1.00B'}}},
+    Q4:{kpis:{power:'1,920',water:'28.8',solar:'27',sla:'97.4',avail:'99.98',budget:'72'},kpiDeltas:{power:{cls:'up',txt:'↑ 6.7% — Year best'},water:{cls:'up',txt:'↑ 4.3% season rise'},solar:{cls:'up',txt:'Best quarter'},sla:{cls:'up',txt:'↑ Best of year'},avail:{cls:'up',txt:'↑ Near-perfect'},budget:{cls:'warn',txt:'AED 0.72B of 1.00B'}}}
+  },
+  marina: {
+    Q1:{kpis:{power:'1,240',water:'20.4',solar:'18',sla:'92.4',avail:'99.92',budget:'12'},kpiDeltas:{power:{cls:'up',txt:'↑ 3.4% vs Q4 2023'},water:{cls:'up',txt:'↑ 2.6% resident demand'},solar:{cls:'neutral',txt:'Limited roof area'},sla:{cls:'down',txt:'↓ Below 95% target'},avail:{cls:'down',txt:'Cable aging issues'},budget:{cls:'up',txt:'AED 0.12B allocated'}}},
+    Q2:{kpis:{power:'1,340',water:'21.6',solar:'20',sla:'93.8',avail:'99.93',budget:'28'},kpiDeltas:{power:{cls:'up',txt:'↑ 8.1% summer prep'},water:{cls:'up',txt:'↑ 5.9% pool season'},solar:{cls:'up',txt:'↑ New installs'},sla:{cls:'up',txt:'↑ Slight improvement'},avail:{cls:'neutral',txt:'Cable work ongoing'},budget:{cls:'up',txt:'AED 0.28B allocated'}}},
+    Q3:{kpis:{power:'1,390',water:'22.2',solar:'21',sla:'93.2',avail:'99.91',budget:'44'},kpiDeltas:{power:{cls:'up',txt:'↑ 3.7% peak summer'},water:{cls:'up',txt:'↑ 2.8% demand'},solar:{cls:'up',txt:'Summer peak'},sla:{cls:'down',txt:'↓ Grid stress'},avail:{cls:'down',txt:'↓ Maintenance window'},budget:{cls:'warn',txt:'AED 0.44B of 1.00B'}}},
+    Q4:{kpis:{power:'1,460',water:'23.0',solar:'22',sla:'94.6',avail:'99.94',budget:'68'},kpiDeltas:{power:{cls:'up',txt:'↑ 5.0% full year'},water:{cls:'up',txt:'↑ 3.6% Q3'},solar:{cls:'up',txt:'↑ Capacity added'},sla:{cls:'up',txt:'↑ Recovering'},avail:{cls:'up',txt:'↑ Post-maintenance'},budget:{cls:'warn',txt:'AED 0.68B of 1.00B'}}}
+  },
+  deira: {
+    Q1:{kpis:{power:'1,560',water:'35.4',solar:'12',sla:'93.8',avail:'99.90',budget:'16'},kpiDeltas:{power:{cls:'down',txt:'↓ 0.6% — Stable demand'},water:{cls:'up',txt:'↑ 0.8% vs prior'},solar:{cls:'neutral',txt:'Limited coverage'},sla:{cls:'down',txt:'↓ Aging grid pressure'},avail:{cls:'down',txt:'↓ Legacy infrastructure'},budget:{cls:'up',txt:'Upgrade program active'}}},
+    Q2:{kpis:{power:'1,600',water:'37.2',solar:'13',sla:'94.6',avail:'99.91',budget:'33'},kpiDeltas:{power:{cls:'up',txt:'↑ 2.6% activity growth'},water:{cls:'up',txt:'↑ 5.1% commercial'},solar:{cls:'neutral',txt:'Minimal rooftop'},sla:{cls:'up',txt:'↑ Improving'},avail:{cls:'up',txt:'↑ Grid upgrades'},budget:{cls:'up',txt:'Capex progressing'}}},
+    Q3:{kpis:{power:'1,630',water:'38.0',solar:'13',sla:'93.4',avail:'99.89',budget:'50'},kpiDeltas:{power:{cls:'up',txt:'↑ 1.9% summer heat'},water:{cls:'up',txt:'↑ 2.2% peak demand'},solar:{cls:'neutral',txt:'No change'},sla:{cls:'down',txt:'↓ Summer stress'},avail:{cls:'down',txt:'↓ Summer heat impact'},budget:{cls:'warn',txt:'Midyear review'}}},
+    Q4:{kpis:{power:'1,700',water:'39.4',solar:'14',sla:'94.8',avail:'99.92',budget:'71'},kpiDeltas:{power:{cls:'up',txt:'↑ 4.3% full year'},water:{cls:'up',txt:'↑ 3.7% vs Q3'},solar:{cls:'up',txt:'↑ Pilot panels'},sla:{cls:'up',txt:'↑ Post-upgrade'},avail:{cls:'up',txt:'↑ Grid modernised'},budget:{cls:'warn',txt:'On track'}}}
+  },
+  south: {
+    Q1:{kpis:{power:'1,140',water:'39.2',solar:'28',sla:'93.0',avail:'99.91',budget:'18'},kpiDeltas:{power:{cls:'up',txt:'↑ 0.2% — Industrial base'},water:{cls:'up',txt:'↑ 1.0% industrial'},solar:{cls:'up',txt:'Large ground arrays'},sla:{cls:'down',txt:'↓ Industrial load spikes'},avail:{cls:'down',txt:'Grid expansion phase'},budget:{cls:'up',txt:'Major capex zone'}}},
+    Q2:{kpis:{power:'1,220',water:'40.8',solar:'30',sla:'94.2',avail:'99.93',budget:'36'},kpiDeltas:{power:{cls:'up',txt:'↑ 7.0% ramp-up'},water:{cls:'up',txt:'↑ 4.1% new tenants'},solar:{cls:'up',txt:'↑ New panels online'},sla:{cls:'up',txt:'↑ Improving'},avail:{cls:'up',txt:'↑ Grid stabilising'},budget:{cls:'up',txt:'On schedule'}}},
+    Q3:{kpis:{power:'1,260',water:'41.6',solar:'31',sla:'93.8',avail:'99.92',budget:'54'},kpiDeltas:{power:{cls:'up',txt:'↑ 3.3% peak season'},water:{cls:'up',txt:'↑ 2.0% summer'},solar:{cls:'up',txt:'Peak summer output'},sla:{cls:'down',txt:'↓ Demand spikes'},avail:{cls:'neutral',txt:'Stable'},budget:{cls:'warn',txt:'Mid-year spend'}}},
+    Q4:{kpis:{power:'1,340',water:'43.0',solar:'33',sla:'95.2',avail:'99.95',budget:'74'},kpiDeltas:{power:{cls:'up',txt:'↑ 6.3% — Strong close'},water:{cls:'up',txt:'↑ 3.4% expansion'},solar:{cls:'up',txt:'↑ Highest zone solar'},sla:{cls:'up',txt:'↑ Best quarter'},avail:{cls:'up',txt:'↑ Infrastructure upgrade'},budget:{cls:'warn',txt:'Final Q spend'}}}
+  },
+  jebel: {
+    Q1:{kpis:{power:'2,020',water:'50.4',solar:'16',sla:'95.8',avail:'99.96',budget:'22'},kpiDeltas:{power:{cls:'up',txt:'↑ 3.6% industrial growth'},water:{cls:'up',txt:'↑ 3.2% port activity'},solar:{cls:'neutral',txt:'Industrial zones'},sla:{cls:'up',txt:'↑ Industrial SLA met'},avail:{cls:'up',txt:'Priority grid zone'},budget:{cls:'up',txt:'Large infra spend'}}},
+    Q2:{kpis:{power:'2,100',water:'52.4',solar:'17',sla:'94.8',avail:'99.95',budget:'41'},kpiDeltas:{power:{cls:'up',txt:'↑ 4.0% port activity'},water:{cls:'up',txt:'↑ 4.0% demand'},solar:{cls:'neutral',txt:'Limited rooftop'},sla:{cls:'down',txt:'↓ Jebel Ali pressure'},avail:{cls:'down',txt:'Maintenance cycle'},budget:{cls:'up',txt:'On track'}}},
+    Q3:{kpis:{power:'2,160',water:'53.8',solar:'17',sla:'94.2',avail:'99.94',budget:'59'},kpiDeltas:{power:{cls:'up',txt:'↑ 2.9% peak demand'},water:{cls:'up',txt:'↑ 2.7% industrial'},solar:{cls:'neutral',txt:'No new installs'},sla:{cls:'down',txt:'↓ Summer industrial load'},avail:{cls:'down',txt:'↓ Heat impact'},budget:{cls:'warn',txt:'On track — monitoring'}}},
+    Q4:{kpis:{power:'2,280',water:'55.6',solar:'18',sla:'96.0',avail:'99.97',budget:'78'},kpiDeltas:{power:{cls:'up',txt:'↑ 5.6% year end surge'},water:{cls:'up',txt:'↑ 3.3% year high'},solar:{cls:'up',txt:'↑ New industrial arrays'},sla:{cls:'up',txt:'↑ Strong recovery'},avail:{cls:'up',txt:'↑ Best Q this year'},budget:{cls:'warn',txt:'Final spend nearing'}}}
+  }
+};
+
+// ── PER-QUARTER SOLAR STRIP DATA ──
+var SOLAR = {
+  Q1:{output:'720 MW', homes:'3.0M', co2:'0.5M T', cost:'AED 1.82'},
+  Q2:{output:'820 MW', homes:'3.4M', co2:'1.1M T', cost:'AED 1.80'},
+  Q3:{output:'940 MW', homes:'3.9M', co2:'1.8M T', cost:'AED 1.79'},
+  Q4:{output:'1,013 MW', homes:'4.2M', co2:'2.4M T', cost:'AED 1.78'}
+};
+
+// ── ZONE NAME MAP (dropdown value → display text fragment) ──
+var ZONE_MAP = {
+  all:     null,
+  downtown:'Downtown & Business Bay',
+  marina:  'Dubai Marina & JLT',
+  deira:   'Deira & Bur Dubai',
+  south:   'Al Quoz & Dubai South',
+  jebel:   'Jebel Ali & DIC'
+};
+
+// ─────────────────────────────────────────────
+// ── PERIOD SWITCH — THE MAIN CONTROLLER ──
+// ─────────────────────────────────────────────
+function setPeriod(p, btn){
+  currentPeriod = p;
+  document.querySelectorAll('.pb').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  var d = QDATA[p];
+
+  // Update page subtitle
+  document.getElementById('pageSub').textContent = d.label + ' · Dubai Grid Operations · Electricity, Water & Renewable Energy';
+
+  // Update card badges
+  document.getElementById('consBadge').textContent  = 'Monthly — ' + p;
+  document.getElementById('slaBadge').textContent   = p + ' Live';
+
+  // Update consumption mini row
+  var prevQ = {Q1:'Prior',Q2:'Q1',Q3:'Q2',Q4:'Q3'}[p];
+  var prevVal= {Q1:'13,200',Q2:'13,800',Q3:'14,400',Q4:'14,282'}[p];
+  var growthVal= {Q1:'+4.5%',Q2:'+4.3%',Q3:'-0.8%',Q4:'+3.8%'}[p];
+  document.getElementById('miniCurr').textContent    = d.kpis.power;
+  document.getElementById('miniCurrLbl').textContent = 'MW ' + p;
+  document.getElementById('miniPrev').textContent    = prevVal;
+  document.getElementById('miniPrevLbl').textContent = 'MW ' + prevQ;
+  document.getElementById('miniGrowth').textContent  = growthVal;
+
+  // Update solar strip
+  var s = SOLAR[p];
+  document.getElementById('solarOutput').textContent = s.output;
+  document.getElementById('solarHomes').textContent  = s.homes;
+  document.getElementById('solarCO2').textContent    = s.co2;
+  document.getElementById('solarCost').textContent   = s.cost;
+
+  // Update all data sections — use zone-aware KPIs
+  var kpiData = getActiveKPIs();
+  updateKPIs(kpiData);
+  buildSLA(d.sla);
+  buildAssets(d.assets);
+  buildZoneTable();
+  buildIncidents(d.incidents);
+  buildBudget(d.budget);
+  buildCharts();
+}
+
+// ─────────────────────────────────────────────
+// ── GET ACTIVE KPI DATA (zone + quarter aware) ──
+// ─────────────────────────────────────────────
+function getActiveKPIs(){
+  var zKey = currentZone in ZONE_KPIS ? currentZone : 'all';
+  return ZONE_KPIS[zKey][currentPeriod];
+}
+
+// ─────────────────────────────────────────────
+// ── ZONE FILTER ──
+// ─────────────────────────────────────────────
+function filterZone(){
+  currentZone = document.getElementById('zoneSelect').value;
+  var zoneName = ZONE_MAP[currentZone];
+
+  // Update page subtitle to reflect zone context
+  var d = QDATA[currentPeriod];
+  var zoneLabel = currentZone === 'all' ? 'All Zones — Dubai' : zoneName;
+  document.getElementById('pageSub').textContent = d.label + ' · ' + zoneLabel + ' · Electricity, Water & Renewable Energy';
+
+  // Show/hide zone focus banner
+  var banner = document.getElementById('zoneBanner');
+  if(currentZone !== 'all'){
+    var type = document.getElementById('utilType').value;
+    var zones = type === 'electricity' ? d.zonesElec : d.zonesWater;
+    var zData = zones.filter(function(z){ return z.name === zoneName; })[0];
+    if(zData){
+      document.getElementById('zoneBannerName').textContent = zoneName;
+      document.getElementById('zoneBannerCons').textContent = zData.consumption;
+      document.getElementById('zoneBannerPeak').textContent = zData.peak;
+      document.getElementById('zoneBannerVs').textContent   = zData.vs;
+      document.getElementById('zoneBannerVs').style.color   = zData.vsColor;
+      document.getElementById('zoneBannerMeters').textContent = zData.meters + ' smart meters';
+      var slaText = {ok:'✅ On Target', warn:'⚠️ Monitoring', crit:'🔴 Breached'}[zData.sla];
+      document.getElementById('zoneBannerSla').textContent  = slaText;
+    }
+    banner.style.display = 'flex';
+  } else {
+    banner.style.display = 'none';
+  }
+
+  // Update KPIs for the selected zone + current quarter
+  var kpiData = getActiveKPIs();
+  updateKPIs(kpiData);
+
+  buildZoneTable();
+}
+
+// ── ANIMATE KPI NUMBER ──
+function animateVal(el, target){
+  var current = parseFloat(el.textContent.replace(/[^0-9.]/g,'')) || 0;
+  var targetNum = parseFloat(target.replace(/[^0-9.]/g,''));
+  var isDecimal = target.indexOf('.')!==-1;
+  var steps = 24, step = 0;
+  clearInterval(el._t);
+  el._t = setInterval(function(){
+    step++;
+    var val = current + (targetNum - current) * (step / steps);
+    el.textContent = isDecimal ? val.toFixed(2) : Math.round(val).toLocaleString();
+    if(step >= steps){ el.textContent = target; clearInterval(el._t); }
+  }, 18);
+}
+
+// ── UPDATE KPIs ──
+function updateKPIs(d){
+  var ids   = ['kv1','kv2','kv3','kv4','kv5','kv6'];
+  var keys  = ['power','water','solar','sla','avail','budget'];
+  var dkeys = ['power','water','solar','sla','avail','budget'];
+  ids.forEach(function(id, i){
+    var el = document.getElementById(id);
+    animateVal(el, d.kpis[keys[i]]);
+  });
+  // Update deltas
+  var deltaEls = document.querySelectorAll('.kpi-delta');
+  dkeys.forEach(function(k, i){
+    if(deltaEls[i]){
+      var info = d.kpiDeltas[k];
+      deltaEls[i].className = 'kpi-delta ' + info.cls;
+      deltaEls[i].textContent = info.txt;
+    }
+  });
+}
+
+// ── BUILD SLA METERS ──
+function buildSLA(slaArr){
+  var el=document.getElementById('slaMeters');el.innerHTML='';
+  slaArr.forEach(function(s){
+    var cls=s.pct>=98?'#22C55E':s.pct>=95?'#C9A84C':'#EF4444';
+    el.innerHTML+='<div class="sla-row">'
+      +'<div class="sla-label">'+s.label+'</div>'
+      +'<div class="sla-track"><div class="sla-fill" style="width:'+s.pct+'%;background:linear-gradient(90deg,'+s.color+','+s.color+'88);"></div></div>'
+      +'<div class="sla-pct" style="color:'+cls+'">'+s.pct+'%</div>'
+    +'</div>';
+  });
+}
+
+// ── BUILD ASSETS ──
+function buildAssets(arr){
+  var el=document.getElementById('assetGrid');el.innerHTML='';
+  arr.forEach(function(a){
+    el.innerHTML+='<div class="asset-card">'
+      +'<div class="asset-icon">'+a.icon+'</div>'
+      +'<div class="asset-name">'+a.name+'</div>'
+      +'<div class="asset-val">'+a.val+'</div>'
+      +'<div class="asset-status '+(a.status==='ok'?'as-ok':'as-warn')+'">'+a.lbl+'</div>'
+    +'</div>';
+  });
+}
+
+// ── BUILD ZONE TABLE ──
+function buildZoneTable(){
+  var d = QDATA[currentPeriod];
+  var type = document.getElementById('utilType').value;
+  var zones = type === 'electricity' ? d.zonesElec : d.zonesWater;
+
+  // Apply zone filter
+  var filterName = ZONE_MAP[currentZone];
+  if(filterName){
+    zones = zones.filter(function(z){ return z.name === filterName; });
+  }
+
+  var body = document.getElementById('zoneBody'); body.innerHTML='';
+  zones.forEach(function(z){
+    var sc = {ok:'sla-ok', warn:'sla-warn', crit:'sla-crit'}[z.sla];
+    var sl = {ok:'On Target', warn:'Monitoring', crit:'Breached'}[z.sla];
+    body.innerHTML += '<tr>'
+      +'<td class="zone-name">'+z.name+'</td>'
+      +'<td class="zone-mw">'+z.consumption+'</td>'
+      +'<td style="font-size:.78rem;color:var(--text3);text-align:right;">'+z.peak+'</td>'
+      +'<td style="font-size:.78rem;font-weight:700;color:'+z.vsColor+';">'+z.vs+'</td>'
+      +'<td><span class="sla-pill '+sc+'">'+sl+'</span></td>'
+      +'<td style="text-align:right;"><div style="display:flex;align-items:center;gap:6px;justify-content:flex-end;">'
+        +'<div style="width:48px;height:5px;background:rgba(255,255,255,.05);border-radius:3px;overflow:hidden;">'
+          +'<div style="width:'+parseFloat(z.meters)+'%;height:100%;background:var(--gold);border-radius:3px;"></div>'
+        +'</div>'
+        +'<span style="font-size:.78rem;color:var(--text);">'+z.meters+'</span>'
+      +'</div></td>'
+    +'</tr>';
+  });
+}
+
+// ── BUILD INCIDENTS ──
+function buildIncidents(arr){
+  var el=document.getElementById('incidentList');el.innerHTML='';
+  arr.forEach(function(i){
+    el.innerHTML+='<div class="incident-row">'
+      +'<div class="inc-sev inc-'+i.sev+'">'+i.icon+'</div>'
+      +'<div style="flex:1;">'
+        +'<div class="inc-loc">'+i.loc+'</div>'
+        +'<div class="inc-desc">'+i.desc+'</div>'
+      +'</div>'
+      +'<div class="inc-eta">'+i.eta+'</div>'
+    +'</div>';
+  });
+}
+
+// ── BUILD BUDGET ──
+function buildBudget(arr){
+  var el=document.getElementById('budgetRows');el.innerHTML='';
+  arr.forEach(function(b){
+    var pct=Math.round((b.spent/b.total)*100);
+    el.innerHTML+='<div class="budget-row">'
+      +'<div class="budget-row-header">'
+        +'<div class="budget-label">'+b.label+'</div>'
+        +'<div class="budget-nums">AED <b>'+b.spent.toFixed(2)+'B</b> of '+b.total.toFixed(2)+'B &nbsp;('+pct+'%)</div>'
+      +'</div>'
+      +'<div class="budget-track"><div class="budget-fill" style="width:'+pct+'%;background:linear-gradient(90deg,'+b.color+','+b.color+'88);"></div></div>'
+    +'</div>';
+  });
+}
+
+// ── BUILD ALL CHARTS (reads currentPeriod) ──
+function buildCharts(){
+  destroyAll();
+  var c=cc();
+  var d=QDATA[currentPeriod];
+
+  // Consumption trend
+  charts.con=new Chart(document.getElementById('consumptionChart'),{
+    type:'line',
+    data:{
+      labels:d.months,
+      datasets:[
+        {label:'Electricity (MW)',data:d.elec,borderColor:'#C9A84C',backgroundColor:'rgba(201,168,76,0.08)',fill:true,tension:.4,pointRadius:5,pointBackgroundColor:'#C9A84C',borderWidth:2.5,yAxisID:'y'},
+        {label:'Water (MIGD)',data:d.waterL,borderColor:'#06B6D4',backgroundColor:'rgba(6,182,212,0.06)',fill:true,tension:.4,pointRadius:5,pointBackgroundColor:'#06B6D4',borderWidth:2.5,yAxisID:'y2'}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:true,animation:{duration:500},
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{labels:{color:c.txt,font:{size:11},boxWidth:12,padding:16}},
+        tooltip:{callbacks:{label:function(ctx){return ctx.dataset.yAxisID==='y'?' '+ctx.raw+' MW':' '+ctx.raw+' MIGD';}}}
+      },
+      scales:{
+        x:{grid:{color:c.grid},ticks:{color:c.txt}},
+        y:{grid:{color:c.grid},ticks:{color:c.txt,callback:function(v){return v+' MW';}},position:'left'},
+        y2:{grid:{display:false},ticks:{color:'#06B6D4',callback:function(v){return v+' M';}},position:'right'}
+      }
+    }
+  });
+
+  // Energy Mix Doughnut
+  var mx = d.mix;
+  charts.mix=new Chart(document.getElementById('mixChart'),{
+    type:'doughnut',
+    data:{labels:mx.labels,datasets:[{data:mx.values,backgroundColor:energyMixColors,borderWidth:0,hoverOffset:8}]},
+    options:{
+      responsive:true,maintainAspectRatio:false,cutout:'66%',animation:{duration:500},
+      onClick:function(evt,els){
+        if(els.length){var i=els[0].index;applyDrill('Energy Mix',mx.labels[i],energyMixColors[i]);}
+      },
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:function(ctx){return ' '+ctx.label+': '+ctx.raw+'%';}}}
+      }
+    }
+  });
+  var leg=document.getElementById('mixLegend');leg.innerHTML='';
+  mx.labels.forEach(function(l,i){
+    leg.innerHTML+='<div style="display:flex;align-items:center;justify-content:space-between;">'
+      +'<div style="display:flex;align-items:center;gap:8px;">'
+        +'<div style="width:10px;height:10px;border-radius:3px;background:'+energyMixColors[i]+';flex-shrink:0;"></div>'
+        +'<span style="font-size:.77rem;color:var(--text2);">'+l+'</span>'
+      +'</div>'
+      +'<span style="font-size:.77rem;font-weight:700;color:var(--text);">'+mx.values[i]+'%</span>'
+    +'</div>';
+  });
+
+  // YoY Bar — always shows full year context, highlights current quarter
+  var yoyHighlight=['rgba(255,255,255,0.10)','rgba(255,255,255,0.10)','rgba(255,255,255,0.10)','rgba(255,255,255,0.10)'];
+  var qi={'Q1':0,'Q2':1,'Q3':2,'Q4':3}[currentPeriod];
+  yoyHighlight[qi]='rgba(201,168,76,0.9)';
+  var yoyLabels2=['2022','2023','2024'];
+  charts.yoy=new Chart(document.getElementById('yoyChart'),{
+    type:'bar',
+    data:{
+      labels:['Q1','Q2','Q3','Q4'],
+      datasets:[
+        {label:'2022',data:[12400,13100,13600,12800],backgroundColor:'rgba(255,255,255,0.10)',borderRadius:5},
+        {label:'2023',data:[13200,14000,14100,13800],backgroundColor:'rgba(6,182,212,0.55)',borderRadius:5},
+        {label:'2024',data:[13800,14400,14282,14820],backgroundColor:yoyHighlight,borderRadius:5}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,animation:{duration:500},
+      onClick:function(evt,els){
+        if(els.length){var yr=yoyLabels2[els[0].datasetIndex];applyDrill('Year',yr,'#C9A84C');}
+      },
+      plugins:{legend:{labels:{color:c.txt,font:{size:11},boxWidth:12}}},
+      scales:{
+        x:{grid:{color:c.grid},ticks:{color:c.txt}},
+        y:{grid:{color:c.grid},ticks:{color:c.txt,callback:function(v){return v/1000+'K MW';}}}
+      }
+    }
+  });
+
+  // Outage Chart — shows current quarter's months
+  charts.out=new Chart(document.getElementById('outageChart'),{
+    type:'bar',
+    data:{
+      labels:d.outageMonths,
+      datasets:[
+        {label:'Outage Events',data:d.outageEvents,backgroundColor:'rgba(239,68,68,0.55)',borderRadius:5,yAxisID:'y'},
+        {label:'MTTR (hours)',data:d.outageMTTR,type:'line',borderColor:'#C9A84C',pointBackgroundColor:'#C9A84C',pointRadius:5,borderWidth:2.2,tension:.4,yAxisID:'y2'}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:true,animation:{duration:500},
+      interaction:{mode:'index',intersect:false},
+      plugins:{legend:{labels:{color:c.txt,font:{size:11},boxWidth:12,padding:16}}},
+      scales:{
+        x:{grid:{color:c.grid},ticks:{color:c.txt,font:{size:11}}},
+        y:{grid:{color:c.grid},ticks:{color:c.txt},position:'left'},
+        y2:{grid:{display:false},ticks:{color:'#C9A84C',callback:function(v){return v+'h'}},position:'right'}
+      }
+    }
+  });
+
+  // Cost per kWh by Zone
+  var zoneNames2 = ['Downtown','Marina','Deira','Jumeirah','Al Quoz','Jebel Ali','Palm','MBR City'];
+  charts.cost=new Chart(document.getElementById('costChart'),{
+    type:'bar',
+    data:{
+      labels:zoneNames2,
+      datasets:[
+        {label:'Electricity (AED/kWh)',data:d.costElec,backgroundColor:'rgba(201,168,76,0.7)',borderRadius:5,yAxisID:'y'},
+        {label:'Water (AED/MIGD)',data:d.costWater,type:'line',borderColor:'#06B6D4',pointBackgroundColor:'#06B6D4',pointRadius:4,borderWidth:2,tension:.3,yAxisID:'y2'}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:true,animation:{duration:500},
+      interaction:{mode:'index',intersect:false},
+      onClick:function(evt,els){
+        if(els.length){var z=zoneNames2[els[0].index];applyDrill('Zone Cost',z,'#C9A84C');}
+      },
+      plugins:{legend:{labels:{color:c.txt,font:{size:11},boxWidth:12,padding:16}}},
+      scales:{
+        x:{grid:{color:c.grid},ticks:{color:c.txt,font:{size:10}}},
+        y:{grid:{color:c.grid},ticks:{color:c.txt,callback:function(v){return 'AED '+v;}},position:'left'},
+        y2:{grid:{display:false},ticks:{color:'#06B6D4'},position:'right'}
+      }
+    }
+  });
+}
+
+// ─────────────────────────────────────────────
+// ── DRILL-DOWN CROSS FILTER SYSTEM ──
+// ─────────────────────────────────────────────
+
+// Active drill-down state
+var drillState = { active: false, type: null, value: null, label: null, color: null };
+
+// Per-source drill-down KPI multipliers & zone/incident filters
+var DRILL_DATA = {
+  // Energy Mix sources
+  'Gas (CCGT)':         { kpiMult:{power:0.52,water:1.0,solar:0,sla:0.98,avail:1.0,budget:0.55}, zoneKey:'jebel',   incidentFilter:'p1', budgetIdx:0 },
+  'Solar (MBR Park)':   { kpiMult:{power:0.26,water:0.8,solar:1.0,sla:1.02,avail:1.0,budget:0.25}, zoneKey:'south',  incidentFilter:'p3', budgetIdx:2 },
+  'Nuclear (Barakah)':  { kpiMult:{power:0.14,water:0.6,solar:0,sla:1.04,avail:1.01,budget:0.12}, zoneKey:'downtown', incidentFilter:'p3', budgetIdx:0 },
+  'Gas (Peakers)':      { kpiMult:{power:0.06,water:0.5,solar:0,sla:0.94,avail:0.99,budget:0.06}, zoneKey:'deira',  incidentFilter:'p2', budgetIdx:1 },
+  'Waste-to-Energy':    { kpiMult:{power:0.02,water:0.4,solar:0,sla:0.96,avail:1.0,budget:0.02},  zoneKey:'south',  incidentFilter:'p3', budgetIdx:1 },
+  // Zone cost bars (by index)
+  'Downtown':   { kpiMult:{power:0.13,water:0.06,solar:0.84,sla:1.03,avail:1.0,budget:0.14}, zoneKey:'downtown', incidentFilter:'p2', budgetIdx:0 },
+  'Marina':     { kpiMult:{power:0.10,water:0.05,solar:0.69,sla:0.97,avail:0.99,budget:0.12}, zoneKey:'marina',  incidentFilter:'p2', budgetIdx:1 },
+  'Deira':      { kpiMult:{power:0.12,water:0.08,solar:0.46,sla:0.98,avail:0.99,budget:0.16}, zoneKey:'deira',   incidentFilter:'p1', budgetIdx:1 },
+  'Jumeirah':   { kpiMult:{power:0.07,water:0.04,solar:0.77,sla:1.01,avail:1.0,budget:0.10}, zoneKey:'downtown', incidentFilter:'p3', budgetIdx:0 },
+  'Al Quoz':    { kpiMult:{power:0.09,water:0.09,solar:1.08,sla:0.97,avail:0.99,budget:0.18}, zoneKey:'south',  incidentFilter:'p2', budgetIdx:2 },
+  'Jebel Ali':  { kpiMult:{power:0.16,water:0.12,solar:0.55,sla:1.00,avail:1.0,budget:0.22}, zoneKey:'jebel',  incidentFilter:'p1', budgetIdx:0 },
+  'Palm':       { kpiMult:{power:0.05,water:0.03,solar:0.88,sla:1.04,avail:1.01,budget:0.08}, zoneKey:'marina', incidentFilter:'p3', budgetIdx:3 },
+  'MBR City':   { kpiMult:{power:0.06,water:0.03,solar:0.91,sla:1.02,avail:1.01,budget:0.08}, zoneKey:'downtown',incidentFilter:'p3', budgetIdx:3 },
+  // YoY years
+  '2022': { kpiMult:{power:0.93,water:0.95,solar:0.62,sla:0.96,avail:0.999,budget:0.40}, zoneKey:'all', incidentFilter:null, budgetIdx:-1 },
+  '2023': { kpiMult:{power:0.96,water:0.97,solar:0.78,sla:0.97,avail:0.999,budget:0.65}, zoneKey:'all', incidentFilter:null, budgetIdx:-1 },
+  '2024': { kpiMult:{power:1.0, water:1.0, solar:1.0, sla:1.0, avail:1.0,  budget:1.0},  zoneKey:'all', incidentFilter:null, budgetIdx:-1 }
+};
+
+function applyDrill(type, label, color){
+  // Toggle off if same clicked again
+  if(drillState.active && drillState.label === label){
+    clearDrill(); return;
+  }
+  drillState = { active:true, type:type, value:label, label:label, color:color };
+
+  var dd = DRILL_DATA[label];
+  if(!dd){ clearDrill(); return; }
+
+  // ── Show drill banner ──
+  var banner = document.getElementById('drillBanner');
+  banner.style.display = 'flex';
+  banner.style.borderColor = color;
+  document.getElementById('drillLabel').textContent = label;
+  document.getElementById('drillLabel').style.color = color;
+  document.getElementById('drillType').textContent = 'Drill-down: ' + type + ' → ' + label;
+
+  // ── Update KPIs (scale base values by multiplier) ──
+  var base = getActiveKPIs();
+  var rawVals = {
+    power:  parseFloat(base.kpis.power.replace(/,/g,'')),
+    water:  parseFloat(base.kpis.water.replace(/,/g,'')),
+    solar:  parseFloat(base.kpis.solar),
+    sla:    parseFloat(base.kpis.sla),
+    avail:  parseFloat(base.kpis.avail),
+    budget: parseFloat(base.kpis.budget)
+  };
+  var drillKPIs = {
+    kpis:{
+      power:  Math.round(rawVals.power  * dd.kpiMult.power).toLocaleString(),
+      water:  (rawVals.water  * dd.kpiMult.water).toFixed(1),
+      solar:  Math.round(rawVals.solar  * dd.kpiMult.solar)+'',
+      sla:    (rawVals.sla    * dd.kpiMult.sla).toFixed(1),
+      avail:  (rawVals.avail  * dd.kpiMult.avail).toFixed(2),
+      budget: Math.round(rawVals.budget * dd.kpiMult.budget)+''
+    },
+    kpiDeltas:{
+      power: {cls:'neutral',txt:'⬡ Filtered: '+label},
+      water: {cls:'neutral',txt:'⬡ Filtered: '+label},
+      solar: {cls:'neutral',txt:'⬡ Filtered: '+label},
+      sla:   {cls:'neutral',txt:'⬡ Filtered: '+label},
+      avail: {cls:'neutral',txt:'⬡ Filtered: '+label},
+      budget:{cls:'neutral',txt:'⬡ Filtered: '+label}
+    }
+  };
+  updateKPIs(drillKPIs);
+
+  // ── Filter zone table to related zone ──
+  var prevZone = currentZone;
+  if(dd.zoneKey && dd.zoneKey !== 'all'){
+    document.getElementById('zoneSelect').value = dd.zoneKey;
+    currentZone = dd.zoneKey;
+  }
+  buildZoneTable();
+  currentZone = prevZone; // restore so other interactions still work
+
+  // ── Filter incidents ──
+  var d = QDATA[currentPeriod];
+  if(dd.incidentFilter){
+    var filtered = d.incidents.filter(function(i){ return i.sev === dd.incidentFilter; });
+    buildIncidents(filtered.length ? filtered : d.incidents.slice(0,1));
+    document.getElementById('incidentBadge').textContent = filtered.length + ' Related';
+  }
+
+  // ── Filter budget (highlight relevant row) ──
+  buildBudget(d.budget);
+  if(dd.budgetIdx >= 0){
+    var rows = document.getElementById('budgetRows').querySelectorAll('.budget-row');
+    rows.forEach(function(r,i){
+      r.style.opacity = i === dd.budgetIdx ? '1' : '0.3';
+      r.style.transform = i === dd.budgetIdx ? 'scale(1.01)' : 'scale(1)';
+      r.style.transition = 'opacity .3s, transform .3s';
+    });
+  }
+
+  // ── Highlight selected segment in charts ──
+  rebuildChartsWithDrill(label, color);
+}
+
+function clearDrill(){
+  drillState = { active:false, type:null, value:null, label:null, color:null };
+  document.getElementById('drillBanner').style.display = 'none';
+
+  // Restore everything
+  var d = QDATA[currentPeriod];
+  var kpiData = getActiveKPIs();
+  updateKPIs(kpiData);
+  buildZoneTable();
+  buildIncidents(d.incidents);
+  document.getElementById('incidentBadge').textContent = d.incidents.length + ' Open';
+  buildBudget(d.budget);
+  // Reset budget opacity
+  document.getElementById('budgetRows').querySelectorAll('.budget-row').forEach(function(r){
+    r.style.opacity='1'; r.style.transform='scale(1)';
+  });
+  buildCharts();
+}
+
+function rebuildChartsWithDrill(activeLabel, activeColor){
+  destroyAll();
+  var c = cc();
+  var d = QDATA[currentPeriod];
+
+  // Consumption trend — unchanged, just dimmed slightly
+  charts.con=new Chart(document.getElementById('consumptionChart'),{
+    type:'line',
+    data:{
+      labels:d.months,
+      datasets:[
+        {label:'Electricity (MW)',data:d.elec,borderColor:'#C9A84C',backgroundColor:'rgba(201,168,76,0.08)',fill:true,tension:.4,pointRadius:5,pointBackgroundColor:'#C9A84C',borderWidth:2.5,yAxisID:'y'},
+        {label:'Water (MIGD)',data:d.waterL,borderColor:'#06B6D4',backgroundColor:'rgba(6,182,212,0.06)',fill:true,tension:.4,pointRadius:5,pointBackgroundColor:'#06B6D4',borderWidth:2.5,yAxisID:'y2'}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:true,animation:{duration:400},interaction:{mode:'index',intersect:false},plugins:{legend:{labels:{color:c.txt,font:{size:11},boxWidth:12,padding:16}},tooltip:{callbacks:{label:function(ctx){return ctx.dataset.yAxisID==='y'?' '+ctx.raw+' MW':' '+ctx.raw+' MIGD';}}}},scales:{x:{grid:{color:c.grid},ticks:{color:c.txt}},y:{grid:{color:c.grid},ticks:{color:c.txt,callback:function(v){return v+' MW';}},position:'left'},y2:{grid:{display:false},ticks:{color:'#06B6D4',callback:function(v){return v+' M';}},position:'right'}}}
+  });
+
+  // Energy Mix — highlight clicked slice, dim others
+  var mx = d.mix;
+  var mixBgs = mx.labels.map(function(l,i){
+    return l === activeLabel ? energyMixColors[i] : 'rgba(255,255,255,0.08)';
+  });
+  var mixBorders = mx.labels.map(function(l,i){
+    return l === activeLabel ? energyMixColors[i] : 'transparent';
+  });
+  charts.mix=new Chart(document.getElementById('mixChart'),{
+    type:'doughnut',
+    data:{labels:mx.labels,datasets:[{data:mx.values,backgroundColor:mixBgs,borderColor:mixBorders,borderWidth:2,hoverOffset:8}]},
+    options:{
+      responsive:true,maintainAspectRatio:false,cutout:'66%',animation:{duration:400},
+      onClick:function(evt,els){
+        if(els.length){var i=els[0].index;applyDrill('Energy Mix',mx.labels[i],energyMixColors[i]);}
+        else clearDrill();
+      },
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){return ' '+ctx.label+': '+ctx.raw+'%';}}}}
+    }
+  });
+  // Legend
+  var leg=document.getElementById('mixLegend');leg.innerHTML='';
+  mx.labels.forEach(function(l,i){
+    var isActive = l===activeLabel;
+    leg.innerHTML+='<div style="display:flex;align-items:center;justify-content:space-between;opacity:'+(isActive?'1':'0.35')+';">'
+      +'<div style="display:flex;align-items:center;gap:8px;">'
+        +'<div style="width:10px;height:10px;border-radius:3px;background:'+energyMixColors[i]+';flex-shrink:0;"></div>'
+        +'<span style="font-size:.77rem;color:var(--text2);">'+l+'</span>'
+      +'</div>'
+      +'<span style="font-size:.77rem;font-weight:700;color:var(--text);">'+mx.values[i]+'%</span>'
+    +'</div>';
+  });
+
+  // YoY Bar — highlight clicked year
+  var zoneNames = ['Downtown','Marina','Deira','Jumeirah','Al Quoz','Jebel Ali','Palm','MBR City'];
+  var yoyLabels = ['2022','2023','2024'];
+  var yoyColors = yoyLabels.map(function(yr){
+    if(yr===activeLabel) return 'rgba(201,168,76,0.95)';
+    var base=['rgba(255,255,255,0.10)','rgba(6,182,212,0.55)','rgba(255,255,255,0.10)'];
+    return base[yoyLabels.indexOf(yr)];
+  });
+  var qi={'Q1':0,'Q2':1,'Q3':2,'Q4':3}[currentPeriod];
+  var q24=['2022','2023'].indexOf(activeLabel)===-1?[13800,14400,14282,14820].map(function(v,i){return i===qi?'rgba(201,168,76,0.9)':'rgba(255,255,255,0.10)';}):null;
+  charts.yoy=new Chart(document.getElementById('yoyChart'),{
+    type:'bar',
+    data:{labels:['Q1','Q2','Q3','Q4'],datasets:[
+      {label:'2022',data:[12400,13100,13600,12800],backgroundColor:'2022'===activeLabel?'rgba(201,168,76,0.9)':'rgba(255,255,255,0.10)',borderRadius:5},
+      {label:'2023',data:[13200,14000,14100,13800],backgroundColor:'2023'===activeLabel?'rgba(201,168,76,0.9)':'rgba(6,182,212,0.55)',borderRadius:5},
+      {label:'2024',data:[13800,14400,14282,14820],backgroundColor:'2024'===activeLabel?'rgba(201,168,76,0.9)':(q24||'rgba(255,255,255,0.10)'),borderRadius:5}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,animation:{duration:400},
+      onClick:function(evt,els){
+        if(els.length){var yr=yoyLabels[els[0].datasetIndex];applyDrill('Year',yr,'#C9A84C');}
+        else clearDrill();
+      },
+      plugins:{legend:{labels:{color:c.txt,font:{size:11},boxWidth:12}}},
+      scales:{x:{grid:{color:c.grid},ticks:{color:c.txt}},y:{grid:{color:c.grid},ticks:{color:c.txt,callback:function(v){return v/1000+'K MW';}}}}
+    }
+  });
+
+  // Outage — unchanged in drill
+  charts.out=new Chart(document.getElementById('outageChart'),{
+    type:'bar',
+    data:{labels:d.outageMonths,datasets:[
+      {label:'Outage Events',data:d.outageEvents,backgroundColor:'rgba(239,68,68,0.55)',borderRadius:5,yAxisID:'y'},
+      {label:'MTTR (hours)',data:d.outageMTTR,type:'line',borderColor:'#C9A84C',pointBackgroundColor:'#C9A84C',pointRadius:5,borderWidth:2.2,tension:.4,yAxisID:'y2'}
+    ]},
+    options:{responsive:true,maintainAspectRatio:true,animation:{duration:400},interaction:{mode:'index',intersect:false},plugins:{legend:{labels:{color:c.txt,font:{size:11},boxWidth:12,padding:16}}},scales:{x:{grid:{color:c.grid},ticks:{color:c.txt,font:{size:11}}},y:{grid:{color:c.grid},ticks:{color:c.txt},position:'left'},y2:{grid:{display:false},ticks:{color:'#C9A84C',callback:function(v){return v+'h'}},position:'right'}}}
+  });
+
+  // Cost by Zone — highlight clicked zone bar
+  var costBgs = zoneNames.map(function(z){
+    return z===activeLabel ? 'rgba(201,168,76,1)' : 'rgba(201,168,76,0.18)';
+  });
+  charts.cost=new Chart(document.getElementById('costChart'),{
+    type:'bar',
+    data:{labels:zoneNames,datasets:[
+      {label:'Electricity (AED/kWh)',data:d.costElec,backgroundColor:costBgs,borderRadius:5,yAxisID:'y'},
+      {label:'Water (AED/MIGD)',data:d.costWater,type:'line',borderColor:'#06B6D4',pointBackgroundColor:'#06B6D4',pointRadius:4,borderWidth:2,tension:.3,yAxisID:'y2'}
+    ]},
+    options:{responsive:true,maintainAspectRatio:true,animation:{duration:400},interaction:{mode:'index',intersect:false},
+      onClick:function(evt,els){
+        if(els.length){var z=zoneNames[els[0].index];applyDrill('Zone Cost',z,'#C9A84C');}
+        else clearDrill();
+      },
+      plugins:{legend:{labels:{color:c.txt,font:{size:11},boxWidth:12,padding:16}}},
+      scales:{x:{grid:{color:c.grid},ticks:{color:c.txt,font:{size:10}}},y:{grid:{color:c.grid},ticks:{color:c.txt,callback:function(v){return 'AED '+v;}},position:'left'},y2:{grid:{display:false},ticks:{color:'#06B6D4'},position:'right'}}
+    }
+  });
+}
+
+// ── FADE UP ──
+(function(){
+  if(!('IntersectionObserver' in window))return;
+  var io=new IntersectionObserver(function(e){
+    e.forEach(function(x){if(x.isIntersecting){x.target.classList.add('visible');io.unobserve(x.target);}});
+  },{threshold:0.05});
+  document.querySelectorAll('.fade-up').forEach(function(el,i){
+    el.style.transitionDelay=(i*0.06)+'s';io.observe(el);
+  });
+})();
+
+// ── INIT ──
+(function(){
+  document.getElementById('zoneBanner').style.display='none';
+  document.getElementById('drillBanner').style.display='none';
+  var d = QDATA[currentPeriod];
+  var kpiData = getActiveKPIs();
+  updateKPIs(kpiData);
+  buildSLA(d.sla);
+  buildAssets(d.assets);
+  buildZoneTable();
+  buildIncidents(d.incidents);
+  buildBudget(d.budget);
+  buildCharts();
+})();
+</script>
+</body>
+</html>
