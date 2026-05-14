@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
@@ -57,7 +57,7 @@ header{position:sticky;top:0;z-index:900;
 [data-theme="light"] header{background:rgba(247,243,236,.97);}
 
 .hdr{max-width:1440px;margin:0 auto;padding:0 24px;height:66px;
-  display:flex;align-items:center;gap:16px;}
+  display:flex;align-items:center;gap:16px;flex-wrap:nowrap;}
 
 .logo-wrap{display:flex;align-items:center;gap:13px;flex-shrink:0;}
 .logo-mark{width:42px;height:42px;border-radius:11px;border:1px solid var(--b1);
@@ -268,6 +268,138 @@ footer{background:var(--ink2);border-top:1px solid var(--b1);padding:22px 28px;t
 @keyframes fadeUp{from{opacity:0;transform:translateY(9px);}to{opacity:1;transform:translateY(0);}}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(1.7);}}
 .live-dot{width:7px;height:7px;background:var(--green);border-radius:50%;animation:pulse 2s infinite;display:inline-block;}
+
+/* ═══════════════════════════════════════════════
+   MOBILE RESPONSIVE — OM BAGAL ANALYTICS
+═══════════════════════════════════════════════ */
+
+/* ─── HEADER MOBILE ─── */
+@media(max-width:768px){
+  header{position:sticky;top:0;z-index:900;}
+
+  .hdr{
+    height:auto;
+    flex-wrap:wrap;
+    padding:10px 14px;
+    gap:8px;
+  }
+
+  .logo-wrap{flex:1;min-width:0;order:1;}
+  .logo-text{font-size:.92rem;}
+  .logo-sub{font-size:.55rem;}
+  .logo-mark{width:36px;height:36px;font-size:.95rem;}
+
+  /* Right controls: compact, sits next to logo */
+  .hdr-right{order:2;gap:6px;flex-shrink:0;align-items:center;}
+  .sel-sm{
+    padding:5px 22px 5px 8px;
+    font-size:.68rem;
+    max-width:100px;
+  }
+  .theme-btn{width:30px;height:30px;font-size:.8rem;}
+
+  /* Period nav: drops to full-width row below */
+  .period-nav{
+    order:3;
+    width:100%;
+    margin-left:0;
+    justify-content:stretch;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    padding:3px;
+  }
+  .period-nav::-webkit-scrollbar{display:none;}
+  .pn-btn{flex:1;min-width:0;padding:7px 6px;font-size:.72rem;text-align:center;}
+}
+
+/* ─── MAIN PADDING ─── */
+@media(max-width:768px){
+  main{padding:14px 12px 48px;}
+}
+
+/* ─── QUARTER BANNER ─── */
+@media(max-width:640px){
+  .q-banner{flex-wrap:wrap;gap:8px;padding:10px 14px;}
+  .qb-sep{display:none;}
+  .qb-stat{width:100%;font-size:.7rem;}
+  .qb-badges{width:100%;margin-left:0;gap:5px;}
+  .badge{font-size:.6rem;padding:3px 8px;}
+}
+
+/* ─── KPI GRID ─── */
+@media(max-width:480px){
+  .kpi-grid{grid-template-columns:1fr 1fr;gap:10px;}
+  .kpi{padding:14px 13px;}
+  .kpi-val{font-size:1.55rem;}
+  .kpi-ico{font-size:1.1rem;margin-bottom:7px;}
+  .kpi-lbl{font-size:.58rem;}
+  .kpi-chg{font-size:.63rem;}
+  .kpi-sub{font-size:.59rem;}
+}
+
+/* ─── CHART HEIGHTS — reduce on mobile ─── */
+@media(max-width:640px){
+  .cw-xl{height:200px;}
+  .cw-lg{height:185px;}
+  .cw-md{height:175px;}
+  .cw-sm{height:160px;}
+}
+
+/* ─── CHART CARD PADDING ─── */
+@media(max-width:640px){
+  .cc{padding:14px 13px;}
+  .cc-head{margin-bottom:10px;}
+  .cc-title{font-size:.88rem;}
+  .cc-sub{font-size:.62rem;}
+  .cc-badge{font-size:.6rem;padding:2px 8px;}
+}
+
+/* ─── FINDINGS / INSIGHTS ─── */
+@media(max-width:640px){
+  .findings{padding:16px 14px;}
+  .fi-grid{gap:9px;}
+  .fi-card{padding:12px;}
+  .fi-txt{font-size:.73rem;}
+  .fi-act{font-size:.65rem;}
+}
+
+/* ─── STRATEGIC IMPACT ─── */
+@media(max-width:640px){
+  .impact-sec{padding:16px 14px;}
+  .impact-grid{gap:10px;}
+  .imp-card{padding:13px 14px;}
+  .imp-title{font-size:.76rem;}
+  .imp-detail{font-size:.69rem;}
+  .imp-fix{font-size:.68rem;}
+  .imp-recovery{padding:6px 9px;}
+  .imp-recovery-txt{font-size:.66rem;}
+}
+
+/* ─── DEAL TABLE ─── */
+@media(max-width:768px){
+  .tbl-sec{padding:14px 12px;}
+  .tbl-head-row{flex-direction:column;align-items:flex-start;gap:10px;}
+  .tsearch{width:100%;}
+  .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  table{min-width:680px;font-size:.72rem;}
+  thead th{padding:7px 10px;font-size:.58rem;}
+  tbody td{padding:8px 10px;}
+}
+
+/* ─── FOOTER MOBILE ─── */
+@media(max-width:640px){
+  footer{padding:16px 14px;}
+  .ftr-brand{font-size:.88rem;}
+  .ftr-sub{font-size:.62rem;line-height:1.7;}
+}
+
+/* ─── ALLOCATION TABLE INSIDE CHART CARD ─── */
+@media(max-width:640px){
+  .alloc-table{font-size:.72rem;}
+  .alloc-table thead th{padding:5px 8px;font-size:.58rem;}
+  .alloc-table tbody td{padding:7px 8px;}
+}
 </style>
 </head>
 <body>
@@ -289,15 +421,6 @@ footer{background:var(--ink2);border-top:1px solid var(--b1);padding:22px 28px;t
     </div>
   </div>
 
-  <!-- Period Nav — hero control -->
-  <div class="period-nav" id="periodNav">
-    <button class="pn-btn" onclick="setQ('q1',this)"><span>Q1 2026</span></button>
-    <button class="pn-btn" onclick="setQ('q2',this)"><span>Q2 2026</span></button>
-    <button class="pn-btn" onclick="setQ('q3',this)"><span>Q3 2026</span></button>
-    <button class="pn-btn" onclick="setQ('q4',this)"><span>Q4 2026</span></button>
-    <button class="pn-btn act" onclick="setQ('full',this)"><span>FY 2025</span></button>
-  </div>
-
   <div class="hdr-right">
     <select class="sel-sm" id="segSel" onchange="applyF()">
       <option value="All">All Sectors</option>
@@ -306,13 +429,22 @@ footer{background:var(--ink2);border-top:1px solid var(--b1);padding:22px 28px;t
       <option value="Corporate">Corporate Services</option>
     </select>
     <select class="sel-sm" id="assetSel" onchange="applyF()">
-      <option value="All">All Deal Stages</option>
+      <option value="All">All Stages</option>
       <option value="Qualified">Qualified</option>
-      <option value="Proposal">Proposal Sent</option>
+      <option value="Proposal">Proposal</option>
       <option value="Negotiation">Negotiation</option>
       <option value="Closing">Closing</option>
     </select>
     <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">☀️</button>
+  </div>
+
+  <!-- Period Nav — drops to full-width row on mobile -->
+  <div class="period-nav" id="periodNav">
+    <button class="pn-btn" onclick="setQ('q1',this)"><span>Q1 2026</span></button>
+    <button class="pn-btn" onclick="setQ('q2',this)"><span>Q2 2026</span></button>
+    <button class="pn-btn" onclick="setQ('q3',this)"><span>Q3 2026</span></button>
+    <button class="pn-btn" onclick="setQ('q4',this)"><span>Q4 2026</span></button>
+    <button class="pn-btn act" onclick="setQ('full',this)"><span>FY 2025</span></button>
   </div>
 </div>
 </header>
