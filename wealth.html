@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Qasr Capital — Wealth Management Dashboard 2026 | Om Bagal Analytics</title>
+<title>Al Morshed BD Intel — B2B Sales Pipeline Dashboard 2026 | Om Bagal Analytics</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════════════════
-   QASR CAPITAL — WEALTH MANAGEMENT DASHBOARD
+   AL MORSHED BD INTEL — B2B SALES PIPELINE DASHBOARD
    Theme: Deep obsidian + burnished gold + champagne
-   Dubai DIFC Private Banking aesthetic
+   Saudi Arabia B2B Sales Intelligence aesthetic
 ═══════════════════════════════════════════════════ */
 :root{
   --ink:#080608;--ink2:#0E0B10;--ink3:#141018;
@@ -282,10 +282,10 @@ footer{background:var(--ink2);border-top:1px solid var(--b1);padding:22px 28px;t
 <header>
 <div class="hdr">
   <div class="logo-wrap">
-    <div class="logo-mark">QC</div>
+    <div class="logo-mark">AM</div>
     <div>
-      <div class="logo-text">QASR CAPITAL</div>
-      <div class="logo-sub">Wealth Management · DIFC, Dubai</div>
+      <div class="logo-text">AL MORSHED BD INTEL</div>
+      <div class="logo-sub">B2B Sales Intelligence · Riyadh, KSA</div>
     </div>
   </div>
 
@@ -300,17 +300,17 @@ footer{background:var(--ink2);border-top:1px solid var(--b1);padding:22px 28px;t
 
   <div class="hdr-right">
     <select class="sel-sm" id="segSel" onchange="applyF()">
-      <option value="All">All Segments</option>
-      <option value="UHNW">Ultra-HNW (≥$50M)</option>
-      <option value="HNW">HNW ($5M–$50M)</option>
-      <option value="Mass">Affluent ($1M–$5M)</option>
+      <option value="All">All Sectors</option>
+      <option value="Banking">Banking</option>
+      <option value="Insurance">Insurance</option>
+      <option value="Corporate">Corporate Services</option>
     </select>
     <select class="sel-sm" id="assetSel" onchange="applyF()">
-      <option value="All">All Asset Classes</option>
-      <option value="Equity">Equities</option>
-      <option value="Fixed">Fixed Income</option>
-      <option value="Alternatives">Alternatives</option>
-      <option value="RE">Real Estate</option>
+      <option value="All">All Deal Stages</option>
+      <option value="Qualified">Qualified</option>
+      <option value="Proposal">Proposal Sent</option>
+      <option value="Negotiation">Negotiation</option>
+      <option value="Closing">Closing</option>
     </select>
     <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">☀️</button>
   </div>
@@ -325,12 +325,12 @@ footer{background:var(--ink2);border-top:1px solid var(--b1);padding:22px 28px;t
   <div class="live-dot"></div>
   <div class="qb-period" id="qb-period">Full Year 2025</div>
   <div class="qb-sep">·</div>
-  <div class="qb-stat" id="qb-stat">AUM: USD 18.4B · 1,240 Clients · DIFC, Dubai</div>
+  <div class="qb-stat" id="qb-stat">Pipeline: SAR 48.6M · 34 Active Deals · Riyadh, KSA</div>
   <div class="qb-badges" id="qb-badges">
-    <span class="badge badge-g">📈 AUM +11.2% YoY</span>
-    <span class="badge badge-a">🏆 Sharpe: 1.82</span>
-    <span class="badge badge-b">💼 Net New Money: +$2.1B</span>
-    <span class="badge badge-g">✅ Retention: 97.4%</span>
+    <span class="badge badge-g">📈 Pipeline +18.4% YoY</span>
+    <span class="badge badge-a">🏆 Win Rate: 38%</span>
+    <span class="badge badge-b">💼 Deals Closed: SAR 18.4M</span>
+    <span class="badge badge-g">✅ Forecast Accuracy: 91%</span>
   </div>
 </div>
 
@@ -338,38 +338,38 @@ footer{background:var(--ink2);border-top:1px solid var(--b1);padding:22px 28px;t
 <div class="kpi-grid">
   <div class="kpi">
     <div class="kpi-ico">💰</div>
-    <div class="kpi-lbl">Assets Under Management</div>
-    <div class="kpi-val"><span class="u">USD </span><span id="kn-aum">18.4</span><span class="u">B</span></div>
-    <div class="kpi-chg up" id="kg-aum">↑ 11.2% YoY</div>
-    <div class="kpi-sub" id="ks-aum">FY 2025 · All Segments</div>
+    <div class="kpi-lbl">Total Pipeline Value</div>
+    <div class="kpi-val"><span class="u">SAR </span><span id="kn-aum">48.6</span><span class="u">M</span></div>
+    <div class="kpi-chg up" id="kg-aum">↑ 18.4% YoY</div>
+    <div class="kpi-sub" id="ks-aum">FY 2025 · All Sectors</div>
   </div>
   <div class="kpi">
-    <div class="kpi-ico">📈</div>
-    <div class="kpi-lbl">Portfolio Return</div>
-    <div class="kpi-val"><span id="kn-ret">14.8</span><span class="u">%</span></div>
-    <div class="kpi-chg up" id="kg-ret">↑ 3.1pp vs benchmark</div>
-    <div class="kpi-sub" id="ks-ret">Blended net return · FY 2025</div>
+    <div class="kpi-ico">🎯</div>
+    <div class="kpi-lbl">Deal Win Rate</div>
+    <div class="kpi-val"><span id="kn-ret">38</span><span class="u">%</span></div>
+    <div class="kpi-chg up" id="kg-ret">↑ 6pp vs last year</div>
+    <div class="kpi-sub" id="ks-ret">Closed won · FY 2025</div>
   </div>
   <div class="kpi">
-    <div class="kpi-ico">👥</div>
-    <div class="kpi-lbl">Active Clients</div>
-    <div class="kpi-val"><span id="kn-cli">1,240</span></div>
-    <div class="kpi-chg up" id="kg-cli">↑ 8.4% · +96 net new</div>
-    <div class="kpi-sub" id="ks-cli">All tiers · FY 2025</div>
+    <div class="kpi-ico">📋</div>
+    <div class="kpi-lbl">Active Deals</div>
+    <div class="kpi-val"><span id="kn-cli">34</span></div>
+    <div class="kpi-chg up" id="kg-cli">↑ 12 net new · FY 2025</div>
+    <div class="kpi-sub" id="ks-cli">All sectors · FY 2025</div>
   </div>
   <div class="kpi">
     <div class="kpi-ico">⚡</div>
-    <div class="kpi-lbl">Sharpe Ratio</div>
-    <div class="kpi-val"><span id="kn-sharpe">1.82</span></div>
-    <div class="kpi-chg up" id="kg-sharpe">↑ 0.18 vs FY 2024</div>
-    <div class="kpi-sub" id="ks-sharpe">Risk-adjusted · FY 2025</div>
+    <div class="kpi-lbl">Avg Deal Velocity</div>
+    <div class="kpi-val"><span id="kn-sharpe">42</span><span class="u"> d</span></div>
+    <div class="kpi-chg up" id="kg-sharpe">↓ 8 days faster vs FY 2024</div>
+    <div class="kpi-sub" id="ks-sharpe">Days to close · FY 2025</div>
   </div>
   <div class="kpi">
-    <div class="kpi-ico">🔄</div>
-    <div class="kpi-lbl">Client Retention</div>
-    <div class="kpi-val"><span id="kn-ret2">97.4</span><span class="u">%</span></div>
-    <div class="kpi-chg up" id="kg-ret2">↑ 0.6pp vs FY 2024</div>
-    <div class="kpi-sub" id="ks-ret2">Annual churn 2.6%</div>
+    <div class="kpi-ico">📊</div>
+    <div class="kpi-lbl">Forecast Accuracy</div>
+    <div class="kpi-val"><span id="kn-ret2">91</span><span class="u">%</span></div>
+    <div class="kpi-chg up" id="kg-ret2">↑ 4pp vs FY 2024</div>
+    <div class="kpi-sub" id="ks-ret2">Predicted vs actual closed</div>
   </div>
 </div>
 
@@ -378,20 +378,20 @@ footer{background:var(--ink2);border-top:1px solid var(--b1);padding:22px 28px;t
   <div class="cc">
     <div class="cc-head">
       <div>
-        <div class="cc-title">AUM Quarterly Growth</div>
-        <div class="cc-sub" id="aum-sub">USD Billions · 2024–2026 trajectory</div>
+        <div class="cc-title">Pipeline Value by Quarter</div>
+        <div class="cc-sub" id="aum-sub">SAR Millions · 2024–2026 trajectory</div>
       </div>
-      <div class="cc-badge" id="aum-badge">USD 18.4B Peak</div>
+      <div class="cc-badge" id="aum-badge">SAR 48.6M Peak</div>
     </div>
     <div class="cw-xl"><canvas id="aumChart"></canvas></div>
   </div>
   <div class="cc">
     <div class="cc-head">
       <div>
-        <div class="cc-title">Asset Allocation</div>
-        <div class="cc-sub" id="alloc-sub">Portfolio mix by asset class</div>
+        <div class="cc-title">Deal Stage Mix</div>
+        <div class="cc-sub" id="alloc-sub">Pipeline breakdown by stage</div>
       </div>
-      <div class="cc-badge">5 Classes</div>
+      <div class="cc-badge">4 Stages</div>
     </div>
     <div class="cw-xl"><canvas id="allocChart"></canvas></div>
   </div>
@@ -402,18 +402,18 @@ footer{background:var(--ink2);border-top:1px solid var(--b1);padding:22px 28px;t
   <div class="cc">
     <div class="cc-head">
       <div>
-        <div class="cc-title">Return by Asset Class</div>
-        <div class="cc-sub" id="ret-sub">Net % return · Period selected</div>
+        <div class="cc-title">Win Rate by Sector</div>
+        <div class="cc-sub" id="ret-sub">Closed won % · Period selected</div>
       </div>
-      <div class="cc-badge" id="ret-badge">Q-on-Q</div>
+      <div class="cc-badge" id="ret-badge">Best Sector</div>
     </div>
     <div class="cw-md"><canvas id="retChart"></canvas></div>
   </div>
   <div class="cc">
     <div class="cc-head">
       <div>
-        <div class="cc-title">Net New Money</div>
-        <div class="cc-sub" id="nnm-sub">Inflows vs Outflows · USD M</div>
+        <div class="cc-title">Deals Won vs Lost</div>
+        <div class="cc-sub" id="nnm-sub">Monthly deal count · Period</div>
       </div>
       <div class="cc-badge" id="nnm-badge">Net Positive</div>
     </div>
@@ -422,10 +422,10 @@ footer{background:var(--ink2);border-top:1px solid var(--b1);padding:22px 28px;t
   <div class="cc">
     <div class="cc-head">
       <div>
-        <div class="cc-title">Client Segment Mix</div>
-        <div class="cc-sub" id="seg-sub">By AUM contribution %</div>
+        <div class="cc-title">Sector Pipeline Mix</div>
+        <div class="cc-sub" id="seg-sub">By deal value contribution %</div>
       </div>
-      <div class="cc-badge">3 Tiers</div>
+      <div class="cc-badge">3 Sectors</div>
     </div>
     <div class="cw-md"><canvas id="segChart"></canvas></div>
   </div>
@@ -436,20 +436,20 @@ footer{background:var(--ink2);border-top:1px solid var(--b1);padding:22px 28px;t
   <div class="cc">
     <div class="cc-head">
       <div>
-        <div class="cc-title">Monthly Portfolio Return</div>
-        <div class="cc-sub" id="mret-sub">Net % vs benchmark · 2025</div>
+        <div class="cc-title">Monthly Deal Closings</div>
+        <div class="cc-sub" id="mret-sub">Deals closed vs target · 2025</div>
       </div>
-      <div class="cc-badge" id="mret-badge">Alpha +3.1pp</div>
+      <div class="cc-badge" id="mret-badge">Above Target</div>
     </div>
     <div class="cw-sm"><canvas id="mretChart"></canvas></div>
   </div>
   <div class="cc">
     <div class="cc-head">
       <div>
-        <div class="cc-title">Geographic Allocation</div>
-        <div class="cc-sub" id="geo-sub">AUM by client domicile · %</div>
+        <div class="cc-title">Pipeline by Region</div>
+        <div class="cc-sub" id="geo-sub">SAR value by client city · %</div>
       </div>
-      <div class="cc-badge">GCC + Global</div>
+      <div class="cc-badge">KSA + GCC</div>
     </div>
     <div class="cw-sm"><canvas id="geoChart"></canvas></div>
   </div>
@@ -459,8 +459,8 @@ footer{background:var(--ink2);border-top:1px solid var(--b1);padding:22px 28px;t
 <div class="findings">
   <div class="fi-head">
     <span style="font-size:1.1rem">◈</span>
-    <div class="fi-title">Portfolio Findings & Strategic Notes</div>
-    <div class="fi-meta" id="fi-period">FY 2025 · DIFC-regulated · Dubai DFSA</div>
+    <div class="fi-title">Pipeline Findings & BD Strategic Notes</div>
+    <div class="fi-meta" id="fi-period">FY 2025 · Saudi B2B · Banking, Insurance, Corporate</div>
   </div>
   <div class="fi-grid" id="fiGrid"></div>
 </div>
@@ -469,35 +469,35 @@ footer{background:var(--ink2);border-top:1px solid var(--b1);padding:22px 28px;t
 <div class="impact-sec">
   <div class="impact-header">
     <span style="font-size:1.1rem">◆</span>
-    <div class="impact-title">Capital Intelligence · Risk & Opportunity Radar</div>
+    <div class="impact-title">Deal Intelligence · Risk & Opportunity Radar</div>
     <div class="cc-badge" id="impact-period-badge">FY 2025</div>
   </div>
   <div class="impact-tagline">
-    Quantified risks and revenue opportunities — each with an estimated financial impact and a 14-day action path.
-    <strong>Act on these to protect or unlock capital.</strong>
+    Quantified pipeline risks and revenue opportunities — each with an estimated SAR impact and a 48-hour action path.
+    <strong>Act on these to protect or unlock your pipeline.</strong>
   </div>
   <div class="impact-grid" id="impactGrid"></div>
 </div>
 
-<!-- ══ CLIENT TABLE ══ -->
+<!-- ══ DEAL TRACKER TABLE ══ -->
 <div class="tbl-sec">
   <div class="tbl-head-row">
-    <div class="tbl-title">Top Client Relationships</div>
-    <input class="tsearch" id="tsearch" placeholder="🔍 Search client…" oninput="filterTbl()">
-    <div class="cc-badge" id="tbl-badge">FY 2025 · By AUM</div>
+    <div class="tbl-title">Active Deal Tracker</div>
+    <input class="tsearch" id="tsearch" placeholder="🔍 Search deal / company…" oninput="filterTbl()">
+    <div class="cc-badge" id="tbl-badge">FY 2025 · By Deal Value</div>
   </div>
   <div class="tbl-scroll">
     <table>
       <thead><tr>
         <th onclick="sortTbl(0)"># ↕</th>
-        <th onclick="sortTbl(1)">Client Profile ↕</th>
-        <th onclick="sortTbl(2)">Segment ↕</th>
-        <th onclick="sortTbl(3)">AUM (USD M) ↕</th>
-        <th onclick="sortTbl(4)">Return % ↕</th>
-        <th onclick="sortTbl(5)">NNM (USD M) ↕</th>
-        <th onclick="sortTbl(6)">Sharpe ↕</th>
-        <th onclick="sortTbl(7)">Domicile ↕</th>
-        <th onclick="sortTbl(8)">Status ↕</th>
+        <th onclick="sortTbl(1)">Company ↕</th>
+        <th onclick="sortTbl(2)">Sector ↕</th>
+        <th onclick="sortTbl(3)">Deal Value (SAR M) ↕</th>
+        <th onclick="sortTbl(4)">Win Prob % ↕</th>
+        <th onclick="sortTbl(5)">Weighted Value ↕</th>
+        <th onclick="sortTbl(6)">Age (Days) ↕</th>
+        <th onclick="sortTbl(7)">BD Owner ↕</th>
+        <th onclick="sortTbl(8)">Stage ↕</th>
       </tr></thead>
       <tbody id="tblBody"></tbody>
     </table>
@@ -511,8 +511,8 @@ footer{background:var(--ink2);border-top:1px solid var(--b1);padding:22px 28px;t
   <div class="ftr-brand">✦ Powered by Om Bagal Analytics</div>
   <div class="ftr-div"></div>
   <div class="ftr-sub">
-    Wealth Management Intelligence · Qasr Capital · DIFC, Dubai ·
-    Data modelled on DIFC, Leading UAE Asset Manager, SHUAA Capital benchmarks ·
+    B2B Sales Pipeline Intelligence · Al Morshed BD Intel · Riyadh, Saudi Arabia ·
+    Data modelled on Saudi banking, insurance & corporate B2B benchmarks ·
     Built by <a href="mailto:ombagal.official@gmail.com">ombagal.official@gmail.com</a> ·
     <a href="https://linkedin.com/in/ombagal-analytics" target="_blank">LinkedIn</a> ·
     <a href="https://wa.me/919987258696" target="_blank">+91 99872 58696</a>
@@ -526,171 +526,171 @@ footer{background:var(--ink2);border-top:1px solid var(--b1);padding:22px 28px;t
 //   ALL DATA
 // ══════════════════════════════════════════════════════════════════
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const ASSET_CLASSES=['Equities','Fixed Income','Alternatives','Real Estate','Cash & Other'];
-const REGIONS=['UAE','Saudi Arabia','Europe','USA','India','Other GCC'];
+const ASSET_CLASSES=['Banking','Insurance','Corporate Svcs','Govt & Semi-Govt'];
+const REGIONS=['Riyadh','Jeddah','Dammam','Dhahran','Khobar','Kuwait City'];
 
-// AUM by quarter (USD B) — 8 quarters: Q1 2024 … Q4 2025
+// Pipeline value by quarter (SAR M) — 8 quarters: Q1 2024 … Q4 2025
 const AUM_QUARTERS={
   labels:['Q1 24','Q2 24','Q3 24','Q4 24','Q1 25','Q2 25','Q3 25','Q4 25','Q1 26E'],
-  data:   [14.2,   14.9,   15.4,   16.0,   16.6,   17.1,   17.7,   18.4,   19.1],
+  data:   [28.4,   31.2,   35.8,   38.6,   41.2,   44.0,   46.5,   48.6,   52.1],
 };
 
 // Quarter-level data
 const Q_DATA={
   full:{
-    aum:18.4,ret:14.8,clients:1240,sharpe:1.82,retention:97.4,nnm:2100,
+    aum:48.6,ret:38,clients:34,sharpe:42,retention:91,nnm:18.4,
     label:'Full Year 2025',
-    alloc:[38,28,16,12,6],
-    retByAsset:[18.4,8.2,22.6,14.1,4.8],
-    nnmMonthly:[180,210,195,220,240,190,185,210,230,250,235,255], // inflows
-    nnmOut:    [82, 90, 78, 95, 88, 76, 80, 88, 92, 98, 85, 97],  // outflows
-    mret:      [0.9,1.1,1.3,1.2,1.0,0.8,0.8,0.9,1.1,1.3,1.4,1.6], // portfolio
-    bench:     [0.5,0.6,0.8,0.7,0.6,0.5,0.4,0.5,0.6,0.7,0.8,0.9], // benchmark
-    geo:[34,22,18,12,8,6],
-    seg:[54,32,14], // UHNW / HNW / Affluent by AUM %
-    badges:['📈 AUM +11.2% YoY','🏆 Sharpe: 1.82','💼 Net New Money: +$2.1B','✅ Retention: 97.4%'],
+    alloc:[42,28,20,10],
+    retByAsset:[41,35,38,29],
+    nnmMonthly:[2,3,2,3,4,3,3,4,4,5,4,5],
+    nnmOut:    [1,1,2,1,2,1,2,1,2,2,1,2],
+    mret:      [3,4,3,4,3,3,3,4,4,5,4,5],
+    bench:     [2,2,2,3,2,2,2,3,3,3,3,4],
+    geo:[38,24,16,12,6,4],
+    seg:[42,28,20,10],
+    badges:['📈 Pipeline +18.4% YoY','🏆 Win Rate: 38%','💼 Closed: SAR 18.4M','✅ Forecast Accuracy: 91%'],
     insights:[
-      {num:'01 · AUM Milestone',txt:'AUM crossed USD 18.4B in Q4 2025 — up 11.2% YoY. UHNW tier alone contributed 54% of total book, growing 13.6% on DIFC inflows.',act:'Double Relationship Manager capacity for UHNW tier in H1 2026.'},
-      {num:'02 · Equity Outperformance',txt:'Equity sleeve returned 18.4% net — 5.8pp above the MSCI EM benchmark. Gulf markets rally and tech allocation in US Growth funds drove the alpha.',act:'Raise equity weight from 38% to 42% in growth mandates for Q2 2026.'},
-      {num:'03 · Alternatives Engine',txt:'Alternatives (PE + Hedge) returned 22.6% — highest of any class. Allocation at just 16% is well below peer avg of 24% for UHNW mandates in DIFC.',act:'Propose alternatives step-up to 22% AUM for eligible UHNW clients in Q1 2026.'},
-      {num:'04 · UAE Domicile Dominance',txt:'34% of AUM is UAE-resident — largest single geography. Saudi inflows at 22% accelerated post-Vision 2030 listings and DIFC presence expansion.',act:'Open Saudi-dedicated RM desk. Target 28% KSA AUM share by FY 2026.'},
-      {num:'05 · Net New Money Quality',txt:'Net New Money of USD 2.1B is 89% from existing client wallet share — not just new client wins. Retention at 97.4% validates the advisory model.',act:'Launch structured referral programme in Q1 2026 to convert existing client networks.'},
-      {num:'06 · Fixed Income Lag',txt:'Fixed income returned 8.2% — below target of 9.5% due to delayed duration positioning in H1 2025. Benchmark duration misfit cost ~110bps.',act:'Restructure IG bond ladder to 6–8yr duration by Q2 2026. Add sukuk allocation to 8%.'},
+      {num:'01 · Pipeline Milestone',txt:'Total pipeline crossed SAR 48.6M in Q4 2025 — up 18.4% YoY. Banking sector alone contributed 42% of total pipeline value, with Al Rajhi and SABB deals anchoring Q3–Q4.',act:'Double outreach to CFO/COO level in Banking sector in H1 2026 — highest value, highest close rate.'},
+      {num:'02 · Win Rate Leadership',txt:'FY 2025 win rate of 38% outperforms Saudi B2B BD peer average of 29%. Deals entering negotiation stage converted at 74% — indicating proposal quality is strong.',act:'Standardise the Q3 proposal format that drove the 74% conversion as the default template.'},
+      {num:'03 · Insurance Velocity',txt:'Insurance deals closed in an average of 36 days — 6 days faster than banking (42 days). Tawuniya and Bupa Arabia moved fastest from proposal to signed contract.',act:'Prioritise insurance pipeline as the fastest-to-close sector; front-load Q1 2026 proposals here.'},
+      {num:'04 · Riyadh Concentration',txt:'38% of pipeline value is Riyadh-based — largest single geography. Jeddah at 24% accelerated post-Vision 2030 corporate expansions and new HQ relocations.',act:'Open Jeddah outreach programme targeting corporate services sector — 3 warm intros available.'},
+      {num:'05 · Deal Aging Problem',txt:'7 of 34 active deals are over 60 days old with no stage movement — representing SAR 8.2M in stalled pipeline. These are at highest risk of ghosting or loss.',act:'Schedule a 15-minute "deal pulse" call on every deal aged 45+ days within the next 48 hours.'},
+      {num:'06 · Forecast Accuracy Strength',txt:'Forecast accuracy of 91% means pipeline data is reliable. Only 9% of predicted closings missed the quarter — vs industry average of 22% miss rate for B2B BD teams.',act:'Formalise the forecasting method as a replicable weekly review process for 2026.'},
     ],
     impact:[
-      {type:'risk',icon:'⚠️',title:'Fixed Income Underperformance',detail:'Duration misfit in H1 2025 cost ~110bps vs target. At USD 5.15B fixed income AUM, this equates to an estimated USD 56M in foregone returns annually.',fix:'Restructure bond ladder to 6–8yr duration + add sukuk. Estimated recovery: +90–120bps within 2 quarters.',recovery:'+USD 46–62M annual return uplift · Timeline: 60–90 days'},
-      {type:'risk',icon:'📉',title:'Alternatives Underallocation',detail:'At 16% allocation vs 24% DIFC peer avg, Qasr Capital is leaving significant alpha on the table. Based on 22.6% Alts return, each 1% AUM shift = ~USD 184M additional annual return potential.',fix:'Step up alternatives to 22% for eligible UHNW mandates (USD 9.9B tier). Prioritise PE co-investments.',recovery:'+USD 1.1–1.4B AUM in Alts sleeve · +1.5–2.1pp total portfolio return uplift'},
-      {type:'opp',icon:'🇸🇦',title:'Saudi Arabia Wallet Gap',detail:'KSA clients = 22% of AUM but Saudi-focused product suite is nascent. Vision 2030 listings and Aramco dividends represent an estimated USD 800M+ in un-captured redeployment mandates.',fix:'Dedicate a Saudi RM desk in DIFC. Launch Vision 2030–aligned equity model portfolio for KSA clients.',recovery:'+USD 300–500M NNM from KSA in 12 months · Target KSA AUM share 28% by FY 2026'},
-      {type:'opp',icon:'👥',title:'UHNW Referral Revenue Gap',detail:'97.4% retention but only 11% of NNM comes from client referrals. Each UHNW referral converts at USD 42M avg AUM. With 352 UHNW clients, even a 5% referral rate = 18 new clients annually.',fix:'Launch structured referral programme with relationship incentives. Assign senior RMs as referral champions.',recovery:'+USD 756M potential NNM annually from referrals alone · Cost: minimal vs upside'},
+      {type:'risk',icon:'⚠️',title:'SAR 8.2M Stalled Pipeline',detail:'7 deals aged 60+ days with zero stage movement. At historical drop rate of 65% for deals stalled this long, SAR 5.3M is at direct risk of being lost within 30 days if no action is taken.',fix:'Call every deal aged 45+ days within 48 hours. If no response in 5 days, re-engage via a different contact at the same company.',recovery:'Recover est. SAR 3–5M by reactivating 3–4 stalled deals · Timeline: 2 weeks'},
+      {type:'risk',icon:'📉',title:'Banking Deals Concentrated in 2 Accounts',detail:'42% of pipeline is banking, but 68% of that value sits in just Al Rajhi and SABB. If either deal slips to next quarter, total FY pipeline drops by SAR 13.9M — a single-quarter miss.',fix:'Diversify banking pipeline immediately. Target Riyad Bank, Banque Saudi Fransi, and Arab National Bank in parallel.',recovery:'Reduce concentration risk · Add SAR 4–6M in backup banking pipeline within 60 days'},
+      {type:'opp',icon:'🏢',title:'Corporate Services Underweight',detail:'Corporate services is 20% of pipeline but closes 12% faster than banking and at 6pp higher win rate. The sector is under-prospected — only 6 companies targeted vs a TAM of 120+ eligible firms.',fix:'Build a dedicated Corporate Services outreach list of 30 firms in Riyadh + Jeddah. Launch in Q1 2026.',recovery:'+SAR 5–8M incremental pipeline in 90 days · Fastest-closing, highest-probability sector'},
+      {type:'opp',icon:'🤝',title:'Referral Pipeline Untapped',detail:'Zero deals in FY 2025 originated from client referrals, despite 12 closed clients who are active in KSA B2B networks. At SAR 2.1M avg deal size, 3 referrals = SAR 6.3M pipeline.',fix:'Ask your 3 most satisfied closed clients for 2 introductions each. Frame it as a 5-minute favour, not a formal request.',recovery:'+SAR 4–7M referred pipeline in 30 days · Zero outreach cost · Highest win rate channel'},
     ],
   },
   q1:{
-    aum:16.6,ret:3.6,clients:1148,sharpe:1.71,retention:97.1,nnm:480,
+    aum:41.2,ret:34,clients:26,sharpe:46,retention:88,nnm:14.2,
     label:'Q1 2025',
-    alloc:[36,30,15,13,6],
-    retByAsset:[4.2,2.1,5.6,3.4,1.1],
-    nnmMonthly:[180,210,195,null,null,null,null,null,null,null,null,null],
-    nnmOut:    [82, 90, 78, null,null,null,null,null,null,null,null,null],
-    mret:      [0.9,1.1,1.3,null,null,null,null,null,null,null,null,null],
-    bench:     [0.5,0.6,0.8,null,null,null,null,null,null,null,null,null],
-    geo:[32,21,19,13,9,6],
-    seg:[52,33,15],
-    badges:['📈 AUM +3.8% QoQ','🏆 Sharpe: 1.71','💼 NNM: +$480M','✅ Retention: 97.1%'],
+    alloc:[40,30,20,10],
+    retByAsset:[36,32,34,26],
+    nnmMonthly:[2,3,2,null,null,null,null,null,null,null,null,null],
+    nnmOut:    [1,1,2,null,null,null,null,null,null,null,null,null],
+    mret:      [3,4,3,null,null,null,null,null,null,null,null,null],
+    bench:     [2,2,2,null,null,null,null,null,null,null,null,null],
+    geo:[36,22,18,14,6,4],
+    seg:[40,30,20,10],
+    badges:['📈 Pipeline +8.4% QoQ','🏆 Win Rate: 34%','💼 Closed: SAR 14.2M','📋 26 Active Deals'],
     insights:[
-      {num:'01 · Q1 Momentum',txt:'AUM opened Q1 2025 at USD 16.6B — strong carry-in from Q4 2024. Equity markets rallied globally, lifting the portfolio 4.2% net in equities alone.',act:'Lock in equity gains via selective rebalancing into alternatives in Q2.'},
-      {num:'02 · NNM Seasonality',txt:'Q1 traditionally shows highest inflow seasonality (+$480M) as UHNW clients rebalance post year-end. March is the single strongest month for new mandates.',act:'Front-load RM outreach and proposals in Feb–Mar for each calendar year.'},
-      {num:'03 · Fixed Income Positioning',txt:'Fixed income at 30% allocation — slightly overweight. Sukuk allocations outperformed sovereign bonds by 62bps as GCC rates held stable in Q1.',act:'Trim fixed income to 28% and rotate proceeds into alternatives by Q2.'},
-      {num:'04 · UAE Market Strength',txt:'UAE equities (DFM + ADX) rose 6.8% in Q1. Clients with domestic equity tilt outperformed blended benchmark by 180bps in the quarter.',act:'Build a UAE-focused equity model portfolio for mid-market HNW clients in Q2.'},
-      {num:'05 · New Client Onboarding',txt:'Q1 net client additions: +22. Average onboarding AUM: USD 8.4M per client. DIFC walk-in and referral channels accounted for 68% of new mandates.',act:'Extend DIFC office hours to evenings — highest footfall window for new client meetings.'},
-      {num:'06 · Risk Metrics Stable',txt:'Sharpe of 1.71 is above the DIFC peer median of 1.58 for Q1. Portfolio max drawdown held at -2.1% despite January global volatility episode.',act:'Stress-test all mandates for a -15% equity correction scenario before Q2 rebalance.'},
+      {num:'01 · Q1 Pipeline Open',txt:'Q1 2025 opened with SAR 41.2M total pipeline — strong carry from Q4 2024. Banking sector dominated with Al Rajhi RFP and SABB advisory mandate entering negotiation stage.',act:'Lock in Al Rajhi and SABB timelines before end of March — avoid Q2 slippage.'},
+      {num:'02 · Proposal Hit Rate',txt:'Q1 proposals sent: 9. Proposals that advanced to negotiation: 5. Hit rate of 56% — above the 45% Q4 2024 baseline. Strong first quarter performance trend.',act:'Review what made the 5 successful proposals different and standardise those elements.'},
+      {num:'03 · Insurance Sector Warm',txt:'Tawuniya responded positively to the Q1 proposal within 8 days — fastest response time in the quarter. Bupa Arabia had initial discovery call in March.',act:'Prioritise Tawuniya follow-up in April. Bupa Arabia is primed for a formal proposal by Q2.'},
+      {num:'04 · Deal Velocity Slower',txt:'Average deal velocity in Q1: 46 days — 4 days slower than Q4 2024. Ramadan scheduling and January budget-freeze cycles at large corporates delayed decision timelines.',act:'Front-load outreach in January and March; treat February as a relationship-building month only.'},
+      {num:'05 · Riyadh Anchor Deals',txt:'5 of the 6 highest-value deals are Riyadh-based. Regional diversity is low in Q1. Jeddah pipeline value dropped 18% vs Q4 2024.',act:'Schedule a dedicated Jeddah prospecting trip in Q2 — target corporate services sector.'},
+      {num:'06 · Forecast Baseline',txt:'Q1 closed SAR 14.2M against a SAR 15M target — 94.7% of target. One deal slipped to Q2. Forecast accuracy held at 88%.',act:'Identify the slipped Q2 deal and accelerate its closing timeline to avoid a second quarter slip.'},
     ],
     impact:[
-      {type:'risk',icon:'⚖️',title:'Fixed Income Overweight',detail:'At 30% allocation, fixed income is 2pp above target. On a USD 16.6B AUM base, this represents USD 332M deployed sub-optimally vs alternatives that returned 5.6% in Q1.',fix:'Trim fixed income to 28% and rotate USD 332M proceeds into alternatives in Q2.',recovery:'+USD 8–12M incremental Q2 return · Sharpe improvement est. +0.04–0.06'},
-      {type:'opp',icon:'🏙️',title:'UAE Equity Alpha Uncaptured',detail:'UAE equities rose 6.8% in Q1 but not all HNW clients have a domestic equity tilt. Clients with UAE exposure outperformed by 180bps — a gap affecting ~USD 5.3B HNW book.',fix:'Build a UAE-focused equity model portfolio and roll out to mid-market HNW clients in Q2.',recovery:'+USD 95M potential additional return on HNW book if UAE model adopted at 50% penetration'},
-      {type:'opp',icon:'📅',title:'Seasonal Inflow Not Maximised',detail:'March is the strongest NNM month but RM outreach traditionally starts in March itself. Pre-Q1 pipeline preparation is missing, costing an estimated 1–2 additional UHNW mandates per year.',fix:'Front-load RM outreach to Feb. Pre-book Q1 proposal slots in January for year-end UHNW clients.',recovery:'+USD 80–120M NNM uplift per year · Requires zero incremental headcount'},
-      {type:'risk',icon:'⚡',title:'RM Capacity Constraint',detail:'DIFC walk-ins account for 68% of new mandates but office hours limit evening appointments. Estimated 8–12 prospect meetings per month lost due to capacity — at avg USD 8.4M/client AUM.',fix:'Extend DIFC office hours to 8pm on weekdays. Add 1 evening RM rotation per week.',recovery:'+2–4 new client mandates per quarter · Est. +USD 25–50M AUM in 90 days'},
+      {type:'risk',icon:'⚖️',title:'Ramadan Delay Structural Risk',detail:'February–March Ramadan window slowed 4 deals by an average of 12 days each. On SAR 18M in affected pipeline, this delay cost an estimated SAR 2.1M in Q1 closure timing.',fix:'Pre-schedule all Q1 proposal submissions before February 15. Reserve March for follow-up and closing only.',recovery:'Recover est. SAR 1.5–2M in Q1 timing · No cost · Requires calendar discipline only'},
+      {type:'opp',icon:'🏙️',title:'Jeddah Pipeline Gap',detail:'Jeddah represents only 18% of Q1 pipeline vs a 28% long-term target. Post-Vision 2030 corporate HQ relocations to Jeddah create a 6-month window of high receptivity for B2B services.',fix:'Dedicate one Q2 week to Jeddah prospecting. Target 8 new first meetings in corporate services sector.',recovery:'+SAR 3–5M Jeddah pipeline by Q2 · 3 warm introductions already available via network'},
+      {type:'opp',icon:'📅',title:'Budget Season Window',detail:'January is the first month of corporate fiscal years for most Saudi banking and insurance clients. BD outreach in January hits decision-makers at peak budget allocation phase.',fix:'Launch a dedicated January outreach campaign targeting CFOs and COOs with budget-timing messaging.',recovery:'+SAR 2–4M in earlier-stage pipeline seeded · Sets up Q2–Q3 conversion pipeline'},
+      {type:'risk',icon:'⚡',title:'Single-Deal Concentration',detail:'Al Rajhi deal alone represents SAR 7.8M — 19% of Q1 pipeline. If this deal stalls, Q1 miss is guaranteed. No backup deal of comparable size exists to offset.',fix:'Build a parallel Al Rajhi contact relationship at VP level as a second internal champion.',recovery:'Protect SAR 7.8M deal · Reduce single-point-of-failure risk · 48-hour action required'},
     ],
   },
   q2:{
-    aum:17.1,ret:3.2,clients:1178,sharpe:1.75,retention:97.2,nnm:490,
+    aum:44.0,ret:36,clients:29,sharpe:44,retention:89,nnm:15.8,
     label:'Q2 2025',
-    alloc:[38,27,16,13,6],
-    retByAsset:[3.8,2.0,5.2,3.7,1.0],
-    nnmMonthly:[null,null,null,220,240,190,null,null,null,null,null,null],
-    nnmOut:    [null,null,null,95, 88, 76, null,null,null,null,null,null],
-    mret:      [null,null,null,1.2,1.0,0.8,null,null,null,null,null,null],
-    bench:     [null,null,null,0.7,0.6,0.5,null,null,null,null,null,null],
-    geo:[33,22,18,12,9,6],
-    seg:[53,32,15],
-    badges:['📈 AUM +3.0% QoQ','🏆 Sharpe: 1.75','💼 NNM: +$490M','🌍 Saudi Inflows +14%'],
+    alloc:[41,28,21,10],
+    retByAsset:[38,33,36,28],
+    nnmMonthly:[null,null,null,3,4,3,null,null,null,null,null,null],
+    nnmOut:    [null,null,null,1,2,1,null,null,null,null,null,null],
+    mret:      [null,null,null,4,3,3,null,null,null,null,null,null],
+    bench:     [null,null,null,3,2,2,null,null,null,null,null,null],
+    geo:[37,23,17,13,6,4],
+    seg:[41,28,21,10],
+    badges:['📈 Pipeline +6.8% QoQ','🏆 Win Rate: 36%','💼 Closed: SAR 15.8M','🌍 Jeddah Deals +14%'],
     insights:[
-      {num:'01 · Q2 Steady Growth',txt:'AUM grew to USD 17.1B in Q2, driven by strong performance and USD 490M net new money. Saudi Aramco dividend season boosted KSA inflows by 14% QoQ.',act:'Create a targeted Saudi UHNW product suite ahead of Q3 Vision 2030 announcements.'},
-      {num:'02 · Alternatives Scaling',txt:'Alternatives returned 5.2% in Q2 — PE co-investments in UAE tech and logistics led performance. Pipeline of 3 new deal closings expected in Q3.',act:'Accelerate due diligence on Q3 PE deals to secure allocation before Q4 lock-up periods.'},
-      {num:'03 · Real Estate Allocation',txt:'DIFC and Downtown Dubai-linked REIT positions returned 3.7% in Q2. Tourism and hospitality recovery drove occupancy rates above pre-2020 levels.',act:'Increase UAE REIT weight from 13% to 15% in balanced mandates for eligible clients.'},
-      {num:'04 · June Slowdown',txt:'June NNM was softest of the quarter at $190M — Eid travel and regional summer slowdown. Consistent pattern across 2023–2025 suggests structural seasonality.',act:'Run digital advisory campaigns in Ramadan–Eid window to maintain engagement during travel season.'},
-      {num:'05 · HNW Tier Expansion',txt:'HNW (USD 5M–50M) segment grew by +18 clients in Q2, the fastest-growing tier by client count. Average ticket size: USD 12.8M per new relationship.',act:'Hire 2 dedicated HNW RMs in DIFC to absorb pipeline — currently 34 clients per RM vs target of 28.'},
-      {num:'06 · Benchmark Spread',txt:'Q2 blended net return of 3.2% vs benchmark 1.8% — alpha of +1.4pp. Strongest alpha driver: alternatives overweight vs GCC peer median of 12%.',act:'Publish Q2 performance attribution report to all clients — transparency drives retention.'},
+      {num:'01 · Q2 Steady Growth',txt:'Pipeline grew to SAR 44.0M in Q2 — driven by SAR 15.8M in closings and strong new pipeline generation. Jeddah deals increased 14% QoQ as corporate services expansion kicks in.',act:'Create a targeted Jeddah corporate pitch deck before Q3 to capitalise on the momentum.'},
+      {num:'02 · Insurance Acceleration',txt:'Tawuniya signed in Q2 — SAR 3.2M deal, closed in 34 days from proposal. Bupa Arabia moved to negotiation stage. Insurance sector becoming the fastest-converting sector.',act:'Accelerate due diligence on Bupa Arabia — target Q3 close to maintain insurance momentum.'},
+      {num:'03 · Proposal Volume Up',txt:'Q2 proposals sent: 12 — highest quarterly volume. Conversion to negotiation: 58%. Quality and quantity both improved from Q1 indicating BD process maturity.',act:'Maintain 10+ proposals per quarter as the baseline standard for 2026 planning.'},
+      {num:'04 · June Pipeline Softness',txt:'June new pipeline generation was weakest of the quarter — corporate budget reviews and summer scheduling slowed decision-making at 4 prospect companies.',act:'Run digital outreach campaigns (LinkedIn + WhatsApp) during summer slowdown to maintain top-of-mind.'},
+      {num:'05 · Corporate Services Growth',txt:'Corporate services pipeline grew to 21% of total — up from 20% in Q1. 3 new companies entered pipeline, average deal size SAR 1.8M.',act:'Hire or partner with a Corporate Services specialist to accelerate this sector in H2.'},
+      {num:'06 · Win Rate Improvement',txt:'Q2 win rate 36% vs Q1 34% — positive trend. Strongest improvement in Insurance sector (+8pp). Weakest: Govt & Semi-Govt at 22% win rate.',act:'Analyse the 2 lost Govt deals — common objection patterns to fix for Q3 re-engagement.'},
     ],
     impact:[
-      {type:'opp',icon:'🇸🇦',title:'KSA Aramco Dividend Season Missed',detail:'Saudi Aramco dividend season drove KSA inflows +14% QoQ, yet no dedicated Saudi product was available. Est. USD 120–180M in KSA capital is being held in cash pending reinvestment guidance.',fix:'Launch a Vision 2030 equity model portfolio before Q3. Route KSA dividend inflows directly into it.',recovery:'+USD 120–180M AUM capture in Q3 · Target KSA share from 22% → 25% by year-end'},
-      {type:'risk',icon:'☀️',title:'June Slowdown Structural Gap',detail:'June NNM at $190M — 21% below the Q2 monthly average. Pattern is consistent across 3 years. This translates to ~USD 40–60M in NNM left unrealised each June.',fix:'Run targeted digital advisory campaigns during Ramadan–Eid travel window. Schedule virtual reviews.',recovery:'+USD 35–55M incremental June NNM · No RM travel cost required'},
-      {type:'risk',icon:'👥',title:'HNW RM Overload',detail:'34 clients per RM vs target of 28 in HNW tier. +18 clients added in Q2 without RM headcount increase. Overloaded RMs typically show 12–18% higher churn in their books within 2 quarters.',fix:'Hire 2 dedicated HNW RMs in DIFC immediately. Redistribute book to 28 clients per RM.',recovery:'Prevent est. USD 200–280M AUM churn risk · Each RM hire ROI: 8–12x within 12 months'},
-      {type:'opp',icon:'🏢',title:'Dubai REIT Weight Below Optimal',detail:'UAE REIT positions returned 3.7% in Q2 — solid risk-adjusted return — yet allocation sits at 13%. DIFC commercial vacancy is at 5-year lows. Opportunity window is time-sensitive.',fix:'Increase UAE REIT weight from 13% to 15% in balanced mandates for eligible clients.',recovery:'+USD 332M additional REIT exposure · Est. +0.2pp portfolio return per quarter at current yields'},
+      {type:'opp',icon:'🇸🇦',title:'Bupa Arabia — Imminent Close',detail:'Bupa Arabia deal is in negotiation stage at SAR 4.1M — the single largest deal in Q2 pipeline. At current pace it closes in Q3, but June summer delays risk pushing it to Q4.',fix:'Escalate to Bupa Arabia senior contact before June 30. Offer an August signing date with July prep.',recovery:'Lock SAR 4.1M in Q3 · Every 30-day delay = 1 quarter of revenue lost'},
+      {type:'risk',icon:'☀️',title:'June–August Pipeline Gap',detail:'June NNM generation dropped 31% below Q2 average. Pattern consistent with 2024 data. If Q3 opens with low pipeline, Q3 closings will be weak regardless of BD effort.',fix:'Pre-seed Q3 pipeline in May by running 15 first-meeting outreaches before June 15.',recovery:'+SAR 4–6M Q3 pipeline seeded in advance · No summer gap in closings'},
+      {type:'risk',icon:'👥',title:'Govt Sector Win Rate Critical',detail:'Government & Semi-Govt win rate of 22% — 16pp below Banking. Two lost deals had a common objection: "We need local presence." This is a positioning gap, not a product gap.',fix:'Add a "Saudi-first" positioning statement to all Govt proposals. Reference Vision 2030 alignment explicitly.',recovery:'Improve Govt win rate from 22% to 32% · Est. +SAR 2M annually on current Govt pipeline'},
+      {type:'opp',icon:'🏢',title:'Corporate Referral from Tawuniya',detail:'Tawuniya signed in Q2 and has expressed satisfaction. Their CFO sits on 2 other corporate boards. A warm referral from him could unlock SAR 3–5M in new pipeline at zero acquisition cost.',fix:'Request a 30-minute thank-you meeting with Tawuniya CFO. Ask for 2 introductions at the end.',recovery:'+SAR 2–4M referred pipeline in 30 days · Highest-quality lead source available'},
     ],
   },
   q3:{
-    aum:17.7,ret:3.5,clients:1210,sharpe:1.78,retention:97.3,nnm:510,
+    aum:46.5,ret:37,clients:31,sharpe:43,retention:90,nnm:16.9,
     label:'Q3 2025',
-    alloc:[39,27,17,12,5],
-    retByAsset:[4.1,2.0,5.8,3.5,1.1],
-    nnmMonthly:[null,null,null,null,null,null,185,210,230,null,null,null],
-    nnmOut:    [null,null,null,null,null,null,80, 88, 92, null,null,null],
-    mret:      [null,null,null,null,null,null,0.8,0.9,1.1,null,null,null],
-    bench:     [null,null,null,null,null,null,0.4,0.5,0.6,null,null,null],
-    geo:[34,22,18,12,8,6],
-    seg:[54,32,14],
-    badges:['📈 AUM +3.5% QoQ','🏆 Sharpe: 1.78','💼 NNM: +$510M','⚡ Alts: Best Quarter'],
+    alloc:[42,27,21,10],
+    retByAsset:[39,34,37,28],
+    nnmMonthly:[null,null,null,null,null,null,3,4,4,null,null,null],
+    nnmOut:    [null,null,null,null,null,null,2,1,2,null,null,null],
+    mret:      [null,null,null,null,null,null,3,4,4,null,null,null],
+    bench:     [null,null,null,null,null,null,2,3,3,null,null,null],
+    geo:[38,23,17,12,6,4],
+    seg:[42,27,21,10],
+    badges:['📈 Pipeline +5.7% QoQ','🏆 Win Rate: 37%','💼 Closed: SAR 16.9M','⚡ Insurance: Best Quarter'],
     insights:[
-      {num:'01 · Q3 Recovery',txt:'Q3 typically soft due to summer, yet AUM grew $600M QoQ. Return came in at 3.5% — above Q2 — driven by strong September as clients returned from summer.',act:'Use Aug for mandates review; September for high-value rebalancing and new proposals.'},
-      {num:'02 · Alternatives Peak',txt:'Alternatives returned 5.8% — highest single-quarter result. A PE exit in UAE logistics generated a 2.8x return, directly lifting portfolio alpha for Q3.',act:'Report PE exit performance to clients as a case study — use for new UHNW acquisition in Q4.'},
-      {num:'03 · Equity Rebalance',txt:'Equity allocation inched up to 39% as markets rallied post-August. US tech exposure added 68bps of return while GCC value plays lagged by 30bps.',act:'Trim US tech weight in growth mandates — valuations stretched at 28x forward P/E.'},
-      {num:'04 · Client Growth Pace',txt:'+32 net new clients in Q3 — highest quarterly addition. Average AUM per new client: USD 9.2M. Major driver: DIFC event sponsorships and RM networking.',act:'Scale DIFC event calendar for Q4 — the busiest season for UHNW deal closings.'},
-      {num:'05 · Real Estate Softness',txt:'Real estate returned 3.5% — slightly below Q2. Residential REIT cap rates compressed. Commercial DIFC-linked assets remain the strongest subsegment.',act:'Pivot real estate sleeve towards DIFC commercial and hospitality REITs for Q4.'},
-      {num:'06 · September Surge',txt:'September saw USD 230M in inflows — 24% of Q3 total in one month. Year-end planning season begins; UHNW clients reinvesting post-summer dividend receipts.',act:'Deploy full RM team for September client meetings; set annual review targets for Q4 completion.'},
+      {num:'01 · Q3 Recovery',txt:'Q3 typically soft due to summer, yet pipeline grew SAR 2.5M QoQ. September was the standout month — clients returned from summer with budget decisions ready to finalise.',act:'Maximise September BD bandwidth. Every senior meeting in September is worth 2x a June meeting.'},
+      {num:'02 · Bupa Arabia Closed',txt:'Bupa Arabia signed in Q3 — SAR 4.1M, closed in 38 days from negotiation stage. Largest single deal of the year. Insurance sector delivered its best quarter in Q3.',act:'Use Bupa Arabia case study in all Q4 Insurance proposals — real proof of delivery.'},
+      {num:'03 · Banking Pipeline Rebuilt',txt:'Riyad Bank and Arab National Bank entered pipeline in Q3 after Q2 outreach. Both are in proposal stage. Diversification of banking pipeline now achieved.',act:'Prioritise Riyad Bank — their procurement cycle closes in October. Target Q4 signing.'},
+      {num:'04 · Client Growth Pace',txt:'+5 net new deals entered pipeline in Q3 — consistent pace. Average deal value: SAR 1.9M per new entry. SABB advisory mandate moved to closing stage.',act:'SABB is in closing — finalise contract terms within 10 days to avoid year-end procurement freeze.'},
+      {num:'05 · Deal Aging Improved',txt:'Average deal age dropped to 43 days — improvement from 46 days in Q1. Disciplined follow-up cadence and stage-gate process implemented in Q2 showing results.',act:'Maintain the weekly deal review process through Q4 — do not let year-end distraction slow cadence.'},
+      {num:'06 · September Surge',txt:'September saw 4 deal closings — highest single-month count. Year-end budget decisions and post-summer urgency converged. ACWA Power corporate services deal signed.',act:'Build September 2026 into a dedicated deal sprint from day 1 — pre-book all meetings in August.'},
     ],
     impact:[
-      {type:'opp',icon:'🏆',title:'PE Exit — Replication Opportunity',detail:'The UAE logistics PE exit generated a 2.8x return in Q3, directly boosting alpha. No systematic process exists to replicate this. Currently only 3 of 15 UHNW clients have PE co-investment exposure.',fix:'Create a PE co-investment access programme for all eligible UHNW clients. Pre-identify Q4 deal pipeline.',recovery:'+USD 180–240M into PE co-investments · Est. 2–3x return potential over 3–5yr hold'},
-      {type:'risk',icon:'📊',title:'US Tech Valuation Risk',detail:'US tech exposure added 68bps in Q3 but now trades at 28x forward P/E — historically stretched. This position represents an est. USD 900M across growth mandates. Drawdown risk is asymmetric.',fix:'Trim US tech weight by 3–4% in growth mandates. Rotate into GCC value and Alts.',recovery:'Prevent est. USD 40–70M mark-to-market risk · Rebalancing cost: ~18bps in transaction fees'},
-      {type:'opp',icon:'📅',title:'Q4 Pipeline Pre-Commitment',detail:'34 mandates under execution heading into Q4 at 74% conversion rate. If pipeline matures in Q4, this = USD 608M AUM. But delayed RM assignment risks pipeline slippage to Q1 2026.',fix:'Assign senior RMs to top 12 pipeline mandates by October. Pre-book all client meetings before December.',recovery:'+USD 450–610M AUM inflow in Q4 · Every week of delay = ~USD 20–30M NNM slippage risk'},
-      {type:'risk',icon:'🏢',title:'DIFC Real Estate Subsector Drift',detail:'Residential REIT cap rate compression reduced Q3 real estate return. Yet no mandate-level reallocation was done within the real estate sleeve. Estimated cost: 30–40bps vs commercial REIT benchmark.',fix:'Pivot real estate sleeve to DIFC commercial + hospitality REITs. Exit underperforming residential.',recovery:'+0.3–0.4pp Q4 real estate return · Estimated uplift on USD 2.1B RE sleeve: USD 6–8M'},
+      {type:'opp',icon:'🏆',title:'SABB Closing — Pipeline Anchor',detail:'SABB advisory mandate at SAR 5.4M is in closing stage — the largest single deal entering Q4. At 74% historical closing rate for deals at this stage, expected value is SAR 4.0M.',fix:'Finalise contract terms with SABB legal team within 10 days. Offer a phased implementation to remove their last objection.',recovery:'Lock SAR 5.4M in Q4 · Sets new single-deal record · Anchor for Q4 targets'},
+      {type:'risk',icon:'📊',title:'Q4 Year-End Procurement Freeze',detail:'Saudi corporate procurement typically freezes in mid-December as budget cycles close. 6 deals currently in proposal/negotiation stage risk being pushed to Q1 2026 if not advanced by November 30.',fix:'Set a November 30 deadline for all active deals to reach negotiation stage. Escalate lagging deals in October.',recovery:'Protect est. SAR 9.2M in Q4 pipeline from slipping to Q1 · Critical 90-day window'},
+      {type:'opp',icon:'📅',title:'Q4 Pipeline Pre-Commitment',detail:'5 deals in proposal stage heading into Q4 at 58% conversion rate. If pipeline matures in Q4, this = SAR 7.1M ACV. But delayed BD follow-up risks slipping 2–3 deals to Q1 2026.',fix:'Assign a weekly review cadence to every proposal-stage deal. Set 7-day response SLAs for all prospect communications.',recovery:'+SAR 5–7M Q4 closings · Every week of delay = SAR 1–2M slippage risk'},
+      {type:'risk',icon:'🏢',title:'Corporate Services Sector Dependency',detail:'ACWA Power was the only Corporate Services close in Q3. Sector pipeline is thin — only 4 companies in active stages vs a 30-company TAM.',fix:'Launch Corporate Services outreach blitz in October — target 10 first meetings before end of November.',recovery:'+SAR 3–5M Corporate pipeline in Q4 · Fastest-closing, highest-margin sector'},
     ],
   },
   q4:{
-    aum:18.4,ret:4.1,clients:1240,sharpe:1.82,retention:97.4,nnm:620,
+    aum:48.6,ret:38,clients:34,sharpe:42,retention:91,nnm:18.4,
     label:'Q4 2025',
-    alloc:[38,28,16,12,6],
-    retByAsset:[5.2,2.1,5.9,3.9,1.3],
-    nnmMonthly:[null,null,null,null,null,null,null,null,null,250,235,255],
-    nnmOut:    [null,null,null,null,null,null,null,null,null,98, 85, 97],
-    mret:      [null,null,null,null,null,null,null,null,null,1.3,1.4,1.6],
-    bench:     [null,null,null,null,null,null,null,null,null,0.7,0.8,0.9],
-    geo:[35,23,17,12,7,6],
-    seg:[55,31,14],
-    badges:['📈 AUM +4.1% QoQ · Peak','🏆 Sharpe: 1.82 · Best Ever','💼 NNM: +$620M · Record','🎯 Year-End Target Exceeded'],
+    alloc:[42,28,20,10],
+    retByAsset:[41,35,38,29],
+    nnmMonthly:[null,null,null,null,null,null,null,null,null,5,4,5],
+    nnmOut:    [null,null,null,null,null,null,null,null,null,2,1,2],
+    mret:      [null,null,null,null,null,null,null,null,null,5,4,5],
+    bench:     [null,null,null,null,null,null,null,null,null,3,3,4],
+    geo:[38,24,16,12,6,4],
+    seg:[42,28,20,10],
+    badges:['📈 Pipeline +4.5% QoQ · Peak','🏆 Win Rate: 38% · Best Ever','💼 Closed: SAR 18.4M · Record','🎯 Year-End Target Exceeded'],
     insights:[
-      {num:'01 · Record Q4',txt:'Q4 2025 was the strongest quarter in Qasr Capital history — AUM +$700M, return 4.1%, NNM $620M. December alone contributed $255M in inflows — typical year-end repositioning.',act:'Mobilise full team for Q4 annual reviews by November — December is too late for mandates.'},
-      {num:'02 · December Dominance',txt:'December was the highest NNM month at $255M. UHNW clients reinvesting year-end bonuses and dividends drives a structural December surge consistent across 2022–2025.',act:'Reserve Dec for UHNW mandate expansions only. Pre-book RM calendars in October.'},
-      {num:'03 · Year-End Alpha',txt:'Q4 equity return of 5.2% net — driven by Gulf Year-End rally (DFM +9.4%, ADX +7.8%) and a tech position exit. Alternatives delivered 5.9% — PE year-end valuations boosted.',act:'Lock in Q4 gains early in January rebalance. Reduce equity to 36% in conservative mandates.'},
-      {num:'04 · UHNW Dominance',txt:'UHNW tier reached 55% of total AUM in Q4 — up from 52% in Q1. Net new UHNW clients: +8, but AUM added by existing UHNW wallet growth was $410M.',act:'Map UHNW client secondary wealth (businesses, trusts, family offices). Aim for full wallet capture.'},
-      {num:'05 · Sharpe Record',txt:'Annual Sharpe of 1.82 is the highest since firm inception. Max drawdown held at -2.4% for the full year — well within DIFC mandate risk limits of -10%.',act:'Publish annual risk-adjusted performance report to DFSA and use in 2026 client pitch decks.'},
-      {num:'06 · 2026 Pipeline Strong',txt:'Q4 closed with 34 mandates under execution — pipeline AUM of USD 820M entering 2026. Conversion rate at 74% vs peer median of 61% for DIFC wealth managers.',act:'Assign senior RMs to top 12 pipeline mandates. Target USD 1.2B Q1 2026 NNM.'},
+      {num:'01 · Record Q4',txt:'Q4 2025 was the strongest quarter in Al Morshed BD Intel history — SAR 18.4M closed, win rate 38%, 5 deals signed in December alone. SABB and Riyad Bank both closed in Q4.',act:'Mobilise full BD capacity for Q4 annual reviews in October — December is too late for new deals.'},
+      {num:'02 · December Dominance',txt:'December was the highest closing month at 5 deals — SAR 7.2M in a single month. Year-end budget spend and decision urgency drove a structural December surge.',act:'Reserve December for closing only. All new prospecting must happen in October–November.'},
+      {num:'03 · Year-End Deal Sprint',txt:'Q4 win rate of 41% — driven by deals that had been nurtured for 60+ days entering Q4 in advanced stages. The long nurture pipeline from Q2–Q3 paid off in Q4.',act:'Seed Q1 2026 pipeline in October–November — deals closed in Q1 2026 depend on Q4 outreach today.'},
+      {num:'04 · Banking Sector Peak',txt:'Banking sector reached 42% of total pipeline in Q4 — SABB (SAR 5.4M) and Riyad Bank (SAR 3.8M) both closed. Banque Saudi Fransi entered pipeline.',act:'Map Banking decision-maker contacts at 5 untapped banks for Q1 2026 outreach.'},
+      {num:'05 · Win Rate Record',txt:'Annual win rate of 38% is the highest since inception. Max deal slip rate held at 9% — well below industry B2B average of 22%. Strong pipeline discipline delivered.',act:'Publish annual BD performance summary — use in Q1 2026 prospect meetings as a credibility asset.'},
+      {num:'06 · 2026 Pipeline Strong',txt:'Q4 closed with 8 deals in proposal/negotiation stage — pipeline value of SAR 12.4M entering 2026. Conversion rate at 74% vs peer median of 58%.',act:'Assign senior focus to top 4 pipeline deals. Target SAR 20M Q1 2026 closings.'},
     ],
     impact:[
-      {type:'opp',icon:'🎯',title:'December Mandate Mobilisation',detail:'December is the highest NNM month at $255M, yet RM calendars are typically not fully pre-booked until late November. Estimated 4–6 UHNW appointments per RM missed each December.',fix:'Pre-book all December client meetings in October. Reserve December exclusively for UHNW expansions.',recovery:'+USD 80–120M incremental December NNM · At USD 55M avg UHNW AUM, 2 extra closings = +$110M'},
-      {type:'risk',icon:'📉',title:'Equity Gains Lock-In Gap',detail:'Q4 equity return of 5.2% (DFM +9.4%, ADX +7.8%). Historical pattern shows Jan reversion of 2–3% on Gulf markets. No systematic Jan rebalancing protocol exists across all mandates.',fix:'Execute equity rebalancing in first 10 days of January. Reduce equity to 36% in conservative mandates.',recovery:'Protect est. USD 180–280M unrealised gain against Q1 reversion · Zero cost to implement'},
-      {type:'opp',icon:'💼',title:'2026 Pipeline Conversion Acceleration',detail:'820M pipeline at 74% conversion = USD 606M expected AUM. But 26% slippage = USD 213M lost. Benchmark conversion leaders achieve 82–85% through structured senior RM assignment.',fix:'Assign top 4 senior RMs to highest 12 pipeline mandates by value. Daily pipeline tracking in January.',recovery:'+USD 60–80M incremental AUM from conversion uplift alone · 14-day intensive push model'},
-      {type:'opp',icon:'🌍',title:'Full Wallet Capture — UHNW',detail:'UHNW tier holds USD 9.9B with Qasr but average UHNW client holds 3.4 wealth relationships globally. Estimated USD 14–22B in UHNW client wealth sits outside Qasr Capital mandates.',fix:'Map all UHNW secondary wealth (trusts, family offices, business equity). Build consolidated balance sheet per client.',recovery:'+10–15% wallet share = USD 1.4–2.2B additional AUM · This is the single largest value unlock available'},
+      {type:'opp',icon:'🎯',title:'December Deal Sprint',detail:'December is the highest closing month but BD outreach typically does not ramp up until late November. Estimated 3–4 decision-maker meetings per rep missed each December due to late mobilisation.',fix:'Pre-book all December client meetings in October. Reserve December exclusively for deal closing, not prospecting.',recovery:'+SAR 3–5M incremental December closings · At SAR 2.1M avg deal size, 2 extra closings = +SAR 4.2M'},
+      {type:'risk',icon:'📉',title:'Q1 2026 Pipeline Seeding Gap',detail:'If Q4 is used only for closing and not for new pipeline seeding, Q1 2026 will open with an empty early-stage funnel. Historical data shows Q1 closings depend 80% on Q4 outreach.',fix:'Run parallel outreach in October–November targeting 20 new first-meeting targets for Q1 2026.',recovery:'Protect est. SAR 8–12M Q1 2026 pipeline · Zero cost · Requires time-blocking only'},
+      {type:'opp',icon:'💼',title:'2026 Pipeline Conversion Acceleration',detail:'SAR 12.4M pipeline at 74% conversion = SAR 9.2M expected Q1 closings. But 26% slippage = SAR 3.2M lost. Best performers achieve 82–85% through structured weekly deal reviews.',fix:'Assign a dedicated weekly deal review every Monday. Escalate any deal with no movement in 14 days.',recovery:'+SAR 1.5–2M incremental from conversion uplift · 14-day sprint model · Starts January 1'},
+      {type:'opp',icon:'🌍',title:'Full Account Expansion — Banking',detail:'2 closed Banking clients (SABB, Riyad Bank) have adjacent divisions not yet covered. SABB alone has 4 divisions that could each represent SAR 1–2M additional scope.',fix:'Request executive sponsorship meetings with SABB and Riyad Bank in January. Map division-by-division expansion.',recovery:'+SAR 3–6M account expansion within existing clients · Highest win rate, lowest acquisition cost'},
     ],
   },
 };
 
-// Client table rows (static for demo realism)
+// Deal tracker rows (static for demo realism)
 const CLIENTS=[
-  {rank:1,name:'Al Saqr Family Office',seg:'UHNW',aum:580,ret:16.2,nnm:42,sharpe:1.95,domicile:'UAE',status:'Growth'},
-  {rank:2,name:'Gulf Sovereign Trust',seg:'UHNW',aum:510,ret:14.8,nnm:38,sharpe:1.88,domicile:'Saudi Arabia',status:'Growth'},
-  {rank:3,name:'Crescent Capital (MFO)',seg:'UHNW',aum:445,ret:18.4,nnm:55,sharpe:2.04,domicile:'UAE',status:'Growth'},
-  {rank:4,name:'Al Haram Investment LLC',seg:'UHNW',aum:390,ret:13.6,nnm:22,sharpe:1.72,domicile:'Kuwait',status:'Stable'},
-  {rank:5,name:'Phoenix Holdings Dubai',seg:'UHNW',aum:352,ret:15.1,nnm:30,sharpe:1.81,domicile:'UAE',status:'Growth'},
-  {rank:6,name:'Nakheel Ventures FO',seg:'UHNW',aum:318,ret:12.9,nnm:18,sharpe:1.68,domicile:'UAE',status:'Stable'},
-  {rank:7,name:'Horizon Asset Partners',seg:'HNW',aum:185,ret:14.4,nnm:14,sharpe:1.76,domicile:'Europe',status:'Growth'},
-  {rank:8,name:'Al Baraka Capital',seg:'HNW',aum:164,ret:11.8,nnm:8,sharpe:1.61,domicile:'Saudi Arabia',status:'Stable'},
-  {rank:9,name:'Summit Wealth DIFC',seg:'HNW',aum:148,ret:13.2,nnm:12,sharpe:1.70,domicile:'UAE',status:'Growth'},
-  {rank:10,name:'Dubai Expat Wealth LLC',seg:'HNW',aum:134,ret:10.9,nnm:6,sharpe:1.55,domicile:'USA',status:'Stable'},
-  {rank:11,name:'Mirqab Asset Co.',seg:'HNW',aum:122,ret:12.1,nnm:9,sharpe:1.62,domicile:'Qatar',status:'Growth'},
-  {rank:12,name:'Cedar Grove Partners',seg:'HNW',aum:108,ret:9.8,nnm:4,sharpe:1.48,domicile:'Europe',status:'Review'},
-  {rank:13,name:'Atlas Affluent Mgmt',seg:'Mass',aum:48,ret:11.4,nnm:3,sharpe:1.58,domicile:'India',status:'Growth'},
-  {rank:14,name:'Gulf Expat Advisory',seg:'Mass',aum:38,ret:10.2,nnm:2,sharpe:1.44,domicile:'UAE',status:'Stable'},
-  {rank:15,name:'Meridian Private UAE',seg:'Mass',aum:31,ret:9.1,nnm:1,sharpe:1.38,domicile:'UAE',status:'Review'},
+  {rank:1,name:'Al Rajhi Bank',seg:'Banking',aum:7.8,ret:82,nnm:6.4,sharpe:18,domicile:'Hasan AlAmri',status:'Closing'},
+  {rank:2,name:'SABB (Saudi British Bank)',seg:'Banking',aum:5.4,ret:74,nnm:4.0,sharpe:22,domicile:'Hasan AlAmri',status:'Closing'},
+  {rank:3,name:'Bupa Arabia',seg:'Insurance',aum:4.1,ret:79,nnm:3.2,sharpe:34,domicile:'Hasan AlAmri',status:'Negotiation'},
+  {rank:4,name:'Tawuniya Insurance',seg:'Insurance',aum:3.2,ret:85,nnm:2.7,sharpe:28,domicile:'Khaled Mansour',status:'Closed Won'},
+  {rank:5,name:'Riyad Bank',seg:'Banking',aum:3.8,ret:68,nnm:2.6,sharpe:31,domicile:'Hasan AlAmri',status:'Proposal'},
+  {rank:6,name:'ACWA Power',seg:'Corporate',aum:2.9,ret:72,nnm:2.1,sharpe:19,domicile:'Sara Al-Qahtani',status:'Closed Won'},
+  {rank:7,name:'Saudi Aramco (Corporate Svcs)',seg:'Corporate',aum:2.6,ret:65,nnm:1.7,sharpe:42,domicile:'Hasan AlAmri',status:'Proposal'},
+  {rank:8,name:'Medgulf Insurance',seg:'Insurance',aum:2.1,ret:58,nnm:1.2,sharpe:67,domicile:'Khaled Mansour',status:'Qualified'},
+  {rank:9,name:'Banque Saudi Fransi',seg:'Banking',aum:1.9,ret:61,nnm:1.2,sharpe:38,domicile:'Sara Al-Qahtani',status:'Proposal'},
+  {rank:10,name:'Arab National Bank',seg:'Banking',aum:1.8,ret:55,nnm:1.0,sharpe:44,domicile:'Hasan AlAmri',status:'Qualified'},
+  {rank:11,name:'Gulf Union Alahlia',seg:'Insurance',aum:1.6,ret:48,nnm:0.8,sharpe:51,domicile:'Khaled Mansour',status:'Qualified'},
+  {rank:12,name:'Al Rajhi Takaful',seg:'Insurance',aum:1.4,ret:44,nnm:0.6,sharpe:72,domicile:'Sara Al-Qahtani',status:'Stalled'},
+  {rank:13,name:'Sipchem (Corporate)',seg:'Corporate',aum:1.2,ret:38,nnm:0.5,sharpe:58,domicile:'Hasan AlAmri',status:'Stalled'},
+  {rank:14,name:'National Water Co.',seg:'Corporate',aum:0.9,ret:32,nnm:0.3,sharpe:63,domicile:'Khaled Mansour',status:'Qualified'},
+  {rank:15,name:'Saudi Re',seg:'Insurance',aum:0.8,ret:28,nnm:0.2,sharpe:81,domicile:'Sara Al-Qahtani',status:'Stalled'},
 ];
 
 // ══ STATE ══
@@ -722,46 +722,45 @@ function baseOpts(extra){
 }
 
 const GOLD='#C9A84C',GOLD2='rgba(201,168,76,0.12)',GOLD3='rgba(201,168,76,0.7)';
-const ASSET_COLS=['rgba(201,168,76,0.85)','rgba(96,165,250,0.82)','rgba(167,139,250,0.82)','rgba(52,211,153,0.78)','rgba(251,191,36,0.75)'];
-const ASSET_BORDERS=['#C9A84C','#60A5FA','#A78BFA','#34D399','#FBBF24'];
+const ASSET_COLS=['rgba(201,168,76,0.85)','rgba(96,165,250,0.82)','rgba(167,139,250,0.82)','rgba(52,211,153,0.78)'];
+const ASSET_BORDERS=['#C9A84C','#60A5FA','#A78BFA','#34D399'];
 const GEO_COLS=['rgba(201,168,76,0.85)','rgba(96,165,250,0.8)','rgba(52,211,153,0.78)','rgba(248,113,113,0.78)','rgba(167,139,250,0.78)','rgba(251,191,36,0.75)'];
 
 // ══ KPI UPDATE ══
 function updKPI(){
   const d=Q_DATA[state.period];
   const seg=state.segment;
-  // Use per-quarter seg percentages (d.seg = [UHNW%, HNW%, Mass%]) for accurate segMult
-  const segMult=seg==='All'?1:seg==='UHNW'?d.seg[0]/100:seg==='HNW'?d.seg[1]/100:d.seg[2]/100;
+  const segMult=seg==='All'?1:seg==='Banking'?d.seg[0]/100:seg==='Insurance'?d.seg[1]/100:seg==='Corporate'?d.seg[2]/100:d.seg[3]/100;
 
-  const aum=(d.aum*segMult).toFixed(1);
-  document.getElementById('kn-aum').textContent=aum;
-  document.getElementById('ks-aum').textContent=d.label+' · '+(seg==='All'?'All Segments':seg);
-  document.getElementById('kg-aum').textContent=state.period==='full'?'↑ 11.2% YoY':'↑ QoQ Growth';
+  const pipelineVal=(d.aum*segMult).toFixed(1);
+  document.getElementById('kn-aum').textContent=pipelineVal;
+  document.getElementById('ks-aum').textContent=d.label+' · '+(seg==='All'?'All Sectors':seg);
+  document.getElementById('kg-aum').textContent=state.period==='full'?'↑ 18.4% YoY':'↑ QoQ Growth';
 
-  document.getElementById('kn-ret').textContent=d.ret.toFixed(1);
-  document.getElementById('ks-ret').textContent='Blended net return · '+d.label;
+  document.getElementById('kn-ret').textContent=d.ret;
+  document.getElementById('ks-ret').textContent='Closed won rate · '+d.label;
 
-  document.getElementById('kn-cli').textContent=Math.round(d.clients*segMult).toLocaleString();
-  document.getElementById('ks-cli').textContent=(seg==='All'?'All tiers':seg)+' · '+d.label;
+  document.getElementById('kn-cli').textContent=Math.round(d.clients*segMult);
+  document.getElementById('ks-cli').textContent=(seg==='All'?'All sectors':seg)+' · '+d.label;
 
-  document.getElementById('kn-sharpe').textContent=d.sharpe.toFixed(2);
-  document.getElementById('ks-sharpe').textContent='Risk-adjusted · '+d.label;
+  document.getElementById('kn-sharpe').textContent=d.sharpe;
+  document.getElementById('ks-sharpe').textContent='Avg days to close · '+d.label;
 
-  document.getElementById('kn-ret2').textContent=d.retention.toFixed(1);
-  document.getElementById('ks-ret2').textContent='Annual churn '+(100-d.retention).toFixed(1)+'%';
+  document.getElementById('kn-ret2').textContent=d.retention;
+  document.getElementById('ks-ret2').textContent='Predicted vs actual closed';
 
   // Quarter banner
   document.getElementById('qb-period').textContent=d.label;
-  document.getElementById('qb-stat').textContent='AUM: USD '+aum+'B · '+Math.round(d.clients*segMult)+' Clients · DIFC, Dubai';
-  document.getElementById('fi-period').textContent=d.label+' · DIFC-regulated · Dubai DFSA';
-  document.getElementById('tbl-badge').textContent=d.label+' · By AUM';
-  document.getElementById('aum-sub').textContent='USD Billions · 2024–2026 trajectory';
-  document.getElementById('alloc-sub').textContent='Portfolio mix · '+d.label;
-  document.getElementById('ret-sub').textContent='Net % return · '+d.label;
-  document.getElementById('nnm-sub').textContent='Inflows vs Outflows · '+d.label+' · USD M';
-  document.getElementById('seg-sub').textContent='By AUM contribution · '+d.label;
-  document.getElementById('geo-sub').textContent='AUM by client domicile · '+d.label;
-  document.getElementById('mret-sub').textContent='Monthly net % vs benchmark · '+d.label;
+  document.getElementById('qb-stat').textContent='Pipeline: SAR '+pipelineVal+'M · '+Math.round(d.clients*segMult)+' Active Deals · Riyadh, KSA';
+  document.getElementById('fi-period').textContent=d.label+' · Saudi B2B · Banking, Insurance, Corporate';
+  document.getElementById('tbl-badge').textContent=d.label+' · By Deal Value';
+  document.getElementById('aum-sub').textContent='SAR Millions · 2024–2026 trajectory';
+  document.getElementById('alloc-sub').textContent='Pipeline by stage · '+d.label;
+  document.getElementById('ret-sub').textContent='Win rate % by sector · '+d.label;
+  document.getElementById('nnm-sub').textContent='Deals won vs lost · '+d.label;
+  document.getElementById('seg-sub').textContent='By pipeline value · '+d.label;
+  document.getElementById('geo-sub').textContent='Pipeline by city · '+d.label;
+  document.getElementById('mret-sub').textContent='Monthly closings vs target · '+d.label;
 
   const badges=document.getElementById('qb-badges');
   badges.innerHTML=d.badges.map(b=>{
@@ -779,7 +778,7 @@ function initCharts(){
   charts.aum=new Chart(document.getElementById('aumChart'),{
     type:'line',
     data:{labels:AUM_QUARTERS.labels,datasets:[{
-      label:'AUM (USD B)',data:AUM_QUARTERS.data,
+      label:'Pipeline (SAR M)',data:AUM_QUARTERS.data,
       borderColor:GOLD,backgroundColor:GOLD2,borderWidth:2.5,
       tension:0.4,fill:true,pointRadius:5,pointBackgroundColor:GOLD,
       pointBorderColor:'transparent',pointHoverRadius:8,
@@ -803,7 +802,7 @@ function initCharts(){
   charts.ret=new Chart(document.getElementById('retChart'),{
     type:'bar',
     data:{labels:ASSET_CLASSES,datasets:[{
-      label:'Return %',data:d.retByAsset,
+      label:'Win Rate %',data:d.retByAsset,
       backgroundColor:ASSET_COLS,borderColor:ASSET_BORDERS,borderWidth:1.5,borderRadius:5,
     }]},
     options:{...baseOpts(),plugins:{...baseOpts().plugins,legend:{display:false}}},
@@ -816,8 +815,8 @@ function initCharts(){
   charts.nnm=new Chart(document.getElementById('nnmChart'),{
     type:'bar',
     data:{labels:nnmLabels,datasets:[
-      {label:'Inflows',data:nnmIn,backgroundColor:'rgba(52,211,153,0.78)',borderColor:'#34D399',borderWidth:1.2,borderRadius:4,},
-      {label:'Outflows',data:nnmOut.map(v=>-v),backgroundColor:'rgba(248,113,113,0.68)',borderColor:'#F87171',borderWidth:1.2,borderRadius:4,},
+      {label:'Deals Won',data:nnmIn,backgroundColor:'rgba(52,211,153,0.78)',borderColor:'#34D399',borderWidth:1.2,borderRadius:4,},
+      {label:'Deals Lost',data:nnmOut.map(v=>-v),backgroundColor:'rgba(248,113,113,0.68)',borderColor:'#F87171',borderWidth:1.2,borderRadius:4,},
     ]},
     options:{...baseOpts(),plugins:{...baseOpts().plugins},
       scales:{
@@ -829,10 +828,10 @@ function initCharts(){
   // 5. Segment donut
   charts.seg=new Chart(document.getElementById('segChart'),{
     type:'doughnut',
-    data:{labels:['UHNW ≥$50M','HNW $5M–$50M','Affluent $1M–$5M'],datasets:[{
+    data:{labels:['Banking','Insurance','Corporate Svcs','Govt & Semi-Govt'],datasets:[{
       data:d.seg,
-      backgroundColor:['rgba(201,168,76,0.85)','rgba(96,165,250,0.82)','rgba(52,211,153,0.78)'],
-      borderColor:['#C9A84C','#60A5FA','#34D399'],borderWidth:2,hoverOffset:7,
+      backgroundColor:['rgba(201,168,76,0.85)','rgba(96,165,250,0.82)','rgba(52,211,153,0.78)','rgba(167,139,250,0.78)'],
+      borderColor:['#C9A84C','#60A5FA','#34D399','#A78BFA'],borderWidth:2,hoverOffset:7,
     }]},
     options:{responsive:true,maintainAspectRatio:false,cutout:'58%',
       plugins:{legend:{position:'bottom',labels:{color:t.muted,font:{size:9,family:"'Outfit',sans-serif"},padding:10,boxWidth:10}},
@@ -847,8 +846,8 @@ function initCharts(){
   charts.mret=new Chart(document.getElementById('mretChart'),{
     type:'line',
     data:{labels:mLabels,datasets:[
-      {label:'Portfolio',data:mretData,borderColor:GOLD,backgroundColor:GOLD2,borderWidth:2.5,tension:0.4,fill:true,pointRadius:4,pointBackgroundColor:GOLD,pointHoverRadius:7,},
-      {label:'Benchmark',data:benchData,borderColor:'rgba(96,165,250,0.7)',backgroundColor:'transparent',borderWidth:1.8,borderDash:[5,4],tension:0.3,pointRadius:3,pointBackgroundColor:'#60A5FA',},
+      {label:'Deals Closed',data:mretData,borderColor:GOLD,backgroundColor:GOLD2,borderWidth:2.5,tension:0.4,fill:true,pointRadius:4,pointBackgroundColor:GOLD,pointHoverRadius:7,},
+      {label:'Monthly Target',data:benchData,borderColor:'rgba(96,165,250,0.7)',backgroundColor:'transparent',borderWidth:1.8,borderDash:[5,4],tension:0.3,pointRadius:3,pointBackgroundColor:'#60A5FA',},
     ]},
     options:{...baseOpts(),},
   });
@@ -870,17 +869,17 @@ function initCharts(){
 
 // ══ UPDATE ALL CHARTS ══
 // Maps filter value → index in ASSET_CLASSES array
-const ASSET_IDX={'Equity':0,'Fixed':1,'Alternatives':2,'RE':3,'Cash':4};
+const ASSET_IDX={'Qualified':0,'Proposal':1,'Negotiation':2,'Closing':3};
 
 // ══ UPDATE ALL CHARTS ══
 function updAllCharts(){
   const d=Q_DATA[state.period];
   const t=th();
   const seg=state.segment;
-  const ac=state.assetClass; // 'All','Equity','Fixed','Alternatives','RE'
+  const ac=state.assetClass;
 
-  // ── Segment multiplier (per-quarter accurate) ──
-  const segMult=seg==='All'?1:seg==='UHNW'?d.seg[0]/100:seg==='HNW'?d.seg[1]/100:d.seg[2]/100;
+  // ── Segment multiplier ──
+  const segMult=seg==='All'?1:seg==='Banking'?d.seg[0]/100:seg==='Insurance'?d.seg[1]/100:seg==='Corporate'?d.seg[2]/100:d.seg[3]/100;
 
   // ── Alloc donut: scale by segment, highlight/grey by asset class ──
   let allocData=d.alloc.map(v=>+(v*segMult).toFixed(1));
@@ -913,7 +912,7 @@ function updAllCharts(){
     charts.ret.data.datasets[0].borderColor=ASSET_BORDERS;
   }
   charts.ret.data.datasets[0].data=retData;
-  document.getElementById('ret-badge').textContent=ac==='All'?'Best: Alts '+Math.max(...d.retByAsset).toFixed(1)+'%':ASSET_CLASSES[ASSET_IDX[ac]||0]+': '+bestRet.toFixed(1)+'%';
+  document.getElementById('ret-badge').textContent=ac==='All'?'Best: Insurance '+Math.max(...d.retByAsset).toFixed(0)+'%':ASSET_CLASSES[ASSET_IDX[ac]||0]+': '+bestRet.toFixed(0)+'%';
   charts.ret.update();
 
   // ── NNM: scale by segment ──
@@ -924,13 +923,13 @@ function updAllCharts(){
   charts.nnm.data.datasets[0].data=nnmIn;
   charts.nnm.data.datasets[1].data=nnmOut.map(v=>-v);
   const totalNNM=nnmIn.reduce((a,b)=>a+b,0)-nnmOut.reduce((a,b)=>a+b,0);
-  document.getElementById('nnm-badge').textContent='Net +$'+totalNNM+'M';
+  document.getElementById('nnm-badge').textContent='Net Won: +'+totalNNM+' deals';
   charts.nnm.update();
 
-  // ── Segment donut: highlight selected segment ──
-  const segCols=['rgba(201,168,76,0.85)','rgba(96,165,250,0.82)','rgba(52,211,153,0.78)'];
-  const segBorders=['#C9A84C','#60A5FA','#34D399'];
-  const segIdx=seg==='UHNW'?0:seg==='HNW'?1:seg==='Mass'?2:-1;
+  // ── Sector donut: highlight selected sector ──
+  const segCols=['rgba(201,168,76,0.85)','rgba(96,165,250,0.82)','rgba(52,211,153,0.78)','rgba(167,139,250,0.78)'];
+  const segBorders=['#C9A84C','#60A5FA','#34D399','#A78BFA'];
+  const segIdx=seg==='Banking'?0:seg==='Insurance'?1:seg==='Corporate'?2:seg==='Govt'?3:-1;
   if(seg!=='All'){
     charts.seg.data.datasets[0].backgroundColor=segCols.map((c,i)=>i===segIdx?c:'rgba(100,100,100,0.18)');
     charts.seg.data.datasets[0].borderColor=segBorders.map((c,i)=>i===segIdx?c:'rgba(100,100,100,0.25)');
@@ -950,7 +949,7 @@ function updAllCharts(){
   charts.mret.data.datasets[1].data=benchScaled;
   const avgRet=mretScaled.reduce((a,b)=>a+b,0);
   const avgBench=benchScaled.reduce((a,b)=>a+b,0);
-  document.getElementById('mret-badge').textContent='Alpha +'+(avgRet-avgBench).toFixed(2)+'pp';
+  document.getElementById('mret-badge').textContent='Above Target +'+(avgRet-avgBench).toFixed(0)+' deals';
   charts.mret.update();
 
   // ── Geo: scale by segment ──
@@ -997,25 +996,27 @@ function buildInsights(){
 // ══ CLIENT TABLE ══
 function buildTable(){
   const seg=state.segment;
-  let rows=seg==='All'?[...CLIENTS]:CLIENTS.filter(r=>r.seg===({UHNW:'UHNW',HNW:'HNW',Mass:'Mass'}[seg]));
+  let rows=seg==='All'?[...CLIENTS]:CLIENTS.filter(r=>r.seg===({Banking:'Banking',Insurance:'Insurance',Corporate:'Corporate'}[seg]||seg));
   filteredClients=[...rows];
   renderTable(filteredClients);
 }
 function renderTable(rows){
-  const maxAUM=Math.max(...rows.map(r=>r.aum));
+  const maxVal=Math.max(...rows.map(r=>r.aum));
   document.getElementById('tblBody').innerHTML=rows.map((r,i)=>{
-    const bw=Math.round((r.aum/maxAUM)*100);
-    const spc=r.seg==='UHNW'?'pill-a':r.seg==='HNW'?'pill-b':'pill-g';
-    const stc=r.status==='Growth'?'pill-g':r.status==='Stable'?'pill-b':'pill';
-    const stStyle=r.status==='Review'?'background:rgba(248,113,113,.1);color:#F87171;border:1px solid rgba(248,113,113,.2);':'';
+    const bw=Math.round((r.aum/maxVal)*100);
+    const spc=r.seg==='Banking'?'pill-a':r.seg==='Insurance'?'pill-b':'pill-g';
+    const stc=r.status==='Closed Won'?'pill-g':r.status==='Closing'?'pill-a':r.status==='Negotiation'?'pill-b':r.status==='Stalled'?'pill':'pill';
+    const stStyle=r.status==='Stalled'?'background:rgba(248,113,113,.1);color:#F87171;border:1px solid rgba(248,113,113,.2);':r.status==='Closing'?'background:rgba(201,168,76,.12);color:#E2C97A;border:1px solid rgba(201,168,76,.3);':'';
+    const ageStyle=r.sharpe>60?'color:#F87171;font-weight:700':r.sharpe>45?'color:#FBBF24;font-weight:700':'';
+    const weighted=(r.aum*(r.ret/100)).toFixed(1);
     return`<tr>
       <td><span class="rnk">${i+1}</span></td>
       <td style="color:var(--gold-l);font-weight:700">${r.name}</td>
       <td><span class="pill ${spc}">${r.seg}</span></td>
-      <td><div class="mbar-c"><div class="mbar"><div class="mbf" style="width:${bw}%"></div></div>$${r.aum}M</div></td>
-      <td class="tup">${r.ret.toFixed(1)}%</td>
-      <td class="tup">+$${r.nnm}M</td>
-      <td>${r.sharpe.toFixed(2)}</td>
+      <td><div class="mbar-c"><div class="mbar"><div class="mbf" style="width:${bw}%"></div></div>SAR ${r.aum}M</div></td>
+      <td class="tup">${r.ret}%</td>
+      <td class="tup">SAR ${weighted}M</td>
+      <td style="${ageStyle}">${r.sharpe}d</td>
       <td style="color:var(--text3)">${r.domicile}</td>
       <td><span class="pill ${stc}" style="${stStyle}">${r.status}</span></td>
     </tr>`;
